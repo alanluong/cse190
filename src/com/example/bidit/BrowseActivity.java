@@ -1,19 +1,39 @@
 package com.example.bidit;
 
+import java.util.ArrayList;
+
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.ListView;
 
 public class BrowseActivity extends Activity implements OnClickListener{
+	
+	ArrayList<Product> mProducts;;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState){
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_browse);
+		
+		ListView lv = (ListView) findViewById(R.id.browseList);
+		
+		mProducts = new ArrayList<Product>();
+	    mProducts.add(new Product("foo", "bar"));
+	    mProducts.add(new Product("bar", "foo"));
+	    
+	    ArrayAdapter<Product> arrayAdapter = new ArrayAdapter<Product>(
+                this, 
+                android.R.layout.simple_list_item_2,
+                mProducts );
+
+        lv.setAdapter(arrayAdapter); 
+	    
 	}
 	
 	@Override

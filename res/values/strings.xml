@@ -7,5 +7,6 @@
     <string name="buy">Buy</string>
     <string name="sell">Sell</string>
     <string name="back">Back</string>
+    <string name="browse_title">Browse Products</string>
 
 </resources>
