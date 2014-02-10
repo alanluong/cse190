@@ -8,5 +8,7 @@
     <string name="sell">Sell</string>
     <string name="back">Back</string>
     <string name="browse_title">Browse Products</string>
+    <string name="camera">Camera</string>
+    <string name="capture_image">To sell, click on camera to capture image</string>
 
 </resources>
