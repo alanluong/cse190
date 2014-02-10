@@ -1,9 +1,13 @@
 package com.example.bidit;
 
+import android.graphics.drawable.Drawable;
+
 public class Product {
 	
 	String mTitle;
 	String mDescription;
+	
+	Drawable mImage;
 	
 	public Product(String s, String d){
 		setName(s);
@@ -24,5 +28,13 @@ public class Product {
 	
 	private void setDescription(String s){
 		mDescription = s;
+	}
+	
+	public Drawable getImage(){
+		return mImage;
+	}
+	
+	public void setImage(Drawable i){
+		mImage = i;
 	}
 }
