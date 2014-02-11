@@ -8,7 +8,6 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ListView;
 
@@ -27,12 +26,12 @@ public class BrowseActivity extends Activity implements OnClickListener{
 	    mProducts.add(new Product("foo", "bar"));
 	    mProducts.add(new Product("bar", "foo"));
 	    
-	    ArrayAdapter<Product> arrayAdapter = new ArrayAdapter<Product>(
+	    ProductsAdapter pAdapter = new ProductsAdapter(
                 this, 
-                android.R.layout.simple_list_item_2,
-                mProducts );
+                R.layout.products_list_item,
+                (Product[]) mProducts.toArray() );
 
-        lv.setAdapter(arrayAdapter); 
+        lv.setAdapter(pAdapter); 
 	    
 	}
 	
