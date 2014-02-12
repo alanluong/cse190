@@ -4,6 +4,7 @@ import java.util.ArrayList;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.content.res.Resources;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.View;
@@ -23,8 +24,9 @@ public class BrowseActivity extends Activity implements OnClickListener{
 		ListView lv = (ListView) findViewById(R.id.browseList);
 		
 		mProducts = new ArrayList<Product>();
-	    mProducts.add(new Product("foo", "bar"));
-	    mProducts.add(new Product("bar", "foo"));
+		Resources res = getResources();
+	    mProducts.add(new Product("foo", "bar", res.getDrawable(R.drawable.ic_launcher)));
+	    mProducts.add(new Product("bar", "foo", res.getDrawable(R.drawable.ic_launcher)));
 	    
 	    ProductsAdapter pAdapter = new ProductsAdapter(
                 this, 

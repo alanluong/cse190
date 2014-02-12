@@ -9,9 +9,11 @@ public class Product {
 	
 	Drawable mImage;
 	
-	public Product(String s, String d){
+	public Product(String s, String d, Drawable image){
 		setName(s);
 		setDescription(d);
+		
+		setImage(image);
 	}
 	
 	public String getName(){
@@ -34,7 +36,7 @@ public class Product {
 		return mImage;
 	}
 	
-	public void setImage(Drawable i){
+	private void setImage(Drawable i){
 		mImage = i;
 	}
 }
