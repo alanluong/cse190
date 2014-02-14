@@ -25,8 +25,8 @@ public class BrowseActivity extends Activity implements OnClickListener{
 		
 		mProducts = new ArrayList<Product>();
 		Resources res = getResources();
-	    mProducts.add(new Product("foo", "bar", res.getDrawable(R.drawable.ic_launcher)));
-	    mProducts.add(new Product("bar", "foo", res.getDrawable(R.drawable.ic_launcher)));
+//	    mProducts.add(new Product("foo", "bar", res.getDrawable(R.drawable.ic_launcher)));
+//	    mProducts.add(new Product("bar", "foo", res.getDrawable(R.drawable.ic_launcher)));
 	    
 	    ProductsAdapter pAdapter = new ProductsAdapter(
                 this, 

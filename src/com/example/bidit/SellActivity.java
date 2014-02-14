@@ -9,7 +9,7 @@ import android.view.View.OnClickListener;
 import android.widget.Button;
 
 public class SellActivity extends Activity implements OnClickListener{
-
+	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -18,6 +18,7 @@ public class SellActivity extends Activity implements OnClickListener{
 	
 	
 	private static final int REQUEST_CODE = 10;
+	
 	
 	@Override
 	public void onClick(View v) {

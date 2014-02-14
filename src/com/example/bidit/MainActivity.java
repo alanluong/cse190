@@ -9,11 +9,19 @@ import android.view.View.OnClickListener;
 import android.widget.Button;
 
 public class MainActivity extends Activity implements OnClickListener{
-
+	private Button sellButton;
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
+		sellButton = (Button)findViewById(R.id.sellbutton);
+		sellButton.setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				Intent intent2 = new Intent(MainActivity.this, SellActivity.class);
+				startActivity(intent2);
+			}
+		});
 	}
 
 	@Override
@@ -22,7 +30,7 @@ public class MainActivity extends Activity implements OnClickListener{
 		getMenuInflater().inflate(R.menu.main, menu);
 		return true;
 	}
-
+/*
 	@Override
 	public void onClick(View view) {
 		if(view instanceof Button){
@@ -33,10 +41,18 @@ public class MainActivity extends Activity implements OnClickListener{
 				startActivity(intent);
 				break;
 			case R.id.sellbutton:
+				Intent intent2 = new Intent(MainActivity.this, SellActivity.class);
+				startActivity(intent2);
 				break;
 			}
 		}
 		
 	}
+*/
 
+	@Override
+	public void onClick(View v) {
+		// TODO Auto-generated method stub
+		
+	}
 }
