@@ -14,6 +14,9 @@ public class SellActivity extends Activity implements OnClickListener{
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_sell);
+		
+		((Button)findViewById(R.id.backbutton2)).setOnClickListener(this);
+		((Button)findViewById(R.id.camerabutton)).setOnClickListener(this);
 	}
 	
 	
