@@ -22,10 +22,10 @@
         android:id="@+id/sellbutton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentRight="true"
+        android:layout_alignLeft="@+id/buybutton"
+        android:layout_alignRight="@+id/buybutton"
         android:layout_below="@+id/buybutton"
-        android:layout_marginTop="84dp"
+        android:layout_marginTop="87dp"
         android:text="@string/sell" />
 
 </RelativeLayout>
