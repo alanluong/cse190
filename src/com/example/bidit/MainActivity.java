@@ -9,19 +9,12 @@ import android.view.View.OnClickListener;
 import android.widget.Button;
 
 public class MainActivity extends Activity implements OnClickListener{
-	private Button sellButton;
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.activity_main);
-		sellButton = (Button)findViewById(R.id.sellbutton);
-		sellButton.setOnClickListener(new OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				Intent intent2 = new Intent(MainActivity.this, SellActivity.class);
-				startActivity(intent2);
-			}
-		});
+		setContentView(R.layout.activity_main);	
+		((Button)findViewById(R.id.buybutton)).setOnClickListener(this);
+		((Button)findViewById(R.id.sellbutton)).setOnClickListener(this);
 	}
 
 	@Override
@@ -30,29 +23,25 @@ public class MainActivity extends Activity implements OnClickListener{
 		getMenuInflater().inflate(R.menu.main, menu);
 		return true;
 	}
-/*
+	
 	@Override
 	public void onClick(View view) {
+		System.out.println("something clicked");
 		if(view instanceof Button){
 			Button clicked = (Button)view;
+			System.out.println("button clicked");
 			switch(clicked.getId()){
 			case R.id.buybutton:
+				System.out.println("buy button clicked");
 				Intent intent = new Intent(MainActivity.this, BrowseActivity.class);
 				startActivity(intent);
 				break;
 			case R.id.sellbutton:
-				Intent intent2 = new Intent(MainActivity.this, SellActivity.class);
-				startActivity(intent2);
+				Intent intent1 = new Intent(MainActivity.this, SellActivity.class);
+				startActivity(intent1);
 				break;
 			}
 		}
-		
-	}
-*/
-
-	@Override
-	public void onClick(View v) {
-		// TODO Auto-generated method stub
 		
 	}
 }
