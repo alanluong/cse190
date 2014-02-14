@@ -25,14 +25,19 @@ public class MainActivity extends Activity implements OnClickListener{
 
 	@Override
 	public void onClick(View view) {
+		System.out.println("something clicked");
 		if(view instanceof Button){
 			Button clicked = (Button)view;
+			System.out.println("button clicked");
 			switch(clicked.getId()){
 			case R.id.buybutton:
+				System.out.println("buy button clicked");
 				Intent intent = new Intent(MainActivity.this, BrowseActivity.class);
 				startActivity(intent);
 				break;
 			case R.id.sellbutton:
+				Intent intent1 = new Intent(MainActivity.this, SellActivity.class);
+				startActivity(intent1);
 				break;
 			}
 		}
