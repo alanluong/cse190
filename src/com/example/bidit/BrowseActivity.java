@@ -31,7 +31,7 @@ public class BrowseActivity extends Activity implements OnClickListener{
 	    ProductsAdapter pAdapter = new ProductsAdapter(
                 this, 
                 R.layout.products_list_item,
-                (Product[]) mProducts.toArray() );
+                mProducts.toArray(new Product[mProducts.size()]) );
 
         lv.setAdapter(pAdapter); 
 	    
