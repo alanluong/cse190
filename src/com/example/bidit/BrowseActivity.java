@@ -20,6 +20,7 @@ public class BrowseActivity extends Activity implements OnClickListener{
 	protected void onCreate(Bundle savedInstanceState){
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_browse);
+		((Button)findViewById(R.id.backbutton)).setOnClickListener(this);
 		
 		ListView lv = (ListView) findViewById(R.id.browseList);
 		
