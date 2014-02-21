@@ -10,6 +10,7 @@ import android.view.Menu;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.ListView;
 
 public class BrowseActivity extends Activity implements OnClickListener{
@@ -26,8 +27,8 @@ public class BrowseActivity extends Activity implements OnClickListener{
 		
 		mProducts = new ArrayList<Product>();
 		Resources res = getResources();
-//	    mProducts.add(new Product("foo", "bar", res.getDrawable(R.drawable.ic_launcher)));
-//	    mProducts.add(new Product("bar", "foo", res.getDrawable(R.drawable.ic_launcher)));
+	    mProducts.add(new Product("foo", "bar", res.getDrawable(R.drawable.ic_launcher)));
+	    mProducts.add(new Product("bar", "foo", res.getDrawable(R.drawable.ic_launcher)));
 	    
 	    ProductsAdapter pAdapter = new ProductsAdapter(
                 this, 
@@ -55,6 +56,8 @@ public class BrowseActivity extends Activity implements OnClickListener{
 				startActivity(intent);
 				break;
 			}
+		}else if(view instanceof ImageView){
+			
 		}
 		
 	}
