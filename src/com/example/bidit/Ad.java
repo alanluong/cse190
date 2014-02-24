@@ -2,14 +2,14 @@ package com.example.bidit;
 
 import android.graphics.drawable.Drawable;
 
-public class Product {
+public class Ad {
 	
 	String mTitle;
 	String mDescription;
 	
 	Drawable mImage;
 	
-	public Product(String s, String d, Drawable image){
+	public Ad(String s, String d, Drawable image){
 		setName(s);
 		setDescription(d);
 		

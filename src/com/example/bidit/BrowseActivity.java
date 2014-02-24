@@ -15,7 +15,7 @@ import android.widget.ListView;
 
 public class BrowseActivity extends Activity implements OnClickListener{
 	
-	ArrayList<Product> mProducts;;
+	ArrayList<Ad> mAds;;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState){
@@ -25,15 +25,15 @@ public class BrowseActivity extends Activity implements OnClickListener{
 		
 		ListView lv = (ListView) findViewById(R.id.browseList);
 		
-		mProducts = new ArrayList<Product>();
+		mAds = new ArrayList<Ad>();
 		Resources res = getResources();
-	    mProducts.add(new Product("foo", "bar", res.getDrawable(R.drawable.ic_launcher)));
-	    mProducts.add(new Product("bar", "foo", res.getDrawable(R.drawable.ic_launcher)));
+	    mAds.add(new Ad("foo", "bar", res.getDrawable(R.drawable.ic_launcher)));
+	    mAds.add(new Ad("bar", "foo", res.getDrawable(R.drawable.ic_launcher)));
 	    
-	    ProductsAdapter pAdapter = new ProductsAdapter(
+	    AdAdapter pAdapter = new AdAdapter(
                 this, 
-                R.layout.products_list_item,
-                mProducts.toArray(new Product[mProducts.size()]) );
+                R.layout.ads_list_item,
+                mAds.toArray(new Ad[mAds.size()]) );
 
         lv.setAdapter(pAdapter); 
 	    

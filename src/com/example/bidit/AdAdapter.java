@@ -7,12 +7,12 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 
-public class ProductsAdapter extends ArrayAdapter<Product> {
-	private Product[] products;
+public class AdAdapter extends ArrayAdapter<Ad> {
+	private Ad[] ads;
 	
-	public ProductsAdapter(Context context, int textViewResourceId, Product[] products){
+	public AdAdapter(Context context, int textViewResourceId, Ad[] products){
 		super(context, textViewResourceId, products);
-		this.products = products;
+		this.ads = products;
 	}
 	
 	@Override
@@ -21,10 +21,10 @@ public class ProductsAdapter extends ArrayAdapter<Product> {
 		
 		if (v == null) {
             LayoutInflater vi = (LayoutInflater)getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-            v = vi.inflate(R.layout.products_list_item, null);
+            v = vi.inflate(R.layout.ads_list_item, null);
         }
 
-        Product it = products[position];
+        Ad it = ads[position];
         if (it != null) {
             ImageView iv = (ImageView) v.findViewById(R.id.list_product_image);
             if (iv != null) {
