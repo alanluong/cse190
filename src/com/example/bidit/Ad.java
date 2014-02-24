@@ -4,39 +4,45 @@ import android.graphics.drawable.Drawable;
 
 public class Ad {
 	
-	String mTitle;
-	String mDescription;
+	User seller;
+	double price;
+	String description;
+	Drawable image;
 	
-	Drawable mImage;
-	
-	public Ad(String s, String d, Drawable image){
-		setName(s);
+	public Ad(String d, Drawable image){
 		setDescription(d);
-		
 		setImage(image);
 	}
 	
-	public String getName(){
-		return mTitle;
-	}
-	
-	private void setName(String s){
-		mTitle = s;
+	public User getSeller() {
+		return seller;
 	}
 
+	public void setSeller(User seller) {
+		this.seller = seller;
+	}
+	
+	public double getPrice() {
+		return price;
+	}
+
+	public void setPrice(double price) {
+		this.price = price;
+	}
+	
 	public String getDescription(){
-		return mDescription;
+		return description;
 	}
 	
 	private void setDescription(String s){
-		mDescription = s;
+		this.description = s;
 	}
-	
+
 	public Drawable getImage(){
-		return mImage;
+		return image;
 	}
 	
 	private void setImage(Drawable i){
-		mImage = i;
+		this.image = i;
 	}
 }

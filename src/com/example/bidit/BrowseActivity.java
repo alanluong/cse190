@@ -27,8 +27,8 @@ public class BrowseActivity extends Activity implements OnClickListener{
 		
 		mAds = new ArrayList<Ad>();
 		Resources res = getResources();
-	    mAds.add(new Ad("foo", "bar", res.getDrawable(R.drawable.ic_launcher)));
-	    mAds.add(new Ad("bar", "foo", res.getDrawable(R.drawable.ic_launcher)));
+	    mAds.add(new Ad("foo", res.getDrawable(R.drawable.ic_launcher)));
+	    mAds.add(new Ad("bar", res.getDrawable(R.drawable.ic_launcher)));
 	    
 	    AdAdapter pAdapter = new AdAdapter(
                 this, 
