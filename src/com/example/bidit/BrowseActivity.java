@@ -28,7 +28,7 @@ import android.widget.ListView;
 
 public class BrowseActivity extends Activity implements OnClickListener {
 
-	ArrayList<Ad> mAds;
+	AdAdapter adapter;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -38,15 +38,12 @@ public class BrowseActivity extends Activity implements OnClickListener {
 
 		ListView lv = (ListView) findViewById(R.id.browseList);
 
-		mAds = new ArrayList<Ad>();
-		Resources res = getResources();
+		//Resources res = getResources();
 		//mAds.add(new Ad("foo", res.getDrawable(R.drawable.ic_launcher)));
 		//mAds.add(new Ad("bar", res.getDrawable(R.drawable.ic_launcher)));
 
-		AdAdapter pAdapter = new AdAdapter(this, R.layout.ads_list_item,
-				mAds.toArray(new Ad[mAds.size()]));
-
-		lv.setAdapter(pAdapter);
+		adapter = new AdAdapter(this, R.layout.ads_list_item);
+		lv.setAdapter(adapter);
 		new RequestAdsTask().execute();
 	}
 
@@ -74,7 +71,7 @@ public class BrowseActivity extends Activity implements OnClickListener {
 		}
 	}
 
-	public class RequestAdsTask extends AsyncTask<Void, Void, Void> {
+	public class RequestAdsTask extends AsyncTask<Void, Ad, Void> {
 		@Override
 		protected Void doInBackground(Void... params) {
 			HttpGet request = new HttpGet(Config.AD_API);
@@ -89,9 +86,9 @@ public class BrowseActivity extends Activity implements OnClickListener {
 					User seller = null;
 					double price = o.getDouble("price");
 					String description = o.getString("description");
-					Drawable image = null;
+					Drawable image = getResources().getDrawable(R.drawable.ic_launcher);
 					Ad ad = new Ad(seller, price, description, image);
-					mAds.add(ad);
+					publishProgress(ad);
 				}
 				Log.d(BrowseActivity.class.getName(), content);
 			} catch (ClientProtocolException e) {
@@ -102,6 +99,13 @@ public class BrowseActivity extends Activity implements OnClickListener {
 				e.printStackTrace();
 			}
 			return null;
+		}
+
+		@Override
+		protected void onProgressUpdate(Ad... ads) {
+			adapter.addAll(ads);
+			adapter.notifyDataSetChanged();
+			Log.d(BrowseActivity.class.getName(), "" + adapter.getCount());
 		}
 	}
 }
