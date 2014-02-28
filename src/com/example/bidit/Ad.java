@@ -9,11 +9,14 @@ public class Ad {
 	String description;
 	Drawable image;
 	
-	public Ad(String d, Drawable image){
-		setDescription(d);
-		setImage(image);
+	public Ad(User seller, double price, String description, Drawable image) {
+		super();
+		this.seller = seller;
+		this.price = price;
+		this.description = description;
+		this.image = image;
 	}
-	
+
 	public User getSeller() {
 		return seller;
 	}
@@ -21,7 +24,7 @@ public class Ad {
 	public void setSeller(User seller) {
 		this.seller = seller;
 	}
-	
+
 	public double getPrice() {
 		return price;
 	}
@@ -29,20 +32,20 @@ public class Ad {
 	public void setPrice(double price) {
 		this.price = price;
 	}
-	
-	public String getDescription(){
+
+	public String getDescription() {
 		return description;
 	}
-	
-	private void setDescription(String s){
-		this.description = s;
+
+	public void setDescription(String description) {
+		this.description = description;
 	}
 
-	public Drawable getImage(){
+	public Drawable getImage() {
 		return image;
 	}
-	
-	private void setImage(Drawable i){
-		this.image = i;
+
+	public void setImage(Drawable image) {
+		this.image = image;
 	}
 }

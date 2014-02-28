@@ -8,10 +8,14 @@ import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.util.EntityUtils;
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import android.app.Activity;
 import android.content.Intent;
 import android.content.res.Resources;
+import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
@@ -36,8 +40,8 @@ public class BrowseActivity extends Activity implements OnClickListener {
 
 		mAds = new ArrayList<Ad>();
 		Resources res = getResources();
-		mAds.add(new Ad("foo", res.getDrawable(R.drawable.ic_launcher)));
-		mAds.add(new Ad("bar", res.getDrawable(R.drawable.ic_launcher)));
+		//mAds.add(new Ad("foo", res.getDrawable(R.drawable.ic_launcher)));
+		//mAds.add(new Ad("bar", res.getDrawable(R.drawable.ic_launcher)));
 
 		AdAdapter pAdapter = new AdAdapter(this, R.layout.ads_list_item,
 				mAds.toArray(new Ad[mAds.size()]));
@@ -73,16 +77,28 @@ public class BrowseActivity extends Activity implements OnClickListener {
 	public class RequestAdsTask extends AsyncTask<Void, Void, Void> {
 		@Override
 		protected Void doInBackground(Void... params) {
-			HttpGet request = new HttpGet(
-					"http://ec2-54-213-102-70.us-west-2.compute.amazonaws.com");
+			HttpGet request = new HttpGet(Config.AD_API);
 			try {
 				HttpResponse response = new DefaultHttpClient()
 						.execute(request);
 				String content = EntityUtils.toString(response.getEntity());
+				JSONObject json = new JSONObject(content);
+				JSONArray objects = json.getJSONArray("objects");
+				for (int i = 0; i < objects.length(); ++i) {
+					JSONObject o = objects.getJSONObject(i);
+					User seller = null;
+					double price = o.getDouble("price");
+					String description = o.getString("description");
+					Drawable image = null;
+					Ad ad = new Ad(seller, price, description, image);
+					mAds.add(ad);
+				}
 				Log.d(BrowseActivity.class.getName(), content);
 			} catch (ClientProtocolException e) {
 				e.printStackTrace();
 			} catch (IOException e) {
+				e.printStackTrace();
+			} catch (JSONException e) {
 				e.printStackTrace();
 			}
 			return null;
