@@ -1,18 +1,26 @@
 package com.example.bidit;
 
+import com.example.bidit.SimpleGestureFilter.SimpleGestureListener;
+
 import android.os.Bundle;
 import android.app.Activity;
 import android.content.Intent;
 import android.view.Menu;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 
-public class MainActivity extends Activity implements OnClickListener{
+public class MainActivity extends Activity implements OnClickListener, SimpleGestureListener{
+	private SimpleGestureFilter detector;
+	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);	
+		
+		detector = new SimpleGestureFilter(this,this);
+		
 		((Button)findViewById(R.id.buybutton)).setOnClickListener(this);
 		((Button)findViewById(R.id.sellbutton)).setOnClickListener(this);
 	}
@@ -43,5 +51,22 @@ public class MainActivity extends Activity implements OnClickListener{
 			}
 		}
 		
+	}
+
+	
+	@Override
+	public boolean dispatchTouchEvent(MotionEvent ev) {
+		this.detector.onTouchEvent(ev);
+		return super.dispatchTouchEvent(ev);
+	}
+	
+	@Override
+	public void onSwipe(int direction) {
+		switch (direction) {
+		case SimpleGestureFilter.SWIPE_LEFT:
+			Intent intent = new Intent(MainActivity.this, MessageActivity.class);
+			startActivity(intent);
+			break;
+		}
 	}
 }
