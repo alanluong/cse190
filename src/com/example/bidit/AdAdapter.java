@@ -3,13 +3,17 @@ package com.example.bidit;
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 
 public class AdAdapter extends ArrayAdapter<Ad> {
+	private Context activityContext;
+	
 	public AdAdapter(Context context, int resource) {
 		super(context, resource);
+		activityContext = context;
 	}
 
 	@Override
@@ -30,6 +34,13 @@ public class AdAdapter extends ArrayAdapter<Ad> {
 			}
 		}
 
+		v.setOnClickListener(new OnClickListener(){
+			public void onClick(View view){
+				BidDialogFragment bdf = BidDialogFragment.newInstance();
+				bdf.show(((BrowseActivity)activityContext).getFragmentManager(), "BidDialog");
+			}
+		});
+		
 		return v;
 	}
 }
