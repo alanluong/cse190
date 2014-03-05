@@ -1,15 +1,17 @@
 package com.example.bidit;
 
+import java.math.BigDecimal;
+
 import android.graphics.drawable.Drawable;
 
 public class Ad {
 	
 	User seller;
-	double price;
+	BigDecimal price;
 	String description;
 	Drawable image;
 	
-	public Ad(User seller, double price, String description, Drawable image) {
+	public Ad(User seller, BigDecimal price, String description, Drawable image) {
 		super();
 		this.seller = seller;
 		this.price = price;
@@ -25,11 +27,11 @@ public class Ad {
 		this.seller = seller;
 	}
 
-	public double getPrice() {
+	public BigDecimal getPrice() {
 		return price;
 	}
 
-	public void setPrice(double price) {
+	public void setPrice(BigDecimal price) {
 		this.price = price;
 	}
 
