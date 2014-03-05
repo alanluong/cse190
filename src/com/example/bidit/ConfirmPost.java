@@ -247,14 +247,6 @@ public class ConfirmPost extends Activity {
 		public void onClick(View v) {
 			postItem(absolutePhotoPath);
 			
-			if(absolutePhotoPath != null)
-			{
-				File file = new File(absolutePhotoPath);
-				if(file.exists())
-				{
-					file.delete();	
-				}
-			}
 		}
 	};
 	
@@ -302,10 +294,10 @@ public class ConfirmPost extends Activity {
 	         builder.setMode(HttpMultipartMode.BROWSER_COMPATIBLE);
 
 	         /* example for adding an image part */
-	         FileBody fileBody = new FileBody(new File("test.jpg")); //image should be a String
+	         FileBody fileBody = new FileBody(new File(absolutePhotoPath)); //image should be a String
 	         builder.addPart("file", fileBody); 
 	         builder.addTextBody("email", "test@gmail.com");
-	         builder.addTextBody("description", "send from and");
+	         builder.addTextBody("description", "mouse");
 	         builder.addTextBody("price",  "10");
 
 	         post.setEntity(builder.build()); 
