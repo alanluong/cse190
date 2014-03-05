@@ -65,9 +65,6 @@ public class BrowseActivity extends Activity implements OnClickListener {
 				startActivity(intent);
 				break;
 			}
-		} else if (view instanceof ImageView) {
-			BidDialogFragment bdf = new BidDialogFragment();
-			bdf.show(getFragmentManager(), "BidDialog");
 		}
 	}
 
