@@ -12,6 +12,13 @@
     <string name="capture_image">To sell, click on camera to capture image</string>
     <string name="bid_prompt">Bid on this item?</string>
     <string name="bid_prompt_yes">Bid!</string>
+    <string name="post">Post</string>
     <string name="bid_prompt_no">Cancel</string>
+    <string name="title_activity_confirm_post">ConfirmPost</string>
+    <string name="dummy_button">Dummy Button</string>
+    <string name="dummy_content">DUMMY\nCONTENT</string>
+    <string name="title_activity_post">PostActivity</string>
+    <string name="min_price">Min. Price</string>
+    <string name="description">Description</string>
 
 </resources>
