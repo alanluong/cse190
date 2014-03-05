@@ -7,8 +7,10 @@ import android.content.DialogInterface;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.view.WindowManager;
+import android.widget.Button;
 import android.widget.EditText;
 
 public class BidDialogFragment extends DialogFragment {
@@ -19,10 +21,11 @@ public class BidDialogFragment extends DialogFragment {
         // Empty constructor required for DialogFragment
     }
 
-    public static BidDialogFragment newInstance(String title) {
+    public static BidDialogFragment newInstance() {
     	BidDialogFragment frag = new BidDialogFragment();
         Bundle args = new Bundle();
-        args.putString("title", title);
+        //put any arguments - for example: 
+        //args.putString("title", title);
         frag.setArguments(args);
         return frag;
     }
@@ -32,12 +35,32 @@ public class BidDialogFragment extends DialogFragment {
             Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_bid, container);
         mEditText = (EditText) view.findViewById(R.id.txt_your_bid);
-        String title = getArguments().getString("title", "Enter Name");
-        getDialog().setTitle(title);
+        
+        //get the arguments here
+        //String title = getArguments().getString("title", "Enter Name");
+        //getDialog().setTitle(title);
+        getDialog().setTitle(R.string.bid_prompt);
+        
         // Show soft keyboard automatically
         mEditText.requestFocus();
         getDialog().getWindow().setSoftInputMode(
                 WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE);
+        
+        Button cancelButton = (Button)(view.findViewById(R.id.btn_cancel));
+        cancelButton.setOnClickListener(new OnClickListener(){
+			@Override
+			public void onClick(View arg0) {
+				dismiss();
+			}
+        });
+        Button bidButton = (Button)(view.findViewById(R.id.btn_bid));
+        bidButton.setOnClickListener(new OnClickListener(){
+			@Override
+			public void onClick(View arg0) {
+				//bid
+			}
+        });
+        
         return view;
     }
 }

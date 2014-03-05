@@ -31,15 +31,16 @@ public class AdAdapter extends ArrayAdapter<Ad> {
 			ImageView iv = (ImageView) v.findViewById(R.id.list_product_image);
 			if (iv != null) {
 				iv.setImageDrawable(it.getImage());
-				iv.setOnClickListener(new OnClickListener(){
-					public void onClick(View view){
-						BidDialogFragment bdf = BidDialogFragment.newInstance("Bid?");
-						bdf.show(((BrowseActivity)activityContext).getFragmentManager(), "BidDialog");
-					}
-				});
 			}
 		}
 
+		v.setOnClickListener(new OnClickListener(){
+			public void onClick(View view){
+				BidDialogFragment bdf = BidDialogFragment.newInstance();
+				bdf.show(((BrowseActivity)activityContext).getFragmentManager(), "BidDialog");
+			}
+		});
+		
 		return v;
 	}
 }
