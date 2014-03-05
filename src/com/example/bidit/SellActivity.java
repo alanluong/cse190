@@ -6,7 +6,7 @@ import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-import android.annotation.SuppressLint;
+
 import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -169,7 +169,7 @@ public class SellActivity extends Activity implements OnClickListener{
 	
 	private void postItem()
 	{
-		
+	    
 		
 	}
 	

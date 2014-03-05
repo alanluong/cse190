@@ -8,6 +8,25 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.List;
+
+import org.apache.http.HttpEntity;
+import org.apache.http.HttpResponse;
+import org.apache.http.NameValuePair;
+import org.apache.http.client.ClientProtocolException;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.entity.UrlEncodedFormEntity;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.entity.mime.HttpMultipartMode;
+import org.apache.http.entity.mime.MultipartEntity;
+import org.apache.http.entity.mime.MultipartEntityBuilder;
+import org.apache.http.entity.mime.content.FileBody;
+import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.message.BasicNameValuePair;
+import org.apache.http.util.EntityUtils;
+import org.json.JSONArray;
+
 
 import com.example.bidit.util.SystemUiHider;
 
@@ -20,10 +39,12 @@ import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.provider.MediaStore;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.MotionEvent;
 import android.view.View;
@@ -256,90 +277,56 @@ public class ConfirmPost extends Activity {
 	
 	private void postItem(String path)
 	{		
-		HttpURLConnection connection = null;
-		DataOutputStream outputStream = null;
-		DataInputStream inputStream = null;
-
-		String pathToOurFile = path;
-		String urlServer = "http://ec2-54-213-102-70.us-west-2.compute.amazonaws.com/cell_upload";
-		String lineEnd = "\r\n";
-		String twoHyphens = "--";
-		String boundary =  "*****";
-
-		int bytesRead, bytesAvailable, bufferSize;
-		byte[] buffer;
-		int maxBufferSize = 1*1024*1024;
-
-		try
-		{			
-			FileInputStream fileInputStream = new FileInputStream(new File(pathToOurFile));
-				
-			URL url = new URL(urlServer);
-			connection = (HttpURLConnection) url.openConnection();
-			System.out.println("hi");
-	
-			// Allow Inputs & Outputs
-			connection.setDoInput(true);
-			connection.setDoOutput(true);
-			connection.setUseCaches(false);
-	
-			// Enable POST method
-			connection.setRequestMethod("POST");
-	
-			connection.setRequestProperty("Connection", "Keep-Alive");
-			connection.setRequestProperty("Content-Type", "multipart/form-data;boundary="+boundary);
-	
-			outputStream = new DataOutputStream( connection.getOutputStream() );
-			outputStream.writeBytes(twoHyphens + boundary + lineEnd);
-			outputStream.writeBytes("Content-Disposition: form-data; email=\"test@gmail.com\";filename=\"" + pathToOurFile +"\"" + lineEnd);
-			outputStream.writeBytes(lineEnd);
-			
-			System.out.println("hi");
-			
-			bytesAvailable = fileInputStream.available();
-			bufferSize = Math.min(bytesAvailable, maxBufferSize);
-			buffer = new byte[bufferSize];
-			
-			System.out.println("hi");
-	
-			// Read file
-			bytesRead = fileInputStream.read(buffer, 0, bufferSize);
-	
-			while (bytesRead > 0)
-			{
-				outputStream.write(buffer, 0, bufferSize);
-				bytesAvailable = fileInputStream.available();
-				bufferSize = Math.min(bytesAvailable, maxBufferSize);
-				bytesRead = fileInputStream.read(buffer, 0, bufferSize);
-			}
-	
-			outputStream.writeBytes(lineEnd);
-			outputStream.writeBytes(twoHyphens + boundary + twoHyphens + lineEnd);
-			
-			System.out.println("hi");
-	
-			// Responses from the server (code and message)
-			int serverResponseCode = connection.getResponseCode();
-			String serverResponseMessage = connection.getResponseMessage();
-			
-			System.out.println(serverResponseMessage);
-			
-	
-			fileInputStream.close();
-			outputStream.flush();
-			outputStream.close();
-			
-		}
-		
-		catch (Exception ex)
-		{
-		//Exception handling
-		}
-		
+         
+	    new AdPost().execute();
 		finish();
 		
 		
 		
+	}
+
+	
+	class AdPost extends AsyncTask<String, Void, JSONArray> {
+
+	    private Exception exception;
+
+	    protected JSONArray doInBackground(String... params) {
+	    	HttpClient client = new DefaultHttpClient();  
+	         String postURL = "http://ec2-54-213-102-70.us-west-2.compute.amazonaws.com/cell_upload";
+
+	         HttpPost post = new HttpPost(postURL); 
+
+	         MultipartEntityBuilder builder = MultipartEntityBuilder.create();        
+
+	         /* example for setting a HttpMultipartMode */
+	         builder.setMode(HttpMultipartMode.BROWSER_COMPATIBLE);
+
+	         /* example for adding an image part */
+	         FileBody fileBody = new FileBody(new File("test.jpg")); //image should be a String
+	         builder.addPart("file", fileBody); 
+	         builder.addTextBody("email", "test@gmail.com");
+	         builder.addTextBody("description", "send from and");
+	         builder.addTextBody("price",  "10");
+
+	         post.setEntity(builder.build()); 
+
+	         try {
+				HttpResponse response = client.execute(post);
+			} catch (ClientProtocolException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			return null;  
+	    }
+
+	    protected void onPostExecute() {
+	        // TODO: check this.exception 
+	        // TODO: do something with the feed
+	    }
+	
 	}
 
 	

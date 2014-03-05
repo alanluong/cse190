@@ -6,9 +6,20 @@ import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
+import org.apache.http.HttpResponse;
+import org.apache.http.client.ClientProtocolException;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.entity.mime.HttpMultipartMode;
+import org.apache.http.entity.mime.MultipartEntityBuilder;
+import org.apache.http.entity.mime.content.FileBody;
+import org.apache.http.impl.client.DefaultHttpClient;
+import org.json.JSONArray;
+
 import com.example.bidit.SimpleGestureFilter.SimpleGestureListener;
 
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
@@ -104,7 +115,6 @@ public class MainActivity extends Activity implements OnClickListener, SimpleGes
 			        }
 			        
 				}
-				
 				break;
 			}
 		}
@@ -165,4 +175,8 @@ public class MainActivity extends Activity implements OnClickListener, SimpleGes
 	    
 	    return image;
 	}
+	
+	
 }
+	
+
