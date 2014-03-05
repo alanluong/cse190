@@ -33,7 +33,7 @@ public class AdAdapter extends ArrayAdapter<Ad> {
 				iv.setImageDrawable(it.getImage());
 				iv.setOnClickListener(new OnClickListener(){
 					public void onClick(View view){
-						BidDialogFragment bdf = new BidDialogFragment();
+						BidDialogFragment bdf = BidDialogFragment.newInstance("Bid?");
 						bdf.show(((BrowseActivity)activityContext).getFragmentManager(), "BidDialog");
 					}
 				});

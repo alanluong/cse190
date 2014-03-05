@@ -5,24 +5,39 @@ import android.app.Dialog;
 import android.app.DialogFragment;
 import android.content.DialogInterface;
 import android.os.Bundle;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.view.WindowManager;
+import android.widget.EditText;
 
 public class BidDialogFragment extends DialogFragment {
-	@Override
-	public Dialog onCreateDialog(Bundle savedInstanceState){
-		// Use the Builder class for convenient dialog construction
-        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-        builder.setMessage(R.string.bid_prompt)
-               .setPositiveButton(R.string.bid_prompt_yes, new DialogInterface.OnClickListener() {
-                   public void onClick(DialogInterface dialog, int id) {
-                       // bid
-                   }
-               })
-               .setNegativeButton(R.string.bid_prompt_no, new DialogInterface.OnClickListener() {
-                   public void onClick(DialogInterface dialog, int id) {
-                       // User cancelled the dialog
-                   }
-               });
-        // Create the AlertDialog object and return it
-        return builder.create();
-	}
+	
+	private EditText mEditText;
+
+    public BidDialogFragment() {
+        // Empty constructor required for DialogFragment
+    }
+
+    public static BidDialogFragment newInstance(String title) {
+    	BidDialogFragment frag = new BidDialogFragment();
+        Bundle args = new Bundle();
+        args.putString("title", title);
+        frag.setArguments(args);
+        return frag;
+    }
+
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+            Bundle savedInstanceState) {
+        View view = inflater.inflate(R.layout.fragment_bid, container);
+        mEditText = (EditText) view.findViewById(R.id.txt_your_bid);
+        String title = getArguments().getString("title", "Enter Name");
+        getDialog().setTitle(title);
+        // Show soft keyboard automatically
+        mEditText.requestFocus();
+        getDialog().getWindow().setSoftInputMode(
+                WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE);
+        return view;
+    }
 }
