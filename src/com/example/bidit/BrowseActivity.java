@@ -85,8 +85,8 @@ public class BrowseActivity extends Activity implements OnClickListener {
 					BigDecimal price = new BigDecimal(o.getDouble("price"));
 					String description = o.getString("description");
 					Drawable image = getResources().getDrawable(R.drawable.ic_launcher);
-					Ad ad = new Ad(seller, price, description, image);
-					publishProgress(ad);
+					//Ad ad = new Ad(seller, price, description, image);
+					//publishProgress(ad);
 				}
 				Log.d(BrowseActivity.class.getName(), content);
 			} catch (ClientProtocolException e) {

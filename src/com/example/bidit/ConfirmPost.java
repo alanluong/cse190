@@ -6,6 +6,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.math.BigDecimal;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -28,13 +29,6 @@ import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.util.EntityUtils;
 import org.json.JSONArray;
 
-
-import org.apache.http.HttpVersion;
-import org.apache.http.client.HttpClient;
-import org.apache.http.client.methods.HttpPost;
-import org.apache.http.entity.mime.MultipartEntity;
-import org.apache.http.impl.client.DefaultHttpClient;
-import org.apache.http.params.CoreProtocolPNames;
 
 import com.example.bidit.util.SystemUiHider;
 
@@ -60,11 +54,15 @@ import android.view.View;
 import android.view.WindowManager;
 import android.view.View.OnClickListener;
 import android.view.Window;
+import android.view.inputmethod.EditorInfo;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
+import android.widget.TextView.OnEditorActionListener;
 
 /**
  * An example full-screen activity that shows and hides the system UI (i.e.
@@ -102,8 +100,11 @@ public class ConfirmPost extends Activity {
 	private SystemUiHider mSystemUiHider;
 	String absolutePhotoPath;
 	Uri myUri = null;
-	EditText description;
-	EditText price;
+	EditText descriptionEditText;
+	EditText priceEditText;
+	Ad ad;
+	User user;
+
 
 	@SuppressLint("NewApi")
 	@Override
@@ -126,16 +127,16 @@ public class ConfirmPost extends Activity {
 		}
 
 		final View controlsView = findViewById(R.id.fullscreen_content_controls);
-		//ImageView contentView = (ImageView) findViewById(R.id.fullscreen_content);
-		LinearLayout contentView = (LinearLayout) findViewById (R.id.fullscreen_content);
+		ImageView contentView = (ImageView) findViewById(R.id.fullscreen_content1);
+		//LinearLayout contentView = (LinearLayout) findViewById (R.id.fullscreen_content);
 		LinearLayout wholeView = (LinearLayout) findViewById (R.id.background);
 		wholeView.requestFocus();
 		
 		try {
 			Bitmap bitmap = MediaStore.Images.Media.getBitmap( getApplicationContext().getContentResolver(), myUri);
 			Drawable d = new BitmapDrawable(getResources(), bitmap);
-			//contentView.setImageBitmap(bitmap);
-			contentView.setBackground(d);
+			contentView.setImageBitmap(bitmap);
+			//contentView.setBackground(d);
 			//wholeView.setBackground(d);
 		} catch (FileNotFoundException e) {
 			// TODO Auto-generated catch block
@@ -211,15 +212,21 @@ public class ConfirmPost extends Activity {
 		// Upon interacting with UI controls, delay any scheduled hide()
 		// operations to prevent the jarring behavior of controls going away
 		// while interacting with the UI.
-		description = (EditText) findViewById(R.id.descriptionText);
-		price = (EditText) findViewById(R.id.priceText);
+		descriptionEditText = (EditText) findViewById(R.id.descriptionText);
+		priceEditText = (EditText) findViewById(R.id.priceText);
 		
 		//price.setFocusable(false);
 		//description.setFocusable(false);
 		
+		contentView.setOnClickListener(hideKeyboardListener);
+		
 		findViewById(R.id.post_button).setOnClickListener(postItemClickListener);
-		findViewById(R.id.priceText).setOnClickListener(priceClickListener);
-		findViewById(R.id.descriptionText).setOnClickListener(descriptionClickListener);
+		findViewById(R.id.priceText).setOnClickListener(viewClickListener);
+		findViewById(R.id.descriptionText).setOnClickListener(viewClickListener);		
+		
+		((EditText)findViewById(R.id.priceText)).setOnEditorActionListener(donePressListener);
+		((EditText)findViewById(R.id.descriptionText)).setOnEditorActionListener(donePressListener); 
+
 	}
 	
 	@Override
@@ -258,26 +265,79 @@ public class ConfirmPost extends Activity {
 	OnClickListener postItemClickListener = new OnClickListener() {
 		@Override
 		public void onClick(View v) {
-			postItem(absolutePhotoPath);
+			//postItem(absolutePhotoPath);
+			
+			final EditText ad_price= (EditText) findViewById(R.id.priceText);
+	    	final EditText ad_description= (EditText) findViewById(R.id.descriptionText);
+	    	
+	    	BigDecimal adPrice = new BigDecimal(ad_price.getText().toString());
+	    	
+	    	user = new User("test@gmail.com", "jon", "test");
+	    	ad = new Ad(user, adPrice, ad_description.getText().toString(), absolutePhotoPath, null);
+	    	
+	    	/*
+	    	user.setEmail("test@gmail.com");
+	    	ad.setSeller(user);
+	    	ad.setPrice(adPrice);
+	    	ad.setDescription(ad_description.getText().toString());
+	    	ad.setImagePath(absolutePhotoPath);
+	    	*/
+	    	
+			new AdPost().execute(ad);
+			finish();
 			
 		}
 	};
 	
-	OnClickListener priceClickListener = new OnClickListener() {
+	OnClickListener hideKeyboardListener = new OnClickListener() {
 		@Override
 		public void onClick(View v) {
-			price.setFocusableInTouchMode(true);
-			price.requestFocus();
+			InputMethodManager imm = (InputMethodManager) getSystemService(INPUT_METHOD_SERVICE);
+			imm.hideSoftInputFromWindow(getCurrentFocus().getWindowToken(), 0);
+		}
+	};
+	
+	OnClickListener viewClickListener = new OnClickListener() {
+		@Override
+		public void onClick(View v) {
+			v.setFocusableInTouchMode(true);
+			v.requestFocus();
 		}
 	};
 	
 	OnClickListener descriptionClickListener = new OnClickListener() {
 		@Override
 		public void onClick(View v) {
-			description.setFocusableInTouchMode(true);
-			description.requestFocus();
+			descriptionEditText.setFocusableInTouchMode(true);
+			descriptionEditText.requestFocus();
 		}
 	};
+	
+	
+	OnEditorActionListener donePressListener = new OnEditorActionListener() {
+        @Override
+        public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+            if (actionId == EditorInfo.IME_ACTION_DONE) {
+            	
+            	if (v == priceEditText)
+            	{
+            		descriptionEditText.requestFocus();
+            	}
+            	
+            	else if (v == descriptionEditText)
+            	{
+            		findViewById(R.id.post_button).requestFocus();
+            		InputMethodManager imm = (InputMethodManager) getSystemService(INPUT_METHOD_SERVICE);
+        			imm.hideSoftInputFromWindow(getCurrentFocus().getWindowToken(), 0);
+            	}
+            	
+            	
+                return true;
+            }
+            return false;
+        }
+    };
+    
 	
 	
 	
@@ -433,58 +493,67 @@ public class ConfirmPost extends Activity {
 	*/
     
 
-	
+	/*
 	private void postItem(String path)
-	{		
-         
-	    new AdPost().execute();
+	{		 
+	    new AdPost().execute(path);
 		finish();
-		
-		
-		
 	}
+	*/
 
 	
-	class AdPost extends AsyncTask<String, Void, JSONArray> {
+	class AdPost extends AsyncTask<Ad, Void, JSONArray> {		
 
 	    private Exception exception;
 
-	    protected JSONArray doInBackground(String... params) {
+	    protected JSONArray doInBackground(Ad... params) {
+	    	Ad ad = params[0];
+	    	String filePath = ad.getImagePath();
+	    	String email = ad.getSeller().getEmail();
+	    	String description = ad.getDescription();
+	    	String price = ad.getPrice().toString();
+	    	
+	    	
 	    	HttpClient client = new DefaultHttpClient();  
-	         String postURL = "http://ec2-54-213-102-70.us-west-2.compute.amazonaws.com/cell_upload";
+	    	String postURL = "http://ec2-54-213-102-70.us-west-2.compute.amazonaws.com/cell_upload";
 
-	         HttpPost post = new HttpPost(postURL); 
+	        HttpPost post = new HttpPost(postURL); 
 
-	         MultipartEntityBuilder builder = MultipartEntityBuilder.create();        
+	        MultipartEntityBuilder builder = MultipartEntityBuilder.create();        
 
-	         /* example for setting a HttpMultipartMode */
-	         builder.setMode(HttpMultipartMode.BROWSER_COMPATIBLE);
+	        /* example for setting a HttpMultipartMode */
+	        builder.setMode(HttpMultipartMode.BROWSER_COMPATIBLE);
 
-	         /* example for adding an image part */
-	         FileBody fileBody = new FileBody(new File(absolutePhotoPath)); //image should be a String
-	         builder.addPart("file", fileBody); 
-	         builder.addTextBody("email", "test@gmail.com");
-	         builder.addTextBody("description", "mouse");
-	         builder.addTextBody("price",  "10");
+	        /* example for adding an image part */
+	        FileBody fileBody = new FileBody(new File(filePath)); //image should be a String
+	        builder.addPart("file", fileBody); 
+	        builder.addTextBody("email", email);
+	        builder.addTextBody("description", description);
+	        builder.addTextBody("price",  price);
 
-	         post.setEntity(builder.build()); 
+	        post.setEntity(builder.build()); 
 
-	         try 
-	         {
-				HttpResponse response = client.execute(post);
-	         } 
+	        try 
+	        {
+	        	HttpResponse response = client.execute(post);
+	        	System.out.println(response);
+	        } 
 	         
-	         catch (ClientProtocolException e) 
-	         {
+	        catch (ClientProtocolException e) 
+	        {
+	        	// TODO Auto-generated catch block
+				e.printStackTrace();
+	        } 
+	         
+	        catch (IOException e) 
+	        {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
-	         } 
-	         
-	         catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-	         }
-	         return null;  
+	        }
+	        
+	        client.getConnectionManager().shutdown(); 
+	        
+	        return null;  
 	    }
 
 	    protected void onPostExecute() {

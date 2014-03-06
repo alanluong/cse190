@@ -36,8 +36,8 @@ public class AdAdapter extends ArrayAdapter<Ad> {
 
 		v.setOnClickListener(new OnClickListener(){
 			public void onClick(View view){
-				BidDialogFragment bdf = BidDialogFragment.newInstance();
-				bdf.show(((BrowseActivity)activityContext).getFragmentManager(), "BidDialog");
+				//BidDialogFragment bdf = BidDialogFragment.newInstance();
+				//bdf.show(((BrowseActivity)activityContext).getFragmentManager(), "BidDialog");
 			}
 		});
 		

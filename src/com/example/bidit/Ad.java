@@ -6,17 +6,27 @@ import android.graphics.drawable.Drawable;
 
 public class Ad {
 	
-	User seller;
-	BigDecimal price;
-	String description;
-	Drawable image;
+	private User seller;
+	private BigDecimal price;
+	private String description;
+	private String imagePath; 
+	private Drawable image;
 	
-	public Ad(User seller, BigDecimal price, String description, Drawable image) {
+	public Ad(User seller, BigDecimal price, String description, String imagePath, Drawable image) {
 		super();
 		this.seller = seller;
 		this.price = price;
 		this.description = description;
+		this.imagePath = imagePath;
 		this.image = image;
+	}
+
+	public String getImagePath() {
+		return imagePath;
+	}
+
+	public void setImagePath(String imagePath) {
+		this.imagePath = imagePath;
 	}
 
 	public User getSeller() {

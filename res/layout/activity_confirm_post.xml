@@ -19,9 +19,8 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_marginTop="0dp"
-        android:layout_weight="10"
-        android:layout_gravity="top"
-        android:gravity="fill_vertical"
+        android:layout_gravity="center"
+        android:gravity="center"
         android:orientation="vertical"
         android:keepScreenOn="true"
         android:textColor="#FFFFFF"
@@ -34,8 +33,9 @@
         android:layout_height="match_parent"
         android:layout_marginTop="0dp"
         android:layout_weight="15"
-        android:layout_gravity="top"
-        android:gravity="fill_vertical"
+        android:layout_gravity="center"
+        android:gravity="center"
+        android:scaleType="center"
         android:keepScreenOn="true"
         android:textColor="#FFFFFF"
         android:textSize="50sp"
@@ -47,7 +47,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"   
-            android:background="#80000000"       
+            android:background="#80000000" 
+            android:layout_weight="1"
             android:layout_gravity="bottom|center_horizontal"
              >
 
@@ -58,15 +59,20 @@
                 android:gravity="center"
                 android:text="$" 
                 android:textSize="25dp"
+                android:layout_marginLeft="0dp"
+                android:layout_marginTop="0dp"
                 android:paddingBottom="0dp"
-                android:paddingLeft="0dp"
+                android:paddingLeft="5dp"
+                android:paddingRight="5dp"
                 />
 
             <EditText
                 android:id="@+id/priceText"
                 android:layout_width="110dp"
                 android:layout_height="match_parent"
+                android:singleLine="true"
                 android:ems="10"
+                android:windowSoftInputMode="stateUnchanged|adjustPan"
                 android:hint="@string/min_price"
                 android:inputType="number" >
 
@@ -77,6 +83,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:layout_weight="0.89"
+                android:windowSoftInputMode="stateUnchanged|adjustPan"
+                android:singleLine="true"
                 android:ems="10"
                 android:hint="@string/description"
                 android:inputType="text" />
@@ -100,7 +108,7 @@
                  android:layout_height="wrap_content"
                  android:background="#009900"
                  android:text="@string/post"
-                 android:textColor="#AAAAAA" />
+                 android:textColor="#FFFFFF" />
 
              </LinearLayout>
              
