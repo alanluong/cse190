@@ -36,27 +36,35 @@ or to a theme attribute in the form "<code>?[<i>package</i>:][<i>type</i>:]<i>na
         public static final int splash=0x7f020001;
     }
     public static final class id {
-        public static final int action_settings=0x7f090014;
+        public static final int action_settings=0x7f09001c;
         public static final int backbutton=0x7f090000;
         public static final int backbutton2=0x7f090011;
         public static final int background=0x7f090002;
         public static final int browseList=0x7f090001;
+        public static final int btn_bid=0x7f09001a;
+        public static final int btn_cancel=0x7f090019;
+        public static final int buttonPanel=0x7f090017;
         public static final int buybutton=0x7f09000a;
         public static final int camerabutton=0x7f09000e;
         public static final int descriptionText=0x7f090007;
         public static final int dummy_button=0x7f09000c;
+        public static final int edit_name=0x7f090014;
         public static final int fullscreen_content=0x7f090003;
         public static final int fullscreen_content1=0x7f090004;
         public static final int fullscreen_content_controls=0x7f090008;
         public static final int imageView=0x7f090010;
         public static final int imgLogo=0x7f090012;
+        public static final int lbl_your_bid=0x7f090015;
+        public static final int leftSpacer=0x7f090018;
         public static final int list_product_image=0x7f090013;
         public static final int post_button=0x7f090009;
         public static final int postbutton=0x7f09000f;
         public static final int priceText=0x7f090006;
+        public static final int rightSpacer=0x7f09001b;
         public static final int sellbutton=0x7f09000b;
         public static final int textView1=0x7f090005;
         public static final int textView2=0x7f09000d;
+        public static final int txt_your_bid=0x7f090016;
     }
     public static final class layout {
         public static final int activity_bids=0x7f030000;
@@ -68,6 +76,7 @@ or to a theme attribute in the form "<code>?[<i>package</i>:][<i>type</i>:]<i>na
         public static final int activity_sell=0x7f030006;
         public static final int activity_splash=0x7f030007;
         public static final int ads_list_item=0x7f030008;
+        public static final int fragment_bid=0x7f030009;
     }
     public static final class menu {
         public static final int main=0x7f080000;

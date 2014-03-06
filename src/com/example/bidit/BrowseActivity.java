@@ -1,6 +1,7 @@
 package com.example.bidit;
 
 import java.io.IOException;
+import java.math.BigDecimal;
 import java.util.ArrayList;
 
 import org.apache.http.HttpResponse;
@@ -81,7 +82,7 @@ public class BrowseActivity extends Activity implements OnClickListener {
 				for (int i = 0; i < objects.length(); ++i) {
 					JSONObject o = objects.getJSONObject(i);
 					User seller = null;
-					double price = o.getDouble("price");
+					BigDecimal price = new BigDecimal(o.getDouble("price"));
 					String description = o.getString("description");
 					Drawable image = getResources().getDrawable(R.drawable.ic_launcher);
 					Ad ad = new Ad(seller, price, description, image);
