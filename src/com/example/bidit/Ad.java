@@ -12,7 +12,7 @@ public class Ad {
 	private String imagePath; 
 	private Drawable image;
 	
-	public Ad(User seller, BigDecimal price, String description, String imagePath, Drawable image) {
+	public Ad(User seller, BigDecimal price, String description, String absolutePhotoPath, Drawable image) {
 		super();
 		this.seller = seller;
 		this.price = price;
