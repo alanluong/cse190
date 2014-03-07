@@ -20,5 +20,9 @@
     <string name="title_activity_post">PostActivity</string>
     <string name="min_price">Min. Price</string>
     <string name="description">Description</string>
+    <string name="username">Username</string>
+    <string name="password">Password</string>
+    <string name="cancel">Cancel</string>
+    <string name="login">Login</string>
 
 </resources>

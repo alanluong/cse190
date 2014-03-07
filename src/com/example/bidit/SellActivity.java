@@ -8,28 +8,28 @@ import java.util.Date;
 
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
+import android.support.v4.app.FragmentActivity;
 import android.view.KeyEvent;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.ImageView;
 
-public class SellActivity extends Activity implements OnClickListener{
+public class SellActivity extends FragmentActivity implements OnClickListener {
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_sell);
-		
-		//((Button)findViewById(R.id.backbutton2)).setOnClickListener(this);
 		((Button)findViewById(R.id.camerabutton)).setOnClickListener(this);
-		
 		((Button)findViewById(R.id.postbutton)).setOnClickListener(this);
 	}
 	

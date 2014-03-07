@@ -9,11 +9,8 @@ import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 
 public class AdAdapter extends ArrayAdapter<Ad> {
-	private Context activityContext;
-	
 	public AdAdapter(Context context, int resource) {
 		super(context, resource);
-		activityContext = context;
 	}
 
 	@Override
@@ -33,13 +30,6 @@ public class AdAdapter extends ArrayAdapter<Ad> {
 				iv.setImageDrawable(it.getImage());
 			}
 		}
-
-		v.setOnClickListener(new OnClickListener(){
-			public void onClick(View view){
-				//BidDialogFragment bdf = BidDialogFragment.newInstance();
-				//bdf.show(((BrowseActivity)activityContext).getFragmentManager(), "BidDialog");
-			}
-		});
 		
 		return v;
 	}

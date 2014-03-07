@@ -2,7 +2,6 @@ package com.example.bidit;
 
 import java.io.IOException;
 import java.math.BigDecimal;
-import java.util.ArrayList;
 
 import org.apache.http.HttpResponse;
 import org.apache.http.client.ClientProtocolException;
@@ -14,20 +13,21 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import android.app.Activity;
-import android.content.Intent;
-import android.content.res.Resources;
+import android.app.ListActivity;
 import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.v4.app.FragmentActivity;
 import android.util.Log;
 import android.view.Menu;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
 import android.widget.Button;
-import android.widget.ImageView;
 import android.widget.ListView;
 
-public class BrowseActivity extends Activity implements OnClickListener {
+public class BrowseActivity extends FragmentActivity implements OnClickListener {
 
 	AdAdapter adapter;
 
@@ -35,38 +35,31 @@ public class BrowseActivity extends Activity implements OnClickListener {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_browse);
-		((Button) findViewById(R.id.backbutton)).setOnClickListener(this);
-
-		ListView lv = (ListView) findViewById(R.id.browseList);
-
-		//Resources res = getResources();
-		//mAds.add(new Ad("foo", res.getDrawable(R.drawable.ic_launcher)));
-		//mAds.add(new Ad("bar", res.getDrawable(R.drawable.ic_launcher)));
-
 		adapter = new AdAdapter(this, R.layout.ads_list_item);
+		ListView lv = (ListView)findViewById(R.id.browseList);
 		lv.setAdapter(adapter);
+		lv.setOnItemClickListener(new OnItemClickListener() {
+		    public void onItemClick(AdapterView<?> parent, View view,
+		        int position, long id) { 
+		    	System.out.println("sup");
+		    	if (Config.getCurrentUser() == null) {
+					new LoginDialogFragment().show(getFragmentManager(),
+							"login");
+				} else {
+					BidDialogFragment bdf = BidDialogFragment.newInstance();
+					bdf.show(getFragmentManager(), "BidDialog");
+				}
+		    }
+		});
 		new RequestAdsTask().execute();
 	}
+	
 
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		// Inflate the menu; this adds items to the action bar if it is present.
 		getMenuInflater().inflate(R.menu.main, menu);
 		return true;
-	}
-
-	@Override
-	public void onClick(View view) {
-		if (view instanceof Button) {
-			Button clicked = (Button) view;
-			switch (clicked.getId()) {
-			case R.id.backbutton:
-				Intent intent = new Intent(BrowseActivity.this,
-						MainActivity.class);
-				startActivity(intent);
-				break;
-			}
-		}
 	}
 
 	public class RequestAdsTask extends AsyncTask<Void, Ad, Void> {
@@ -105,5 +98,11 @@ public class BrowseActivity extends Activity implements OnClickListener {
 			adapter.notifyDataSetChanged();
 			Log.d(BrowseActivity.class.getName(), "" + adapter.getCount());
 		}
+	}
+
+
+	@Override
+	public void onClick(View v) {
+		
 	}
 }
