@@ -28,7 +28,7 @@ import android.widget.AdapterView.OnItemClickListener;
 import android.widget.Button;
 import android.widget.ListView;
 
-public class BrowseActivity extends FragmentActivity implements OnClickListener {
+public class BrowseActivity extends BiditActivity implements OnClickListener {
 
 	AdAdapter adapter;
 
@@ -72,7 +72,7 @@ public class BrowseActivity extends FragmentActivity implements OnClickListener 
 	public class RequestAdsTask extends AsyncTask<Void, Ad, Void> {
 		@Override
 		protected Void doInBackground(Void... params) {
-			HttpGet request = new HttpGet(Config.AD_API);
+			HttpGet request = new HttpGet(Util.AD_API);
 			try {
 				HttpResponse response = new DefaultHttpClient()
 						.execute(request);
