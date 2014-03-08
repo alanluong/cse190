@@ -10,15 +10,25 @@ public class Ad {
 	private BigDecimal price;
 	private String description;
 	private String imagePath; 
+	private String localPath;
 	private Drawable image;
 	
-	public Ad(User seller, BigDecimal price, String description, String absolutePhotoPath, Drawable image) {
+	public Ad(User seller, BigDecimal price, String description, String imagePath, Drawable image) {
 		super();
 		this.seller = seller;
 		this.price = price;
 		this.description = description;
 		this.imagePath = imagePath;
 		this.image = image;
+		this.localPath = null;
+	}
+
+	public String getLocalPath() {
+		return localPath;
+	}
+
+	public void setLocalPath(String localPath) {
+		this.localPath = localPath;
 	}
 
 	public String getImagePath() {

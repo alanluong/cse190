@@ -1,11 +1,14 @@
 package com.example.bidit;
 
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.InputStream;
 import java.math.BigDecimal;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
@@ -21,9 +24,10 @@ import org.apache.http.client.HttpClient;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.entity.mime.HttpMultipartMode;
-import org.apache.http.entity.mime.MultipartEntity;
 import org.apache.http.entity.mime.MultipartEntityBuilder;
+import org.apache.http.entity.mime.content.ContentBody;
 import org.apache.http.entity.mime.content.FileBody;
+import org.apache.http.entity.mime.content.InputStreamBody;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.util.EntityUtils;
@@ -34,12 +38,21 @@ import com.example.bidit.util.SystemUiHider;
 
 import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
+import android.app.ActionBar.LayoutParams;
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.app.ProgressDialog;
+import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
+import android.graphics.Bitmap.CompressFormat;
+import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
@@ -49,6 +62,7 @@ import android.os.StrictMode;
 import android.provider.MediaStore;
 import android.util.Log;
 import android.view.KeyEvent;
+import android.view.Menu;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.WindowManager;
@@ -71,33 +85,7 @@ import android.widget.TextView.OnEditorActionListener;
  * @see SystemUiHider
  */
 public class ConfirmPost extends Activity {
-	/**
-	 * Whether or not the system UI should be auto-hidden after
-	 * {@link #AUTO_HIDE_DELAY_MILLIS} milliseconds.
-	 */
-	private static final boolean AUTO_HIDE = false;
-
-	/**
-	 * If {@link #AUTO_HIDE} is set, the number of milliseconds to wait after
-	 * user interaction before hiding the system UI.
-	 */
-	private static final int AUTO_HIDE_DELAY_MILLIS = 3000;
-
-	/**
-	 * If set, will toggle the system UI visibility upon interaction. Otherwise,
-	 * will show the system UI visibility upon interaction.
-	 */
-	private static final boolean TOGGLE_ON_CLICK = false;
-
-	/**
-	 * The flags to pass to {@link SystemUiHider#getInstance}.
-	 */
-	private static final int HIDER_FLAGS = SystemUiHider.FLAG_HIDE_NAVIGATION;
-
-	/**
-	 * The instance of the {@link SystemUiHider} for this activity.
-	 */
-	private SystemUiHider mSystemUiHider;
+	
 	String absolutePhotoPath;
 	Uri myUri = null;
 	EditText descriptionEditText;
@@ -111,11 +99,6 @@ public class ConfirmPost extends Activity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		
-		StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
-
-		StrictMode.setThreadPolicy(policy);
-		
-		this.requestWindowFeature(Window.FEATURE_NO_TITLE);
 		setContentView(R.layout.activity_confirm_post);
 		
 		getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_UNCHANGED);
@@ -126,15 +109,14 @@ public class ConfirmPost extends Activity {
 			absolutePhotoPath = extras.getString("absolutePath");
 		}
 
-		final View controlsView = findViewById(R.id.fullscreen_content_controls);
 		ImageView contentView = (ImageView) findViewById(R.id.fullscreen_content1);
 		//LinearLayout contentView = (LinearLayout) findViewById (R.id.fullscreen_content);
-		LinearLayout wholeView = (LinearLayout) findViewById (R.id.background);
-		wholeView.requestFocus();
+		//LinearLayout wholeView = (LinearLayout) findViewById (R.id.background);
+		//wholeView.requestFocus();
 		
 		try {
 			Bitmap bitmap = MediaStore.Images.Media.getBitmap( getApplicationContext().getContentResolver(), myUri);
-			Drawable d = new BitmapDrawable(getResources(), bitmap);
+			//Drawable d = new BitmapDrawable(getResources(), bitmap);
 			contentView.setImageBitmap(bitmap);
 			//contentView.setBackground(d);
 			//wholeView.setBackground(d);
@@ -151,6 +133,7 @@ public class ConfirmPost extends Activity {
 
 		// Set up an instance of SystemUiHider to control the system UI for
 		// this activity.
+		/*
 		mSystemUiHider = SystemUiHider.getInstance(this, contentView,
 				HIDER_FLAGS);
 		mSystemUiHider.setup();
@@ -191,10 +174,10 @@ public class ConfirmPost extends Activity {
 							// Schedule a hide().
 							delayedHide(AUTO_HIDE_DELAY_MILLIS);
 						}
-						*/
+						
 					}
 				});
-
+				*/
 		// Set up the user interaction to manually show or hide the system UI.
 		/*
 		contentView.setOnClickListener(new View.OnClickListener() {
@@ -227,6 +210,13 @@ public class ConfirmPost extends Activity {
 		((EditText)findViewById(R.id.priceText)).setOnEditorActionListener(donePressListener);
 		((EditText)findViewById(R.id.descriptionText)).setOnEditorActionListener(donePressListener); 
 
+	}
+	
+	@Override
+	public boolean onCreateOptionsMenu(Menu menu) {
+		// Inflate the menu; this adds items to the action bar if it is present.
+		getMenuInflater().inflate(R.menu.main, menu);
+		return true;
 	}
 	
 	@Override
@@ -267,24 +257,83 @@ public class ConfirmPost extends Activity {
 		public void onClick(View v) {
 			//postItem(absolutePhotoPath);
 			
-			final EditText ad_price= (EditText) findViewById(R.id.priceText);
-	    	final EditText ad_description= (EditText) findViewById(R.id.descriptionText);
-	    	
-	    	BigDecimal adPrice = new BigDecimal(ad_price.getText().toString());
-	    	
-	    	user = new User("test@gmail.com", "jon", "test");
-	    	ad = new Ad(user, adPrice, ad_description.getText().toString(), absolutePhotoPath, null);
-	    	
-	    	/*
-	    	user.setEmail("test@gmail.com");
-	    	ad.setSeller(user);
-	    	ad.setPrice(adPrice);
-	    	ad.setDescription(ad_description.getText().toString());
-	    	ad.setImagePath(absolutePhotoPath);
-	    	*/
-	    	
-			new AdPost().execute(ad);
-			finish();
+			if(!isNetworkOnline())
+			{
+				AlertDialog.Builder builder = new AlertDialog.Builder(ConfirmPost.this);
+                builder.setCancelable(false);
+                builder.setTitle("No Network Detected");
+                builder.setMessage("Please check your network connection!");
+                builder.setInverseBackgroundForced(true);
+                builder.setPositiveButton("OK",
+                        new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog,
+                                    int which) {
+                                dialog.dismiss();
+                            }
+                        });
+                /*
+                builder.setNegativeButton("No",
+                        new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog,
+                                    int which) {
+                                dialog.dismiss();
+                            }
+                        });
+                 */
+                 
+                
+                AlertDialog alert = builder.create();
+                alert.show();
+			}
+			
+			else
+			{
+			
+				final EditText ad_price= (EditText) findViewById(R.id.priceText);
+		    	final EditText ad_description= (EditText) findViewById(R.id.descriptionText);
+		    	
+		    	if(ad_price.getText().toString().matches("") || ad_description.getText().toString().matches(""))
+		    	{
+		    		AlertDialog.Builder builder = new AlertDialog.Builder(ConfirmPost.this);
+	                builder.setCancelable(false);
+	                builder.setTitle("Missing Fields!");
+	                builder.setMessage("Please check that all the fields have a valid input!");
+	                builder.setInverseBackgroundForced(true);
+	                builder.setPositiveButton("OK",
+	                        new DialogInterface.OnClickListener() {
+	                            @Override
+	                            public void onClick(DialogInterface dialog,
+	                                    int which) {
+	                                dialog.dismiss();
+	                            }
+	                        });
+	                AlertDialog alert = builder.create();
+	                alert.show();
+		    	}
+		    	
+		    	else
+		    	{
+		    	
+			    	BigDecimal adPrice = new BigDecimal(ad_price.getText().toString());
+			    	
+			    	user = new User("test@gmail.com", "jon", "test");
+			    	ad = new Ad(user, adPrice, ad_description.getText().toString(), null, null);
+			    	ad.setLocalPath(absolutePhotoPath);
+			    	
+			    	/*
+			    	user.setEmail("test@gmail.com");
+			    	ad.setSeller(user);
+			    	ad.setPrice(adPrice);
+			    	ad.setDescription(ad_description.getText().toString());
+			    	ad.setImagePath(absolutePhotoPath);
+			    	*/
+			    	
+					new AdPost().execute(ad);
+		    	}
+			}
+			
 			
 		}
 	};
@@ -331,12 +380,41 @@ public class ConfirmPost extends Activity {
         			imm.hideSoftInputFromWindow(getCurrentFocus().getWindowToken(), 0);
             	}
             	
-            	
                 return true;
             }
             return false;
         }
     };
+    
+    public boolean isNetworkOnline() 
+    {
+        boolean status=false;
+        try
+        {
+            ConnectivityManager cm = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+            NetworkInfo netInfo = cm.getNetworkInfo(0);
+            
+            if (netInfo != null && netInfo.getState()==NetworkInfo.State.CONNECTED) 
+            {
+                status= true;
+            }
+            
+            else 
+            {
+                netInfo = cm.getNetworkInfo(1);
+                if(netInfo!=null && netInfo.getState()==NetworkInfo.State.CONNECTED)
+                    status= true;
+            }
+        }
+        
+        catch(Exception e){
+            e.printStackTrace();  
+            return false;
+        }
+        
+        return status;
+
+    }  
     
 	
 	
@@ -502,13 +580,41 @@ public class ConfirmPost extends Activity {
 	*/
 
 	
-	class AdPost extends AsyncTask<Ad, Void, JSONArray> {		
+	class AdPost extends AsyncTask<Ad, Void, Void> {		
+	    
+	    private ProgressDialog uploadingDialog;
 
-	    private Exception exception;
+	    @Override
+	    protected void onPreExecute() {
+	    	uploadingDialog = new ProgressDialog(ConfirmPost.this);
+	    	uploadingDialog.setMessage("Posting...");
+	    	uploadingDialog.getWindow().setLayout(LayoutParams.WRAP_CONTENT,LayoutParams.WRAP_CONTENT);
+	    	uploadingDialog.setCancelable(false); 
+	    	uploadingDialog.show();
+	    }
+	    
+	    @Override
+	    protected void onPostExecute(Void string) {
+	        try 
+	        {	        	
+	        	if (uploadingDialog.isShowing()) 
+	        	{
+	        		uploadingDialog.dismiss();
+	        	}
+	        	
+	        	finish();
+	        	
+	        } 
+	        
+	        catch(Exception e) {
+	        }
 
-	    protected JSONArray doInBackground(Ad... params) {
+	    }
+	    
+
+	    protected Void doInBackground(Ad... params) {
 	    	Ad ad = params[0];
-	    	String filePath = ad.getImagePath();
+	    	String filePath = ad.getLocalPath();
 	    	String email = ad.getSeller().getEmail();
 	    	String description = ad.getDescription();
 	    	String price = ad.getPrice().toString();
@@ -519,14 +625,26 @@ public class ConfirmPost extends Activity {
 
 	        HttpPost post = new HttpPost(postURL); 
 
-	        MultipartEntityBuilder builder = MultipartEntityBuilder.create();        
-
+	        MultipartEntityBuilder builder = MultipartEntityBuilder.create();
+	        
+	        Bitmap bmp = BitmapFactory.decodeFile(filePath);
+    		ByteArrayOutputStream bos = new ByteArrayOutputStream();
+    		
+    		//Number represents compression amount
+    		bmp.compress(CompressFormat.JPEG, 50, bos);
+    		InputStream in = new ByteArrayInputStream(bos.toByteArray());
+			
+    		//ContentBody photoFile = new InputStreamBody(in, "image/jpeg", "filename.jpg");
+    		ContentBody photoFile = new InputStreamBody(in, "filename.jpg");
+	        		
 	        /* example for setting a HttpMultipartMode */
 	        builder.setMode(HttpMultipartMode.BROWSER_COMPATIBLE);
 
 	        /* example for adding an image part */
-	        FileBody fileBody = new FileBody(new File(filePath)); //image should be a String
-	        builder.addPart("file", fileBody); 
+	        //FileBody fileBody = new FileBody(new File(filePath)); //image should be a String
+	        //builder.addPart("file", fileBody);
+	        
+	        builder.addPart("file", photoFile); 
 	        builder.addTextBody("email", email);
 	        builder.addTextBody("description", description);
 	        builder.addTextBody("price",  price);
@@ -536,7 +654,7 @@ public class ConfirmPost extends Activity {
 	        try 
 	        {
 	        	HttpResponse response = client.execute(post);
-	        	System.out.println(response);
+	        	//System.out.println(response);
 	        } 
 	         
 	        catch (ClientProtocolException e) 
@@ -555,11 +673,8 @@ public class ConfirmPost extends Activity {
 	        
 	        return null;  
 	    }
-
-	    protected void onPostExecute() {
-	        // TODO: check this.exception 
-	        // TODO: do something with the feed
-	    }
+	    
+	    
 
 	}
 	

@@ -48,7 +48,6 @@ public class MainActivity extends Activity implements OnClickListener, SimpleGes
 	}
 	
 	
-	
 	private static final int REQUEST_CODE = 10;
 	String mCurrentPhotoPath;
 	String absolutePhotoPath;
@@ -62,18 +61,13 @@ public class MainActivity extends Activity implements OnClickListener, SimpleGes
 		return true;
 	}
 	
-	
-	
 	@Override
 	public void onClick(View view) {
-		System.out.println("something clicked");
 		if(view instanceof Button){
 			Button clicked = (Button)view;
-			System.out.println("button clicked");
 			switch(clicked.getId()){
 			case R.id.buybutton:
-				System.out.println("buy button clicked");
-				Intent intent = new Intent(MainActivity.this, BrowseActivity.class);
+				Intent intent = new Intent(MainActivity.this, PostActivity.class);
 				startActivity(intent);
 				break;
 			/*

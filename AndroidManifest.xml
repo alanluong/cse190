@@ -11,6 +11,7 @@
     <uses-permission android:name="android.permission.CAMERA" />
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
 
     <uses-feature
         android:name="android.hardware.camera"
@@ -49,8 +50,7 @@
         <activity
             android:name="com.example.bidit.ConfirmPost"
             android:configChanges="orientation|keyboardHidden|screenSize"
-            android:label="@string/title_activity_confirm_post"
-            android:theme="@style/FullscreenTheme" >
+            android:label="@string/title_activity_confirm_post" >
         </activity>
         <activity
             android:name="com.example.bidit.PostActivity"
