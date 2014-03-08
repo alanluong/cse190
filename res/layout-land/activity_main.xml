@@ -9,21 +9,20 @@
     tools:context=".MainActivity" >
 
     <Button
-        android:id="@+id/buybutton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_centerHorizontal="true"
-        android:layout_marginBottom="54dp"
-        android:text="@string/buy" />
-
-    <Button
         android:id="@+id/sellbutton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignLeft="@+id/buybutton"
-        android:layout_alignParentTop="true"
-        android:layout_marginTop="38dp"
+        android:layout_below="@+id/buybutton"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="36dp"
         android:text="@string/sell" />
+
+    <Button
+        android:id="@+id/buybutton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/sellbutton"
+        android:layout_centerVertical="true"
+        android:text="@string/buy" />
 
 </RelativeLayout>
