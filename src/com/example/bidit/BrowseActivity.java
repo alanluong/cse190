@@ -18,6 +18,7 @@ import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
+import android.support.v4.view.ViewPager;
 import android.util.Log;
 import android.view.Menu;
 import android.view.View;
@@ -35,22 +36,28 @@ public class BrowseActivity extends FragmentActivity implements OnClickListener 
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_browse);
-		adapter = new AdAdapter(this, R.layout.ads_list_item);
-		ListView lv = (ListView)findViewById(R.id.browseList);
+		adapter = new AdAdapter(getSupportFragmentManager());
+		
+		// This is for ListView
+		/*ListView lv = (ListView)findViewById(R.id.browseList);
 		lv.setAdapter(adapter);
 		lv.setOnItemClickListener(new OnItemClickListener() {
 		    public void onItemClick(AdapterView<?> parent, View view,
 		        int position, long id) { 
 		    	System.out.println("sup");
-		    	if (Config.getCurrentUser() == null) {
-					new LoginDialogFragment().show(getFragmentManager(),
-							"login");
-				} else {
+		    	//if (Config.getCurrentUser() == null) {
+				//	new LoginDialogFragment().show(getFragmentManager(),
+				//			"login");
+				//} else {
 					BidDialogFragment bdf = BidDialogFragment.newInstance();
 					bdf.show(getFragmentManager(), "BidDialog");
-				}
+				//}
 		    }
-		});
+		});*/
+		
+		// Using ViewPager instead
+		ViewPager vp = (ViewPager)findViewById(R.id.pager);
+		vp.setAdapter(adapter);
 		new RequestAdsTask().execute();
 	}
 	
