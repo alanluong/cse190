@@ -27,7 +27,7 @@ public class AdSlideFragment extends Fragment {
 		if (it != null) {
 			ImageView iv = (ImageView) rootView.findViewById(R.id.list_product_image);
 			if (iv != null) {
-				iv.setImageDrawable(it.getImage());
+				iv.setImageBitmap(it.getImage());
 			}
 		}
 		
@@ -38,7 +38,7 @@ public class AdSlideFragment extends Fragment {
 				//	new LoginDialogFragment().show(getFragmentManager(),
 				//			"login");
 				//} else {
-					BidDialogFragment bdf = BidDialogFragment.newInstance();
+					BidDialogFragment bdf = BidDialogFragment.newInstance(getArguments().getInt("adNum"));
 					bdf.show(getFragmentManager(), "BidDialog");
 				//}
 			}

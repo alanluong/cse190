@@ -2,33 +2,33 @@ package com.example.bidit;
 
 import java.io.IOException;
 import java.math.BigDecimal;
+import java.net.MalformedURLException;
+import java.net.URL;
 
 import org.apache.http.HttpResponse;
 import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.methods.HttpGet;
-import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.util.EntityUtils;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import android.app.Activity;
-import android.app.ListActivity;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.app.ActionBar;
+import android.content.Intent;
+
 import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.support.v4.app.FragmentActivity;
 import android.support.v4.view.ViewPager;
 import android.util.Log;
 import android.view.Menu;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.widget.AdapterView;
-import android.widget.AdapterView.OnItemClickListener;
-import android.widget.Button;
-import android.widget.ListView;
+import android.view.MenuItem;
 
-public class BrowseActivity extends BiditActivity implements OnClickListener {
+public class BrowseActivity extends BiditActivity {
 
 	AdAdapter adapter;
 
@@ -36,6 +36,10 @@ public class BrowseActivity extends BiditActivity implements OnClickListener {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_browse);
+		
+		ActionBar actionBar = getActionBar();
+		actionBar.setDisplayHomeAsUpEnabled(true);
+		
 		adapter = new AdAdapter(getSupportFragmentManager());
 		
 		// This is for ListView
@@ -59,6 +63,7 @@ public class BrowseActivity extends BiditActivity implements OnClickListener {
 		ViewPager vp = (ViewPager)findViewById(R.id.pager);
 		vp.setAdapter(adapter);
 		new RequestAdsTask().execute();
+		
 	}
 	
 
@@ -74,7 +79,7 @@ public class BrowseActivity extends BiditActivity implements OnClickListener {
 		protected Void doInBackground(Void... params) {
 			HttpGet request = new HttpGet(Util.AD_API);
 			try {
-				HttpResponse response = new DefaultHttpClient()
+				HttpResponse response = Util.getHttpClient()
 						.execute(request);
 				String content = EntityUtils.toString(response.getEntity());
 				JSONObject json = new JSONObject(content);
@@ -84,7 +89,11 @@ public class BrowseActivity extends BiditActivity implements OnClickListener {
 					User seller = null;
 					BigDecimal price = new BigDecimal(o.getDouble("price"));
 					String description = o.getString("description");
-					Drawable image = getResources().getDrawable(R.drawable.ic_launcher);
+					
+
+					String imageUrl = (Util.BASE_URL + "uploads/" + o.getString("id")+".jpg");
+					Log.d("asdf",imageUrl);
+					Bitmap image = loadImageFromUrl(imageUrl);
 					Ad ad = new Ad(seller, price, description, description, image);
 					publishProgress(ad);
 				}
@@ -105,11 +114,27 @@ public class BrowseActivity extends BiditActivity implements OnClickListener {
 			adapter.notifyDataSetChanged();
 			Log.d(BrowseActivity.class.getName(), "" + adapter.getCount());
 		}
-	}
-
-
-	@Override
-	public void onClick(View v) {
 		
+		private Bitmap loadImageFromUrl(String url)
+		{
+			
+			URL purl;
+			Bitmap bmp = null;
+			try {
+				purl = new URL(url);
+				bmp = BitmapFactory.decodeStream(purl.openConnection().getInputStream());
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			return bmp;
+		}
+	}
+	
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item){
+		Intent myIntent = new Intent(getApplicationContext(), MainActivity.class);
+		startActivityForResult(myIntent, 0);
+		return true;
 	}
 }

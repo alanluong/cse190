@@ -11,6 +11,7 @@
     <string name="camera">Camera</string>
     <string name="capture_image">To sell, click on camera to capture image</string>
     <string name="bid_prompt">Bid on this item?</string>
+    <string name="your_bid">Bid Amount</string>
     <string name="bid_prompt_yes">Bid!</string>
     <string name="post">Post</string>
     <string name="bid_prompt_no">Cancel</string>
