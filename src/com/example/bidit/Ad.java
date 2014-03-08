@@ -3,7 +3,6 @@ package com.example.bidit;
 import java.math.BigDecimal;
 
 import android.graphics.Bitmap;
-import android.graphics.drawable.Drawable;
 
 public class Ad {
 	
