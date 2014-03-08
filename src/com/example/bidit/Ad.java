@@ -2,6 +2,7 @@ package com.example.bidit;
 
 import java.math.BigDecimal;
 
+import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
 
 public class Ad {
@@ -11,9 +12,9 @@ public class Ad {
 	private String description;
 	private String imagePath; 
 	private String localPath;
-	private Drawable image;
+	private Bitmap image;
 	
-	public Ad(User seller, BigDecimal price, String description, String imagePath, Drawable image) {
+	public Ad(User seller, BigDecimal price, String description, String imagePath, Bitmap image) {
 		super();
 		this.seller = seller;
 		this.price = price;
@@ -63,11 +64,11 @@ public class Ad {
 		this.description = description;
 	}
 
-	public Drawable getImage() {
+	public Bitmap getImage() {
 		return image;
 	}
 
-	public void setImage(Drawable image) {
+	public void setImage(Bitmap image) {
 		this.image = image;
 	}
 }
