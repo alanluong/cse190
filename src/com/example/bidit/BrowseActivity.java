@@ -15,6 +15,9 @@ import org.json.JSONObject;
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.app.ActionBar;
+import android.content.Intent;
+
 import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -23,8 +26,9 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.MenuItem;
 
-public class BrowseActivity extends BiditActivity implements OnClickListener {
+public class BrowseActivity extends BiditActivity {
 
 	AdAdapter adapter;
 
@@ -32,6 +36,10 @@ public class BrowseActivity extends BiditActivity implements OnClickListener {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_browse);
+		
+		ActionBar actionBar = getActionBar();
+		actionBar.setDisplayHomeAsUpEnabled(true);
+		
 		adapter = new AdAdapter(getSupportFragmentManager());
 		
 		// This is for ListView
@@ -122,10 +130,11 @@ public class BrowseActivity extends BiditActivity implements OnClickListener {
 			return bmp;
 		}
 	}
-
-
+	
 	@Override
-	public void onClick(View v) {
-		
+	public boolean onOptionsItemSelected(MenuItem item){
+		Intent myIntent = new Intent(getApplicationContext(), MainActivity.class);
+		startActivityForResult(myIntent, 0);
+		return true;
 	}
 }

@@ -10,6 +10,7 @@ import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 
 public class BidDialogFragment extends DialogFragment {
 	
@@ -19,11 +20,10 @@ public class BidDialogFragment extends DialogFragment {
         // Empty constructor required for DialogFragment
     }
 
-    public static BidDialogFragment newInstance() {
+    public static BidDialogFragment newInstance(int position) {
     	BidDialogFragment frag = new BidDialogFragment();
         Bundle args = new Bundle();
-        //put any arguments - for example: 
-        //args.putString("title", title);
+        args.putInt("adNum", position);
         frag.setArguments(args);
         return frag;
     }
@@ -37,7 +37,12 @@ public class BidDialogFragment extends DialogFragment {
         //get the arguments here
         //String title = getArguments().getString("title", "Enter Name");
         //getDialog().setTitle(title);
-        getDialog().setTitle(R.string.bid_prompt);
+        int position = getArguments().getInt("adNum");
+        Ad it = AdAdapter.getAd(position);
+        getDialog().setTitle("[$"+it.getPrice()+"] - " + it.getDescription());
+        
+        //TextView tv = (TextView)(view.findViewById(R.id.price));
+        //tv.setText(it.getPrice().toString());
         
         // Show soft keyboard automatically
         mEditText.requestFocus();

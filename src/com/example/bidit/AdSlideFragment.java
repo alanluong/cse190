@@ -38,7 +38,7 @@ public class AdSlideFragment extends Fragment {
 				//	new LoginDialogFragment().show(getFragmentManager(),
 				//			"login");
 				//} else {
-					BidDialogFragment bdf = BidDialogFragment.newInstance();
+					BidDialogFragment bdf = BidDialogFragment.newInstance(getArguments().getInt("adNum"));
 					bdf.show(getFragmentManager(), "BidDialog");
 				//}
 			}
