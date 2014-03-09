@@ -67,4 +67,15 @@ public class AdAdapter /*extends ArrayAdapter<Ad>*/ extends FragmentStatePagerAd
 	public ArrayList<Ad> getAds(){
 		return mAds;
 	}
+	
+	public Ad getAd(int pos)
+	{
+		return mAds.get(pos);
+	}
+	
+	public void addAd(Ad ad)
+	{
+		mAds.add(ad);
+	}
+	
 }

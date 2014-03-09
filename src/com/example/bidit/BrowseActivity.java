@@ -13,11 +13,10 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.app.ActionBar;
 import android.content.Intent;
-
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.view.ViewPager;
@@ -25,10 +24,14 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 
+
 public class BrowseActivity extends BiditActivity {
 
+		
+	
 	AdAdapter adapter;
 	ArrayList<Ad> savedAds;
+
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -45,22 +48,6 @@ public class BrowseActivity extends BiditActivity {
 			adapter = new AdAdapter(getSupportFragmentManager());
 		}
 		
-		// This is for ListView
-		/*ListView lv = (ListView)findViewById(R.id.browseList);
-		lv.setAdapter(adapter);
-		lv.setOnItemClickListener(new OnItemClickListener() {
-		    public void onItemClick(AdapterView<?> parent, View view,
-		        int position, long id) { 
-		    	System.out.println("sup");
-		    	//if (Config.getCurrentUser() == null) {
-				//	new LoginDialogFragment().show(getFragmentManager(),
-				//			"login");
-				//} else {
-					BidDialogFragment bdf = BidDialogFragment.newInstance();
-					bdf.show(getFragmentManager(), "BidDialog");
-				//}
-		    }
-		});*/
 		
 		// Using ViewPager instead
 		ViewPager vp = (ViewPager)findViewById(R.id.pager);
@@ -161,4 +148,6 @@ public class BrowseActivity extends BiditActivity {
 		// TODO Auto-generated method stub
 		
 	}
+	
+	
 }

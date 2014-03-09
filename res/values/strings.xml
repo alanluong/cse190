@@ -26,5 +26,6 @@
     <string name="cancel">Cancel</string>
     <string name="login">Login</string>
     <string name="price">Price</string>
+    <string name="descr_image">descr_image</string>
 
 </resources>
