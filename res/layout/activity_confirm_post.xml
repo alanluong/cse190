@@ -71,7 +71,7 @@
                 android:windowSoftInputMode="stateUnchanged|adjustPan"
                 android:hint="@string/price"
                 android:textSize="20sp"
-                android:inputType="number" >
+                android:inputType="numberDecimal" >
 
             </EditText>
 

@@ -45,6 +45,7 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.Bitmap.CompressFormat;
@@ -85,7 +86,7 @@ import android.widget.TextView.OnEditorActionListener;
  * 
  * @see SystemUiHider
  */
-public class ConfirmPost extends Activity {
+public class ConfirmPost extends Activity implements OnLoginSuccessful{
 	
 	String absolutePhotoPath;
 	Uri myUri = null;
@@ -258,6 +259,8 @@ public class ConfirmPost extends Activity {
 		public void onClick(View v) {
 			//postItem(absolutePhotoPath);
 			
+			SharedPreferences pref = Util.getPreferences(getApplicationContext());
+			
 			final EditText ad_price= (EditText) findViewById(R.id.priceText);
 	    	final EditText ad_description= (EditText) findViewById(R.id.descriptionText);
 	    	
@@ -321,15 +324,26 @@ public class ConfirmPost extends Activity {
                 alert.show();
 			}
 	    	
-	    	else
+	    	else 
 	    	{
+
 		    	BigDecimal adPrice = new BigDecimal(ad_price.getText().toString());
-		    	
 		    	user = new User("test@gmail.com", "jon", "test");
 		    	ad = new Ad(user, adPrice, ad_description.getText().toString(), null, null);
 		    	ad.setLocalPath(absolutePhotoPath);
 		    	
-				new AdPost().execute(ad);
+		    	if(pref.getBoolean("isLoggedIn", false) == false)
+		    	{
+		    		LoginDialogFragment ldf = new LoginDialogFragment();
+		    		new LoginDialogFragment().show(getFragmentManager(), "loginDialog");
+		    	}
+		    	
+		    	else
+		    	{
+			    	
+					new AdPost().execute(ad);
+					
+		    	}
 	    	}
 			
 			
@@ -521,6 +535,13 @@ public class ConfirmPost extends Activity {
 	    
 	    
 
+	}
+
+
+	@Override
+	public void onLoginSuccessful() {
+		new AdPost().execute(ad);
+		
 	}
 	
 	/*

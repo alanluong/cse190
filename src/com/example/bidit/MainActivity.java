@@ -65,17 +65,16 @@ public class MainActivity extends BiditActivity implements OnClickListener,
 
 	@Override
 	public void onClick(View view) {
-/*		System.out.println("something clicked");
+		System.out.println("something clicked");
 		if (view instanceof Button) {
 			Button clicked = (Button) view;
 			System.out.println("button clicked");
 			switch (clicked.getId()) {
 			case R.id.buybutton:
 				System.out.println("buy button clicked");
-				Intent intent = new Intent(MainActivity.this,
-						BrowseActivity.class);
+				Intent intent = new Intent(MainActivity.this, BrowseActivity.class);
 				startActivity(intent);
-*/		
+/*	
 		if(view instanceof Button){
 			Button clicked = (Button)view;
 			switch(clicked.getId()){
@@ -95,6 +94,7 @@ public class MainActivity extends BiditActivity implements OnClickListener,
 				
 
 		    	uploadingDialog.show();
+		    	*/
 				break;
 			case R.id.sellbutton:
 				Intent takePictureIntent = new Intent(
@@ -184,6 +184,12 @@ public class MainActivity extends BiditActivity implements OnClickListener,
 		mCurrentPhotoPath = "file:" + image.getAbsolutePath();
 
 		return image;
+	}
+
+	@Override
+	public void onLoginSuccessful() {
+		// TODO Auto-generated method stub
+		
 	}
 
 }
