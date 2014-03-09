@@ -36,7 +36,7 @@ public class BrowseActivity extends BiditActivity {
 		ActionBar actionBar = getActionBar();
 		actionBar.setDisplayHomeAsUpEnabled(true);
 		
-		adapter = new AdAdapter(getSupportFragmentManager());
+		adapter = new AdAdapter(getSupportFragmentManager(), adapter);
 		
 		// This is for ListView
 		/*ListView lv = (ListView)findViewById(R.id.browseList);
@@ -61,7 +61,6 @@ public class BrowseActivity extends BiditActivity {
 		new RequestAdsTask().execute();
 		
 	}
-	
 
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
@@ -80,7 +79,7 @@ public class BrowseActivity extends BiditActivity {
 				String content = EntityUtils.toString(response.getEntity());
 				JSONObject json = new JSONObject(content);
 				JSONArray objects = json.getJSONArray("objects");
-				for (int i = 0; i < objects.length(); ++i) {
+				for (int i = 0; i < 3; ++i) {
 					JSONObject o = objects.getJSONObject(i);
 					User seller = null;
 					BigDecimal price = new BigDecimal(o.getDouble("price"));
@@ -128,6 +127,9 @@ public class BrowseActivity extends BiditActivity {
 	
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item){
+		if(super.onOptionsItemSelected(item)){
+			return true;
+		}
 		Intent myIntent = new Intent(getApplicationContext(), MainActivity.class);
 		startActivityForResult(myIntent, 0);
 		return true;

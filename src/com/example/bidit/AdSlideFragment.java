@@ -1,5 +1,6 @@
 package com.example.bidit;
 
+import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -10,10 +11,12 @@ import android.widget.ImageView;
 
 public class AdSlideFragment extends Fragment {
 	
-	public static Fragment newInstance(int id){
+	public static Fragment newInstance(Bitmap img, String description, String price){
 		AdSlideFragment adf = new AdSlideFragment();
 		Bundle args = new Bundle();
-		args.putInt("adNum", id);
+		args.putParcelable("image", img);
+		args.putString("description", description);
+		args.putString("price", price);
 		adf.setArguments(args);
 		return adf;
 	}
@@ -23,13 +26,13 @@ public class AdSlideFragment extends Fragment {
 		ViewGroup rootView = (ViewGroup) inflater.inflate(R.layout.ads_list_item, container, false);
 		
 		int position = getArguments().getInt("adNum");
-		Ad it = AdAdapter.getAd(position);
-		if (it != null) {
-			ImageView iv = (ImageView) rootView.findViewById(R.id.list_product_image);
-			if (iv != null) {
-				iv.setImageBitmap(it.getImage());
-			}
+		//Ad it = AdAdapter.getAd(position);
+		//if (it != null) {
+		ImageView iv = (ImageView) rootView.findViewById(R.id.list_product_image);
+		if (iv != null) {
+			iv.setImageBitmap((Bitmap)(getArguments().getParcelable("image")));
 		}
+		//}
 		
 		rootView.setOnClickListener(new OnClickListener(){
 			@Override
@@ -38,7 +41,7 @@ public class AdSlideFragment extends Fragment {
 				//	new LoginDialogFragment().show(getFragmentManager(),
 				//			"login");
 				//} else {
-					BidDialogFragment bdf = BidDialogFragment.newInstance(getArguments().getInt("adNum"));
+					BidDialogFragment bdf = BidDialogFragment.newInstance(getArguments().getString("description"), getArguments().getString("price"));
 					bdf.show(getFragmentManager(), "BidDialog");
 				//}
 			}

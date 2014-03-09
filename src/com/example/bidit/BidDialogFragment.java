@@ -19,10 +19,11 @@ public class BidDialogFragment extends DialogFragment {
         // Empty constructor required for DialogFragment
     }
 
-    public static BidDialogFragment newInstance(int position) {
+    public static BidDialogFragment newInstance(String description, String price) {
     	BidDialogFragment frag = new BidDialogFragment();
         Bundle args = new Bundle();
-        args.putInt("adNum", position);
+        args.putString("description", description);
+        args.putString("price", price);
         frag.setArguments(args);
         return frag;
     }
@@ -36,9 +37,9 @@ public class BidDialogFragment extends DialogFragment {
         //get the arguments here
         //String title = getArguments().getString("title", "Enter Name");
         //getDialog().setTitle(title);
-        int position = getArguments().getInt("adNum");
-        Ad it = AdAdapter.getAd(position);
-        getDialog().setTitle("[$"+it.getPrice()+"] - " + it.getDescription());
+        //int position = getArguments().getInt("adNum");
+        //Ad it = AdAdapter.getAd(position);
+        getDialog().setTitle("[$"+getArguments().getString("price")+"] - " + getArguments().getString("description"));
         
         //TextView tv = (TextView)(view.findViewById(R.id.price));
         //tv.setText(it.getPrice().toString());

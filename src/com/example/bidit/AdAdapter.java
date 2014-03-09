@@ -8,7 +8,7 @@ import android.support.v4.app.FragmentStatePagerAdapter;
 
 public class AdAdapter /*extends ArrayAdapter<Ad>*/ extends FragmentStatePagerAdapter {
 	
-	static ArrayList<Ad> mAds;
+	private static ArrayList<Ad> mAds;
 	
 	/*public AdAdapter(Context context, int resource) {
 		super(context, resource);
@@ -36,8 +36,16 @@ public class AdAdapter /*extends ArrayAdapter<Ad>*/ extends FragmentStatePagerAd
 	}*/
 	
 	public AdAdapter(FragmentManager fm) {
+		this(fm, null);
+	}
+	
+	public AdAdapter(FragmentManager fm, AdAdapter def){
 		super(fm);
-		mAds = new ArrayList<Ad>();
+		if(def == null){
+			mAds = new ArrayList<Ad>();
+		}else{
+			System.out.println(mAds);
+		}
 	}
 
 	@Override
@@ -47,7 +55,8 @@ public class AdAdapter /*extends ArrayAdapter<Ad>*/ extends FragmentStatePagerAd
 
 	@Override
 	public Fragment getItem(int position) {
-		return AdSlideFragment.newInstance(position);
+		Ad it = mAds.get(position);
+		return AdSlideFragment.newInstance(it.getImage(), it.getDescription(), ""+it.getPrice());
 	}
 	
 	public void addAll(Ad... ads){
@@ -56,7 +65,8 @@ public class AdAdapter /*extends ArrayAdapter<Ad>*/ extends FragmentStatePagerAd
 		}
 	}
 
+	/*
 	public static Ad getAd(int position) {
 		return mAds.get(position);
-	}
+	}*/
 }

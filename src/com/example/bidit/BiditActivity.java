@@ -34,6 +34,10 @@ public class BiditActivity extends FragmentActivity {
 		switch (item.getItemId()) {
 		case R.id.action_login:
 			new LoginDialogFragment().show(getFragmentManager(), "login");
+			return true;
+		case R.id.action_settings:
+			//implementation for settings goes here
+			return true;
 		}
 		return super.onOptionsItemSelected(item);
 	}
