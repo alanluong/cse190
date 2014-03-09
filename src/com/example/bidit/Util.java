@@ -9,6 +9,8 @@ public class Util {
 	public static final String BASE_URL = "http://ec2-54-213-102-70.us-west-2.compute.amazonaws.com/";
 	public static final String API = "/api";
 	public static final String AD_API = BASE_URL + API + "/Ad";
+	public static final String BID_API = BASE_URL + API + "/Bid";
+	public static final String MESSAGE_API = BASE_URL + API + "/Message";
 	public static final String USER_API = BASE_URL + API + "/User";
 	public static final String LOGIN = BASE_URL + "/login";
 	static private User currentUser;

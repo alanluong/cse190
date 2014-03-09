@@ -5,6 +5,12 @@ public class Message {
 	User receiver;
 	String content;
 	
+	public Message(User s, User r, String c){
+		setSender(s);
+		setReceiver(r);
+		setContent(c);
+	}
+	
 	public User getSender() {
 		return sender;
 	}

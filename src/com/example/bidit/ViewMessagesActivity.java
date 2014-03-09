@@ -16,25 +16,25 @@ import android.os.Bundle;
 import android.util.Log;
 import android.widget.ListView;
 
-public class ViewBidsActivity extends BiditActivity {
+public class ViewMessagesActivity extends BiditActivity {
 	
-	BidAdapter adapter;
+MessageAdapter adapter;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.activity_view_bids);
+		setContentView(R.layout.activity_view_messages);
 		
-		adapter = new BidAdapter(this, R.layout.bids_list_item);
-		ListView lv = (ListView)findViewById(R.id.bid_list);
+		adapter = new MessageAdapter(this, R.layout.messages_list_item);
+		ListView lv = (ListView)findViewById(R.id.message_list);
 		lv.setAdapter(adapter);
-		new RequestBidsTask().execute();
+		new RequestMessagesTask().execute();
 	}
 	
-	public class RequestBidsTask extends AsyncTask<Void, Bid, Void> {
+	public class RequestMessagesTask extends AsyncTask<Void, Message, Void> {
 		@Override
 		protected Void doInBackground(Void... params) {
-			HttpGet request = new HttpGet(Util.BID_API);
+			HttpGet request = new HttpGet(Util.MESSAGE_API);
 			try {
 				HttpResponse response = Util.getHttpClient()
 						.execute(request);
@@ -43,15 +43,14 @@ public class ViewBidsActivity extends BiditActivity {
 				JSONArray objects = json.getJSONArray("objects");
 				for (int i = 0; i < 3; ++i) {
 					JSONObject o = objects.getJSONObject(i);
-					User seller = null;
-					User buyer = null;
-					Ad ad = null;
-					BigDecimal price = new BigDecimal(o.getDouble("price"));
+					User sender = null;
+					User receiver = null;
+					String msg_content = o.getString("content");
 					
-					Bid bid = new Bid(price, buyer, seller, ad);
-					publishProgress(bid);
+					Message message = new Message(sender, receiver, msg_content);
+					publishProgress(message);
 				}
-				Log.d(ViewBidsActivity.class.getName(), content);
+				Log.d(ViewMessagesActivity.class.getName(), content);
 			} catch (ClientProtocolException e) {
 				e.printStackTrace();
 			} catch (IOException e) {
@@ -63,10 +62,10 @@ public class ViewBidsActivity extends BiditActivity {
 		}
 
 		@Override
-		protected void onProgressUpdate(Bid... bids) {
-			adapter.addAll(bids);
+		protected void onProgressUpdate(Message... messages) {
+			adapter.addAll(messages);
 			adapter.notifyDataSetChanged();
-			Log.d(ViewBidsActivity.class.getName(), "count: " + adapter.getCount());
+			Log.d(ViewMessagesActivity.class.getName(), "count: " + adapter.getCount());
 		}
 	}
 
