@@ -6,7 +6,7 @@ import android.content.Context;
 import android.content.SharedPreferences;
 
 public class Util {
-	public static final String BASE_URL = "http://ec2-54-213-102-70.us-west-2.compute.amazonaws.com/";
+	public static final String BASE_URL = "http://ec2-54-213-102-70.us-west-2.compute.amazonaws.com";
 	public static final String API = "/api";
 	public static final String AD_API = BASE_URL + API + "/Ad";
 	public static final String BID_API = BASE_URL + API + "/Bid";

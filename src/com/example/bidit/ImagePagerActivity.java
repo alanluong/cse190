@@ -3,8 +3,6 @@ package com.example.bidit;
 
 import java.io.IOException;
 import java.math.BigDecimal;
-import java.net.URL;
-import java.util.ArrayList;
 
 import org.apache.http.HttpResponse;
 import org.apache.http.client.ClientProtocolException;
@@ -15,7 +13,6 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Parcelable;
@@ -24,13 +21,12 @@ import android.support.v4.view.ViewPager;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.view.View.OnClickListener;
+import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
-import com.example.bidit.Constants.Extra;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
@@ -199,10 +195,11 @@ public class ImagePagerActivity extends BiditActivity {
 	public class RequestAdsTask extends AsyncTask<Void, Ad, Void> {
 		@Override
 		protected Void doInBackground(Void... params) {
+			Log.d("adapi", Util.AD_API);
 			HttpGet request = new HttpGet(Util.AD_API);
 			try {
 				HttpResponse response = Util.getHttpClient()
-						.execute(request);
+				.execute(request);
 				String content = EntityUtils.toString(response.getEntity());
 				JSONObject json = new JSONObject(content);
 				JSONArray objects = json.getJSONArray("objects");
@@ -211,7 +208,8 @@ public class ImagePagerActivity extends BiditActivity {
 					User seller = null;
 					BigDecimal price = new BigDecimal(o.getDouble("price"));
 					String description = o.getString("description");
-					String imageUrl = (Util.BASE_URL + "uploads/" + o.getString("id")+".jpg");
+					String imageUrl = (Util.BASE_URL + "/uploads/" + o.getString("id")+".jpg");
+					Log.d("imageurl", imageUrl);
 					imageUrls[i] = imageUrl;
 
 					//Bitmap image = loadImageFromUrl(imageUrl);
@@ -236,19 +234,6 @@ public class ImagePagerActivity extends BiditActivity {
 			Log.d(BrowseActivity.class.getName(), "count: " + adapter.getCount());
 		}
 		
-		private Bitmap loadImageFromUrl(String url)
-		{
-			
-			URL purl;
-			Bitmap bmp = null;
-			try {
-				purl = new URL(url);
-				bmp = BitmapFactory.decodeStream(purl.openConnection().getInputStream());
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
-			return bmp;
-		}
 	}
 	
 }
