@@ -22,6 +22,7 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.DialogFragment;
+import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -29,39 +30,40 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.webkit.WebView.FindListener;
 import android.widget.Button;
 import android.widget.EditText;
 
 public class LoginDialogFragment extends DialogFragment {
 	public LoginDialogFragment() {
-		
+
 	}
-	
+
 	@Override
 	public Dialog onCreateDialog(Bundle savedInstanceState) {
 
-	    AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-	    LayoutInflater inflater = getActivity().getLayoutInflater();
+		AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+		LayoutInflater inflater = getActivity().getLayoutInflater();
 		final View view = inflater.inflate(R.layout.dialog_login, null);
- 	    builder.setView(view)
-           .setPositiveButton(R.string.login, new DialogInterface.OnClickListener() {
-               @Override
-               public void onClick(DialogInterface dialog, int id) {
-                   new LoginTask().execute(view);
-               }
-               
-           })
-           .setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
-               public void onClick(DialogInterface dialog, int id) {
-                   LoginDialogFragment.this.getDialog().cancel();
-               }
-           });      
-	    return builder.create();
+		builder.setView(view)
+				.setPositiveButton(R.string.login,
+						new DialogInterface.OnClickListener() {
+							@Override
+							public void onClick(DialogInterface dialog, int id) {
+								new LoginTask((OnLoginSuccessful)getActivity()).execute(view);
+							}
+
+						})
+				.setNegativeButton(R.string.cancel,
+						new DialogInterface.OnClickListener() {
+							public void onClick(DialogInterface dialog, int id) {
+								LoginDialogFragment.this.getDialog().cancel();
+							}
+						});
+		return builder.create();
 	}
-	
-	
-	
+
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
@@ -69,14 +71,53 @@ public class LoginDialogFragment extends DialogFragment {
 		return super.onCreateView(inflater, container, savedInstanceState);
 	}
 
+	public class LoginTask extends AsyncTask<View, Void, Boolean> {
 
+		private ProgressDialog loggingInDialog;
+		private OnLoginSuccessful myListener;
+		
+		public LoginTask(OnLoginSuccessful listener) {
+			this.myListener = listener;
+		}
 
-	public class LoginTask extends AsyncTask<View, Void, Void> {
 		@Override
-		protected Void doInBackground(View... views) {
+		protected void onPreExecute() {
+			loggingInDialog = new ProgressDialog(getActivity());
+			loggingInDialog.setMessage("Loggin In...");
+			// uploadingDialog.getWindow().setLayout(LayoutParams.WRAP_CONTENT,LayoutParams.WRAP_CONTENT);
+			loggingInDialog.setCancelable(false);
+			loggingInDialog.show();
+
+			WindowManager.LayoutParams lp = new WindowManager.LayoutParams();
+
+			lp.copyFrom(loggingInDialog.getWindow().getAttributes());
+			lp.width = 700;
+			// lp.height = 150;
+			// lp.x=-170;
+			// lp.y=100;
+			loggingInDialog.getWindow().setAttributes(lp);
+		}
+
+		@Override
+		protected void onPostExecute(Boolean login) {
+			if (login.booleanValue()) {
+				loggingInDialog.dismiss();
+				myListener.onLoginSuccessful();
+			} 
+			
+			else {
+				loggingInDialog.setCancelable(false);
+			}
+
+		}
+
+		@Override
+		protected Boolean doInBackground(View... views) {
 			View view = views[0];
-			String username = ((EditText)view.findViewById(R.id.username)).getText().toString();
-			String password = ((EditText)view.findViewById(R.id.password)).getText().toString();
+			String username = ((EditText) view.findViewById(R.id.username))
+					.getText().toString();
+			String password = ((EditText) view.findViewById(R.id.password))
+					.getText().toString();
 			try {
 				HttpPost request = new HttpPost(Util.LOGIN);
 				List<NameValuePair> pairs = new ArrayList<NameValuePair>();
@@ -85,12 +126,17 @@ public class LoginDialogFragment extends DialogFragment {
 				request.setEntity(new UrlEncodedFormEntity(pairs));
 
 				HttpResponse response = Util.getHttpClient().execute(request);
+				if (response.getStatusLine().getStatusCode() == 403) {
+					return false;
+				}
 				String content = EntityUtils.toString(response.getEntity());
 				Log.d("LoginDialog", content);
+				return true;
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
-			return null;
+			return false;
 		}
+
 	}
 }

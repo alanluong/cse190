@@ -134,4 +134,11 @@ public class BrowseActivity extends BiditActivity {
 		startActivityForResult(myIntent, 0);
 		return true;
 	}
+
+
+	@Override
+	public void onLoginSuccessful() {
+		// TODO Auto-generated method stub
+		
+	}
 }

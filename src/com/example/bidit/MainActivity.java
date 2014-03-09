@@ -23,6 +23,10 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
+import android.app.Activity;
+import android.app.AlertDialog;
+import android.app.FragmentManager;
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.view.Menu;
@@ -68,9 +72,29 @@ public class MainActivity extends BiditActivity implements OnClickListener,
 			switch (clicked.getId()) {
 			case R.id.buybutton:
 				System.out.println("buy button clicked");
-				Intent intent = new Intent(MainActivity.this,
-						BrowseActivity.class);
+				Intent intent = new Intent(MainActivity.this, BrowseActivity.class);
 				startActivity(intent);
+/*	
+		if(view instanceof Button){
+			Button clicked = (Button)view;
+			switch(clicked.getId()){
+			case R.id.buybutton:
+				//Intent intent = new Intent(MainActivity.this, BrowseActivity.class);
+				//startActivity(intent);
+				//FragmentManager fm = getFragmentManager();
+				//LoginDialogFragment myInstance = new LoginDialogFragment();
+				//myInstance.show(fm, "some_tag");
+				//ProgressDialog.Builder builder = new ProgressDialog.Builder(MainActivity.this);
+
+				ProgressDialog uploadingDialog;
+				uploadingDialog = new ProgressDialog(MainActivity.this);
+				uploadingDialog.setMessage("Posting...");
+		    	uploadingDialog.getWindow().setLayout(300, 300);
+				uploadingDialog.setCancelable(false); 
+				
+
+		    	uploadingDialog.show();
+		    	*/
 				break;
 			case R.id.sellbutton:
 				Intent takePictureIntent = new Intent(
@@ -81,8 +105,7 @@ public class MainActivity extends BiditActivity implements OnClickListener,
 					if (absolutePhotoPath != null) {
 						File file = new File(absolutePhotoPath);
 						if (file.exists()) {
-							boolean deleted = file.delete();
-							System.out.println(deleted);
+							file.delete();
 						}
 					}
 
@@ -99,8 +122,7 @@ public class MainActivity extends BiditActivity implements OnClickListener,
 					// Continue only if the File was successfully created
 					if (photoFile != null) {
 						capturedImageUri = Uri.fromFile(photoFile);
-						takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT,
-								Uri.fromFile(photoFile));
+						takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(photoFile));
 						startActivityForResult(takePictureIntent, REQUEST_CODE);
 					}
 
@@ -118,8 +140,7 @@ public class MainActivity extends BiditActivity implements OnClickListener,
 		if (requestCode == REQUEST_CODE) {
 			switch (resultCode) {
 			case RESULT_OK:
-				Intent confirmPost = new Intent(MainActivity.this,
-						ConfirmPost.class);
+				Intent confirmPost = new Intent(MainActivity.this, ConfirmPost.class);
 				confirmPost.putExtra("absolutePath", absolutePhotoPath);
 				confirmPost.putExtra("uri", capturedImageUri.toString());
 				startActivity(confirmPost);
@@ -163,6 +184,12 @@ public class MainActivity extends BiditActivity implements OnClickListener,
 		mCurrentPhotoPath = "file:" + image.getAbsolutePath();
 
 		return image;
+	}
+
+	@Override
+	public void onLoginSuccessful() {
+		// TODO Auto-generated method stub
+		
 	}
 
 }

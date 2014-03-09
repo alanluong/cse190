@@ -45,6 +45,7 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.Bitmap.CompressFormat;
@@ -65,6 +66,7 @@ import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.view.View.OnClickListener;
 import android.view.Window;
@@ -84,7 +86,7 @@ import android.widget.TextView.OnEditorActionListener;
  * 
  * @see SystemUiHider
  */
-public class ConfirmPost extends Activity {
+public class ConfirmPost extends Activity implements OnLoginSuccessful{
 	
 	String absolutePhotoPath;
 	Uri myUri = null;
@@ -257,7 +259,41 @@ public class ConfirmPost extends Activity {
 		public void onClick(View v) {
 			//postItem(absolutePhotoPath);
 			
-			if(!isNetworkOnline())
+			SharedPreferences pref = Util.getPreferences(getApplicationContext());
+			
+			final EditText ad_price= (EditText) findViewById(R.id.priceText);
+	    	final EditText ad_description= (EditText) findViewById(R.id.descriptionText);
+	    	
+	    	if(ad_price.getText().toString().matches("") || ad_description.getText().toString().trim().matches(""))
+	    	{
+	    		AlertDialog.Builder builder = new AlertDialog.Builder(ConfirmPost.this);
+                builder.setCancelable(false);
+                builder.setTitle("Missing Fields!");
+                builder.setMessage("Please check that all the fields have a valid input!");
+                builder.setInverseBackgroundForced(true);
+                builder.setPositiveButton("OK",
+                        new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog,
+                                    int which) {
+                                dialog.dismiss();
+                            }
+                        });
+                AlertDialog alert = builder.create();
+                alert.show();
+                alert.getWindow().setLayout(950, ViewGroup.LayoutParams.WRAP_CONTENT);
+                
+                //WindowManager.LayoutParams lp = new WindowManager.LayoutParams();
+
+    	    	//lp.copyFrom(alert.getWindow().getAttributes());
+    	    	//lp.width = 900;
+    	    	//lp.height = 1000;
+    	    	//lp.x=-170;
+    	    	//lp.y=100;
+    	    	//alert.getWindow().setAttributes(lp);
+	    	}
+	    	
+	    	else if(!isNetworkOnline())
 			{
 				AlertDialog.Builder builder = new AlertDialog.Builder(ConfirmPost.this);
                 builder.setCancelable(false);
@@ -287,52 +323,29 @@ public class ConfirmPost extends Activity {
                 AlertDialog alert = builder.create();
                 alert.show();
 			}
-			
-			else
-			{
-			
-				final EditText ad_price= (EditText) findViewById(R.id.priceText);
-		    	final EditText ad_description= (EditText) findViewById(R.id.descriptionText);
+	    	
+	    	else 
+	    	{
+
+		    	BigDecimal adPrice = new BigDecimal(ad_price.getText().toString());
+		    	user = new User("test@gmail.com", "jon", "test");
+		    	ad = new Ad(user, adPrice, ad_description.getText().toString(), null, null);
+		    	ad.setLocalPath(absolutePhotoPath);
 		    	
-		    	if(ad_price.getText().toString().matches("") || ad_description.getText().toString().matches(""))
+		    	if(pref.getBoolean("isLoggedIn", false) == false)
 		    	{
-		    		AlertDialog.Builder builder = new AlertDialog.Builder(ConfirmPost.this);
-	                builder.setCancelable(false);
-	                builder.setTitle("Missing Fields!");
-	                builder.setMessage("Please check that all the fields have a valid input!");
-	                builder.setInverseBackgroundForced(true);
-	                builder.setPositiveButton("OK",
-	                        new DialogInterface.OnClickListener() {
-	                            @Override
-	                            public void onClick(DialogInterface dialog,
-	                                    int which) {
-	                                dialog.dismiss();
-	                            }
-	                        });
-	                AlertDialog alert = builder.create();
-	                alert.show();
+		    		LoginDialogFragment ldf = new LoginDialogFragment();
+		    		new LoginDialogFragment().show(getFragmentManager(), "loginDialog");
 		    	}
 		    	
 		    	else
 		    	{
-		    	
-			    	BigDecimal adPrice = new BigDecimal(ad_price.getText().toString());
-			    	
-			    	user = new User("test@gmail.com", "jon", "test");
-			    	ad = new Ad(user, adPrice, ad_description.getText().toString(), null, null);
-			    	ad.setLocalPath(absolutePhotoPath);
-			    	
-			    	/*
-			    	user.setEmail("test@gmail.com");
-			    	ad.setSeller(user);
-			    	ad.setPrice(adPrice);
-			    	ad.setDescription(ad_description.getText().toString());
-			    	ad.setImagePath(absolutePhotoPath);
-			    	*/
 			    	
 					new AdPost().execute(ad);
+					
 		    	}
-			}
+	    	}
+			
 			
 			
 		}
@@ -415,12 +428,121 @@ public class ConfirmPost extends Activity {
         return status;
 
     }  
-    
+
 	
-	
-	
-	
-	
+	class AdPost extends AsyncTask<Ad, Void, Void> {		
+	    
+	    private ProgressDialog uploadingDialog;
+
+	    @Override
+	    protected void onPreExecute() {
+	    	uploadingDialog = new ProgressDialog(ConfirmPost.this);
+	    	uploadingDialog.setMessage("Posting...");
+	    	//uploadingDialog.getWindow().setLayout(LayoutParams.WRAP_CONTENT,LayoutParams.WRAP_CONTENT);
+	    	uploadingDialog.setCancelable(false); 
+	    	uploadingDialog.show();
+	    	
+	    	WindowManager.LayoutParams lp = new WindowManager.LayoutParams();
+
+	    	lp.copyFrom(uploadingDialog.getWindow().getAttributes());
+	    	lp.width = 700;
+	    	//lp.height = 150;
+	    	//lp.x=-170;
+	    	//lp.y=100;
+	    	uploadingDialog.getWindow().setAttributes(lp);
+	    }
+	    
+	    @Override
+	    protected void onPostExecute(Void string) {
+	        try 
+	        {	        	
+	        	if (uploadingDialog.isShowing()) 
+	        	{
+	        		uploadingDialog.dismiss();
+	        	}
+	        	
+	        	finish();
+	        	
+	        } 
+	        
+	        catch(Exception e) {
+	        }
+
+	    }
+	    
+
+	    protected Void doInBackground(Ad... params) {
+	    	Ad ad = params[0];
+	    	String filePath = ad.getLocalPath();
+	    	String email = ad.getSeller().getEmail();
+	    	String description = ad.getDescription();
+	    	String price = ad.getPrice().toString();
+	    	
+	    	
+	    	HttpClient client = Util.getHttpClient();  
+	    	String postURL = "http://ec2-54-213-102-70.us-west-2.compute.amazonaws.com/cell_upload";
+
+	        HttpPost post = new HttpPost(postURL); 
+
+	        MultipartEntityBuilder builder = MultipartEntityBuilder.create();
+	        
+	        Bitmap bmp = BitmapFactory.decodeFile(filePath);
+    		ByteArrayOutputStream bos = new ByteArrayOutputStream();
+    		
+    		//Number represents compression amount
+    		bmp.compress(CompressFormat.JPEG, 50, bos);
+    		InputStream in = new ByteArrayInputStream(bos.toByteArray());
+			
+    		//ContentBody photoFile = new InputStreamBody(in, "image/jpeg", "filename.jpg");
+    		ContentBody photoFile = new InputStreamBody(in, "filename.jpg");
+	        		
+	        /* example for setting a HttpMultipartMode */
+	        builder.setMode(HttpMultipartMode.BROWSER_COMPATIBLE);
+
+	        /* example for adding an image part */
+	        //FileBody fileBody = new FileBody(new File(filePath)); //image should be a String
+	        //builder.addPart("file", fileBody);
+	        
+	        builder.addPart("file", photoFile); 
+	        builder.addTextBody("email", email);
+	        builder.addTextBody("description", description);
+	        builder.addTextBody("price",  price);
+
+	        post.setEntity(builder.build()); 
+
+	        try 
+	        {
+	        	HttpResponse response = client.execute(post);
+	        	//System.out.println(response);
+	        } 
+	         
+	        catch (ClientProtocolException e) 
+	        {
+	        	// TODO Auto-generated catch block
+				e.printStackTrace();
+	        } 
+	         
+	        catch (IOException e) 
+	        {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+	        }
+	        
+	        client.getConnectionManager().shutdown(); 
+	        
+	        return null;  
+	    }
+	    
+	    
+
+	}
+
+
+	@Override
+	public void onLoginSuccessful() {
+		new AdPost().execute(ad);
+		
+	}
 	
 	/*
 	public int uploadFile(String sourceFileUri) {
@@ -578,105 +700,6 @@ public class ConfirmPost extends Activity {
 		finish();
 	}
 	*/
-
-	
-	class AdPost extends AsyncTask<Ad, Void, Void> {		
-	    
-	    private ProgressDialog uploadingDialog;
-
-	    @Override
-	    protected void onPreExecute() {
-	    	uploadingDialog = new ProgressDialog(ConfirmPost.this);
-	    	uploadingDialog.setMessage("Posting...");
-	    	uploadingDialog.getWindow().setLayout(LayoutParams.WRAP_CONTENT,LayoutParams.WRAP_CONTENT);
-	    	uploadingDialog.setCancelable(false); 
-	    	uploadingDialog.show();
-	    }
-	    
-	    @Override
-	    protected void onPostExecute(Void string) {
-	        try 
-	        {	        	
-	        	if (uploadingDialog.isShowing()) 
-	        	{
-	        		uploadingDialog.dismiss();
-	        	}
-	        	
-	        	finish();
-	        	
-	        } 
-	        
-	        catch(Exception e) {
-	        }
-
-	    }
-	    
-
-	    protected Void doInBackground(Ad... params) {
-	    	Ad ad = params[0];
-	    	String filePath = ad.getLocalPath();
-	    	String email = ad.getSeller().getEmail();
-	    	String description = ad.getDescription();
-	    	String price = ad.getPrice().toString();
-	    	
-	    	
-	    	HttpClient client = new DefaultHttpClient();  
-	    	String postURL = "http://ec2-54-213-102-70.us-west-2.compute.amazonaws.com/cell_upload";
-
-	        HttpPost post = new HttpPost(postURL); 
-
-	        MultipartEntityBuilder builder = MultipartEntityBuilder.create();
-	        
-	        Bitmap bmp = BitmapFactory.decodeFile(filePath);
-    		ByteArrayOutputStream bos = new ByteArrayOutputStream();
-    		
-    		//Number represents compression amount
-    		bmp.compress(CompressFormat.JPEG, 50, bos);
-    		InputStream in = new ByteArrayInputStream(bos.toByteArray());
-			
-    		//ContentBody photoFile = new InputStreamBody(in, "image/jpeg", "filename.jpg");
-    		ContentBody photoFile = new InputStreamBody(in, "filename.jpg");
-	        		
-	        /* example for setting a HttpMultipartMode */
-	        builder.setMode(HttpMultipartMode.BROWSER_COMPATIBLE);
-
-	        /* example for adding an image part */
-	        //FileBody fileBody = new FileBody(new File(filePath)); //image should be a String
-	        //builder.addPart("file", fileBody);
-	        
-	        builder.addPart("file", photoFile); 
-	        builder.addTextBody("email", email);
-	        builder.addTextBody("description", description);
-	        builder.addTextBody("price",  price);
-
-	        post.setEntity(builder.build()); 
-
-	        try 
-	        {
-	        	HttpResponse response = client.execute(post);
-	        	//System.out.println(response);
-	        } 
-	         
-	        catch (ClientProtocolException e) 
-	        {
-	        	// TODO Auto-generated catch block
-				e.printStackTrace();
-	        } 
-	         
-	        catch (IOException e) 
-	        {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-	        }
-	        
-	        client.getConnectionManager().shutdown(); 
-	        
-	        return null;  
-	    }
-	    
-	    
-
-	}
 	
 
 	
