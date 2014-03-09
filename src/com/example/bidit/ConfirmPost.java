@@ -86,7 +86,7 @@ import android.widget.TextView.OnEditorActionListener;
  * 
  * @see SystemUiHider
  */
-public class ConfirmPost extends Activity implements OnLoginSuccessful{
+public class ConfirmPost extends BiditActivity implements OnLoginSuccessful{
 	
 	String absolutePhotoPath;
 	Uri myUri = null;
@@ -223,7 +223,7 @@ public class ConfirmPost extends Activity implements OnLoginSuccessful{
 	public boolean onCreateOptionsMenu(Menu menu) {
 		// Inflate the menu; this adds items to the action bar if it is present.
 		getMenuInflater().inflate(R.menu.main, menu);
-		return true;
+		return super.onCreateOptionsMenu(menu);
 	}
 	
 	@Override
@@ -331,8 +331,7 @@ public class ConfirmPost extends Activity implements OnLoginSuccessful{
 	    	
 	    	else 
 	    	{
-
-		    	BigDecimal adPrice = new BigDecimal(ad_price.getText().toString());
+	    		BigDecimal adPrice = new BigDecimal(ad_price.getText().toString());
 		    	user = new User("test@gmail.com", "jon", "test");
 		    	ad = new Ad(user, adPrice, ad_description.getText().toString(), null, null);
 		    	ad.setLocalPath(absolutePhotoPath);
@@ -465,7 +464,24 @@ public class ConfirmPost extends Activity implements OnLoginSuccessful{
 	        		uploadingDialog.dismiss();
 	        	}
 	        	
-	        	finish();
+	        	AlertDialog.Builder builder = new AlertDialog.Builder(ConfirmPost.this);
+                builder.setCancelable(false);
+                builder.setTitle("Post Success!");
+                //builder.setMessage("Please check that all the fields have a valid input!");
+                builder.setInverseBackgroundForced(true);
+                builder.setPositiveButton("OK",
+                        new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog,
+                                    int which) {
+                                dialog.dismiss();
+                                finish();
+                            }
+                        });
+                
+                AlertDialog alert = builder.create();
+                alert.show();
+                alert.getWindow().setLayout(500, ViewGroup.LayoutParams.WRAP_CONTENT);
 	        	
 	        } 
 	        
@@ -546,7 +562,10 @@ public class ConfirmPost extends Activity implements OnLoginSuccessful{
 				e.printStackTrace();
 	        }
 	        
+	       
+	        
 	        try {
+	        	bos.close();
 				in.close();
 			} catch (IOException e) {
 				// TODO Auto-generated catch block

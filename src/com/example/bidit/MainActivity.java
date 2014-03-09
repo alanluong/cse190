@@ -1,8 +1,12 @@
 package com.example.bidit;
 
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
@@ -29,6 +33,8 @@ import android.app.FragmentManager;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.Bitmap.CompressFormat;
 import android.view.Menu;
 import android.view.MotionEvent;
 import android.view.View;
@@ -52,26 +58,24 @@ public class MainActivity extends BiditActivity implements OnClickListener,
 	}
 
 	private static final int REQUEST_CODE = 10;
-	String mCurrentPhotoPath;
-	String absolutePhotoPath;
+	String mCurrentPhotoPath = "";
+	String absolutePhotoPath = "";
 	Uri capturedImageUri = null;
 
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		// Inflate the menu; this adds items to the action bar if it is present.
+		
 		getMenuInflater().inflate(R.menu.main, menu);
-		return true;
+		return super.onCreateOptionsMenu(menu);
 	}
 
 	@Override
 	public void onClick(View view) {
-		System.out.println("something clicked");
 		if (view instanceof Button) {
 			Button clicked = (Button) view;
-			System.out.println("button clicked");
 			switch (clicked.getId()) {
 			case R.id.buybutton:
-				System.out.println("buy button clicked");
 				Intent intent = new Intent(MainActivity.this, BrowseActivity.class);
 				startActivity(intent);
 /*	
@@ -139,8 +143,18 @@ public class MainActivity extends BiditActivity implements OnClickListener,
 	protected void onSaveInstanceState(Bundle outState) {
 		super.onSaveInstanceState(outState);
 		
+		//if(absolutePhotoPath)
 		outState.putString("pathString", absolutePhotoPath);
-		outState.putString("uriString", capturedImageUri.toString());
+		
+		if(capturedImageUri != null)
+		{
+			outState.putString("uriString", capturedImageUri.toString());
+		}
+		
+		else
+		{
+			outState.putString("uriString", "");
+		}
 	}
 
 	@Override
@@ -159,6 +173,53 @@ public class MainActivity extends BiditActivity implements OnClickListener,
 		if (requestCode == REQUEST_CODE) {
 			switch (resultCode) {
 			case RESULT_OK:
+				/*
+				File f = new File(absolutePhotoPath);
+				
+				Bitmap originalBitmap = BitmapFactory.decodeFile(absolutePhotoPath);
+				
+				int newHeight = (int) (originalBitmap.getHeight()*.95);
+				int newWidth = (int) (originalBitmap.getWidth()*.95);
+				
+				/*
+				if((originalBitmap.getHeight() > originalBitmap.getWidth()) && originalBitmap.getHeight() > 1920)
+				{
+					newHeight = 1920;
+					newWidth = 1080;
+					originalBitmap = Bitmap.createScaledBitmap(originalBitmap, newWidth, newHeight, true);
+				}
+				
+				else
+				if((originalBitmap.getHeight() < originalBitmap.getWidth()) && originalBitmap.getHeight() > 1080)
+				{
+					newHeight = 1080;
+					newWidth = 1920;
+					originalBitmap = Bitmap.createScaledBitmap(originalBitmap, newWidth, newHeight, true);
+				}
+				
+				
+				originalBitmap = Bitmap.createScaledBitmap(originalBitmap, newWidth, newHeight, true);
+				
+	    		ByteArrayOutputStream bos = new ByteArrayOutputStream();
+	    		
+	    		originalBitmap.compress(CompressFormat.JPEG, 50, bos);
+	    		
+	    		byte[] bitmapdata = bos.toByteArray();
+
+	    		//write the bytes in file
+	    		
+	    		try {
+	    			FileOutputStream fos = new FileOutputStream(f);
+					fos.write(bitmapdata);
+					fos.flush();
+		    		fos.close();
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+	    		*/
+	    		
+				
 				Intent confirmPost = new Intent(MainActivity.this, ConfirmPost.class);
 				confirmPost.putExtra("absolutePath", absolutePhotoPath);
 				confirmPost.putExtra("uri", capturedImageUri.toString());

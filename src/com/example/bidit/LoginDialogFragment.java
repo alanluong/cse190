@@ -37,6 +37,7 @@ import android.view.WindowManager;
 import android.webkit.WebView.FindListener;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Toast;
 
 public class LoginDialogFragment extends DialogFragment {
 	public LoginDialogFragment() {
@@ -64,7 +65,20 @@ public class LoginDialogFragment extends DialogFragment {
 								LoginDialogFragment.this.getDialog().cancel();
 							}
 						});
-		return builder.create();
+		
+		Dialog dialog = builder.create();
+		//dialog.getWindow().setLayout(300, ViewGroup.LayoutParams.WRAP_CONTENT);
+         
+		//WindowManager.LayoutParams lp = new WindowManager.LayoutParams();
+
+    	//lp.copyFrom(dialog.getWindow().getAttributes());
+    	//lp.width = 900;
+    	//lp.height = 1000;
+    	//lp.x=-170;
+    	//lp.y=100;
+    	//alert.getWindow().setAttributes(lp);
+		
+		return dialog;
 	}
 
 	@Override
@@ -124,9 +138,12 @@ public class LoginDialogFragment extends DialogFragment {
 			if (login.booleanValue()) {
 				loggingInDialog.dismiss();
 				myListener.onLoginSuccessful();
+				Toast.makeText(myContext, "Login Successful", Toast.LENGTH_SHORT).show();
+				
 			} 
 			
 			else {
+				Toast.makeText(myContext, "Incorrect Credentials", Toast.LENGTH_SHORT).show();
 				loggingInDialog.dismiss();
 			}
 
