@@ -62,13 +62,17 @@ public class MainActivity extends BiditActivity implements OnClickListener,
 	String absolutePhotoPath = "";
 	Uri capturedImageUri = null;
 
-	@Override
+	/*@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		// Inflate the menu; this adds items to the action bar if it is present.
 		
 		getMenuInflater().inflate(R.menu.main, menu);
+<<<<<<< HEAD
 		return super.onCreateOptionsMenu(menu);
 	}
+=======
+		return true;
+	}*/
 
 	@Override
 	public void onClick(View view) {
@@ -76,7 +80,8 @@ public class MainActivity extends BiditActivity implements OnClickListener,
 			Button clicked = (Button) view;
 			switch (clicked.getId()) {
 			case R.id.buybutton:
-				Intent intent = new Intent(MainActivity.this, BrowseActivity.class);
+				//Intent intent = new Intent(MainActivity.this, BrowseActivity.class);
+				Intent intent = new Intent(MainActivity.this, ImagePagerActivity.class);
 				startActivity(intent);
 /*	
 		if(view instanceof Button){
@@ -139,7 +144,7 @@ public class MainActivity extends BiditActivity implements OnClickListener,
 	
 	
 
-	@Override
+	/*@Override
 	protected void onSaveInstanceState(Bundle outState) {
 		super.onSaveInstanceState(outState);
 		
@@ -164,7 +169,7 @@ public class MainActivity extends BiditActivity implements OnClickListener,
 		
 		capturedImageUri = Uri.parse(savedInstanceState.getString("uriString"));
 		absolutePhotoPath = savedInstanceState.getString("pathString");
-	}
+	}*/
 
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {

@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    
+    <item name="action_mybids" type="id"/>
+    <item name="action_mymessages" type="id"/>
+    <item name="action_logout" type="id"/>
+    
+</resources>
