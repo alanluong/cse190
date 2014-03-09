@@ -109,7 +109,12 @@ public class ConfirmPost extends Activity implements OnLoginSuccessful{
 		if (extras != null) {
 			myUri = Uri.parse(extras.getString("uri"));
 			absolutePhotoPath = extras.getString("absolutePath");
+			//absolutePhotoPath = extras.getString("uri");
 		}
+		
+		System.out.println(myUri);
+		System.out.println(absolutePhotoPath);
+		
 
 		ImageView contentView = (ImageView) findViewById(R.id.fullscreen_content1);
 		//LinearLayout contentView = (LinearLayout) findViewById (R.id.fullscreen_content);
@@ -117,7 +122,7 @@ public class ConfirmPost extends Activity implements OnLoginSuccessful{
 		//wholeView.requestFocus();
 		
 		try {
-			Bitmap bitmap = MediaStore.Images.Media.getBitmap( getApplicationContext().getContentResolver(), myUri);
+			Bitmap bitmap = MediaStore.Images.Media.getBitmap(getApplicationContext().getContentResolver(), myUri);
 			//Drawable d = new BitmapDrawable(getResources(), bitmap);
 			contentView.setImageBitmap(bitmap);
 			//contentView.setBackground(d);
@@ -334,7 +339,6 @@ public class ConfirmPost extends Activity implements OnLoginSuccessful{
 		    	
 		    	if(pref.getBoolean("isLoggedIn", false) == false)
 		    	{
-		    		LoginDialogFragment ldf = new LoginDialogFragment();
 		    		new LoginDialogFragment().show(getFragmentManager(), "loginDialog");
 		    	}
 		    	
@@ -487,6 +491,20 @@ public class ConfirmPost extends Activity implements OnLoginSuccessful{
 	        MultipartEntityBuilder builder = MultipartEntityBuilder.create();
 	        
 	        Bitmap bmp = BitmapFactory.decodeFile(filePath);
+	        
+	        /*
+	        Bitmap bmp;
+			try {
+				bmp = MediaStore.Images.Media.getBitmap(getApplicationContext().getContentResolver(), myUri);
+			} catch (FileNotFoundException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			} catch (IOException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
+			*/
+	        
     		ByteArrayOutputStream bos = new ByteArrayOutputStream();
     		
     		//Number represents compression amount
@@ -528,7 +546,14 @@ public class ConfirmPost extends Activity implements OnLoginSuccessful{
 				e.printStackTrace();
 	        }
 	        
-	        client.getConnectionManager().shutdown(); 
+	        try {
+				in.close();
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+	        
+	        //client.getConnectionManager().shutdown(); 
 	        
 	        return null;  
 	    }
