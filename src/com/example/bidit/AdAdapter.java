@@ -39,12 +39,11 @@ public class AdAdapter /*extends ArrayAdapter<Ad>*/ extends FragmentStatePagerAd
 		this(fm, null);
 	}
 	
-	public AdAdapter(FragmentManager fm, AdAdapter def){
+	public AdAdapter(FragmentManager fm, ArrayList<Ad> def){
 		super(fm);
-		if(def == null){
-			mAds = new ArrayList<Ad>();
-		}else{
-			System.out.println(mAds);
+		mAds = new ArrayList<Ad>();
+		if(def != null){
+			mAds.addAll(def);
 		}
 	}
 
@@ -63,5 +62,9 @@ public class AdAdapter /*extends ArrayAdapter<Ad>*/ extends FragmentStatePagerAd
 		for(Ad ad : ads){
 			mAds.add(ad);
 		}
+	}
+	
+	public ArrayList<Ad> getAds(){
+		return mAds;
 	}
 }

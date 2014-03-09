@@ -3,6 +3,7 @@ package com.example.bidit;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.net.URL;
+import java.util.ArrayList;
 
 import org.apache.http.HttpResponse;
 import org.apache.http.client.ClientProtocolException;
@@ -27,6 +28,7 @@ import android.view.MenuItem;
 public class BrowseActivity extends BiditActivity {
 
 	AdAdapter adapter;
+	ArrayList<Ad> savedAds;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -36,7 +38,12 @@ public class BrowseActivity extends BiditActivity {
 		ActionBar actionBar = getActionBar();
 		actionBar.setDisplayHomeAsUpEnabled(true);
 		
-		adapter = new AdAdapter(getSupportFragmentManager(), adapter);
+		if(savedAds == null){
+			adapter = new AdAdapter(getSupportFragmentManager(), savedAds);
+			new RequestAdsTask().execute();
+		}else{
+			adapter = new AdAdapter(getSupportFragmentManager());
+		}
 		
 		// This is for ListView
 		/*ListView lv = (ListView)findViewById(R.id.browseList);
@@ -58,8 +65,21 @@ public class BrowseActivity extends BiditActivity {
 		// Using ViewPager instead
 		ViewPager vp = (ViewPager)findViewById(R.id.pager);
 		vp.setAdapter(adapter);
-		new RequestAdsTask().execute();
 		
+		int position = 0;
+		if(savedInstanceState != null){
+			position = savedInstanceState.getInt("currentPage");
+		}
+		Log.d(BrowseActivity.class.getName(), "loaded position: " + position);
+		vp.setCurrentItem(position);
+	}
+	
+	@Override
+	public void onSaveInstanceState(Bundle savedInstanceState){
+		int position = ((ViewPager)(findViewById(R.id.pager))).getCurrentItem();
+		Log.d(BrowseActivity.class.getName(), "saved position: " + position);
+		savedInstanceState.putInt("currentPage", position);
+		savedAds = adapter.getAds();
 	}
 
 	@Override
@@ -107,7 +127,7 @@ public class BrowseActivity extends BiditActivity {
 		protected void onProgressUpdate(Ad... ads) {
 			adapter.addAll(ads);
 			adapter.notifyDataSetChanged();
-			Log.d(BrowseActivity.class.getName(), "" + adapter.getCount());
+			Log.d(BrowseActivity.class.getName(), "count: " + adapter.getCount());
 		}
 		
 		private Bitmap loadImageFromUrl(String url)
