@@ -64,9 +64,4 @@ public class AdAdapter /*extends ArrayAdapter<Ad>*/ extends FragmentStatePagerAd
 			mAds.add(ad);
 		}
 	}
-
-	/*
-	public static Ad getAd(int position) {
-		return mAds.get(position);
-	}*/
 }

@@ -25,14 +25,10 @@ public class AdSlideFragment extends Fragment {
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		ViewGroup rootView = (ViewGroup) inflater.inflate(R.layout.ads_list_item, container, false);
 		
-		int position = getArguments().getInt("adNum");
-		//Ad it = AdAdapter.getAd(position);
-		//if (it != null) {
 		ImageView iv = (ImageView) rootView.findViewById(R.id.list_product_image);
 		if (iv != null) {
 			iv.setImageBitmap((Bitmap)(getArguments().getParcelable("image")));
 		}
-		//}
 		
 		rootView.setOnClickListener(new OnClickListener(){
 			@Override

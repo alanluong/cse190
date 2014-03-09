@@ -34,15 +34,7 @@ public class BidDialogFragment extends DialogFragment {
         View view = inflater.inflate(R.layout.fragment_bid, container);
         mEditText = (EditText) view.findViewById(R.id.txt_your_bid);
         
-        //get the arguments here
-        //String title = getArguments().getString("title", "Enter Name");
-        //getDialog().setTitle(title);
-        //int position = getArguments().getInt("adNum");
-        //Ad it = AdAdapter.getAd(position);
         getDialog().setTitle("[$"+getArguments().getString("price")+"] - " + getArguments().getString("description"));
-        
-        //TextView tv = (TextView)(view.findViewById(R.id.price));
-        //tv.setText(it.getPrice().toString());
         
         // Show soft keyboard automatically
         mEditText.requestFocus();
