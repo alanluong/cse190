@@ -132,6 +132,25 @@ public class MainActivity extends BiditActivity implements OnClickListener,
 		}
 
 	}
+	
+	
+
+	@Override
+	protected void onSaveInstanceState(Bundle outState) {
+		super.onSaveInstanceState(outState);
+		
+		outState.putString("pathString", absolutePhotoPath);
+		outState.putString("uriString", capturedImageUri.toString());
+	}
+
+	@Override
+	protected void onRestoreInstanceState(Bundle savedInstanceState) {
+		// TODO Auto-generated method stub
+		super.onRestoreInstanceState(savedInstanceState);
+		
+		capturedImageUri = Uri.parse(savedInstanceState.getString("uriString"));
+		absolutePhotoPath = savedInstanceState.getString("pathString");
+	}
 
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {

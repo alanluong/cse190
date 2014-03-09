@@ -23,7 +23,10 @@ import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.DialogFragment;
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.DialogInterface;
+import android.content.SharedPreferences;
+import android.content.SharedPreferences.Editor;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
@@ -51,7 +54,7 @@ public class LoginDialogFragment extends DialogFragment {
 						new DialogInterface.OnClickListener() {
 							@Override
 							public void onClick(DialogInterface dialog, int id) {
-								new LoginTask((OnLoginSuccessful)getActivity()).execute(view);
+								new LoginTask((OnLoginSuccessful)getActivity(), getActivity()).execute(view);
 							}
 
 						})
@@ -75,15 +78,33 @@ public class LoginDialogFragment extends DialogFragment {
 
 		private ProgressDialog loggingInDialog;
 		private OnLoginSuccessful myListener;
+		private Context myContext;
 		
-		public LoginTask(OnLoginSuccessful listener) {
+		public LoginTask(OnLoginSuccessful listener, Context context) {
 			this.myListener = listener;
+			this.myContext = context;
+		}
+
+		public OnLoginSuccessful getMyListener() {
+			return myListener;
+		}
+
+		public void setMyListener(OnLoginSuccessful myListener) {
+			this.myListener = myListener;
+		}
+
+		public Context getMyContext() {
+			return myContext;
+		}
+
+		public void setMyContext(Context myContext) {
+			this.myContext = myContext;
 		}
 
 		@Override
 		protected void onPreExecute() {
 			loggingInDialog = new ProgressDialog(getActivity());
-			loggingInDialog.setMessage("Loggin In...");
+			loggingInDialog.setMessage("Logging In...");
 			// uploadingDialog.getWindow().setLayout(LayoutParams.WRAP_CONTENT,LayoutParams.WRAP_CONTENT);
 			loggingInDialog.setCancelable(false);
 			loggingInDialog.show();
@@ -106,7 +127,7 @@ public class LoginDialogFragment extends DialogFragment {
 			} 
 			
 			else {
-				loggingInDialog.setCancelable(false);
+				loggingInDialog.dismiss();
 			}
 
 		}
@@ -129,6 +150,15 @@ public class LoginDialogFragment extends DialogFragment {
 				if (response.getStatusLine().getStatusCode() == 403) {
 					return false;
 				}
+				
+				SharedPreferences prefs = Util.getPreferences(getMyContext());
+				Editor editor = prefs.edit();
+				
+				editor.putBoolean("isLoggedIn", true);
+				editor.putString("Username", username);
+				editor.putString("Password", password);
+				editor.commit();
+				
 				String content = EntityUtils.toString(response.getEntity());
 				Log.d("LoginDialog", content);
 				return true;
