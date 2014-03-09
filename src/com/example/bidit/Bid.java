@@ -1,20 +1,24 @@
 package com.example.bidit;
 
+import java.math.BigDecimal;
+
 public class Bid {
-	private double price;
+	private BigDecimal price;
 	private User bidder;
 	private User seller;
+	private Ad ad;
 	
-	public Bid(double p, User b, User s){
+	public Bid(BigDecimal p, User b, User s, Ad a){
 		setPrice(p);
 		setBidder(b);
 		setSeller(s);
+		setAd(a);
 	}
 	
-	public double getPrice() {
+	public BigDecimal getPrice() {
 		return price;
 	}
-	public void setPrice(double price) {
+	public void setPrice(BigDecimal price) {
 		this.price = price;
 	}
 	public User getBidder() {
@@ -28,5 +32,11 @@ public class Bid {
 	}
 	public void setSeller(User seller) {
 		this.seller = seller;
+	}
+	public Ad getAd(){
+		return ad;
+	}
+	public void setAd(Ad ad){
+		this.ad = ad;
 	}
 }

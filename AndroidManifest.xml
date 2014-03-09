@@ -59,6 +59,14 @@
             android:name="com.example.bidit.PostActivity"
             android:label="@string/title_activity_post" >
         </activity>
+        <activity
+            android:name="com.example.bidit.ViewBidsActivity"
+            android:label="@string/app_name">
+        </activity>
+        <activity
+            android:name="com.example.bidit.ViewMessagesActivity"
+            android:label="@string/app_name">
+        </activity>
     </application>
 
 </manifest>

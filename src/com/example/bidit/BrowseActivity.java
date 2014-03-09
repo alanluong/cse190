@@ -38,8 +38,8 @@ public class BrowseActivity extends BiditActivity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_browse);
 		
-		ActionBar actionBar = getActionBar();
-		actionBar.setDisplayHomeAsUpEnabled(true);
+		//ActionBar actionBar = getActionBar();
+		//actionBar.setDisplayHomeAsUpEnabled(true);
 		
 		if(savedAds == null){
 			adapter = new AdAdapter(getSupportFragmentManager(), savedAds);
@@ -132,7 +132,7 @@ public class BrowseActivity extends BiditActivity {
 		}
 	}
 	
-	@Override
+	/*@Override
 	public boolean onOptionsItemSelected(MenuItem item){
 		if(super.onOptionsItemSelected(item)){
 			return true;
@@ -140,7 +140,7 @@ public class BrowseActivity extends BiditActivity {
 		Intent myIntent = new Intent(getApplicationContext(), MainActivity.class);
 		startActivityForResult(myIntent, 0);
 		return true;
-	}
+	}*/
 
 
 	@Override

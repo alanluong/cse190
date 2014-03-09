@@ -1,9 +1,11 @@
 package com.example.bidit;
 
+import android.app.ActionBar;
 import android.app.backup.SharedPreferencesBackupHelper;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.content.Intent;
+import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -16,16 +18,16 @@ public abstract class BiditActivity extends FragmentActivity implements OnLoginS
 		super();
 	}
 	
+	protected void onCreate(Bundle savedInstanceState){
+		super.onCreate(savedInstanceState);
+		ActionBar actionBar = getActionBar();
+		actionBar.setDisplayHomeAsUpEnabled(true);
+	}
+	
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		// Inflate the menu; this adds items to the action bar if it is present.
 		getMenuInflater().inflate(R.menu.main, menu);
-		//if(loggedIn){
-			MenuItem loginItem = menu.getItem(0);
-			loginItem.setTitle("Logout");
-			menu.add(Menu.NONE, R.id.action_mybids, Menu.NONE, "My Bids");
-			menu.add(Menu.NONE, R.id.action_mymessages, Menu.NONE, "My Messages");
-		//}
 		return true;
 	}
 
@@ -36,6 +38,8 @@ public abstract class BiditActivity extends FragmentActivity implements OnLoginS
 		{
 			menu.findItem(R.id.action_login).setVisible(true);
 			menu.findItem(R.id.action_logout).setVisible(false);
+			menu.findItem(R.id.action_mybids).setVisible(false);
+			menu.findItem(R.id.action_mymessages).setVisible(false);
 			System.out.println("loggedout");
 		}
 		
@@ -43,6 +47,8 @@ public abstract class BiditActivity extends FragmentActivity implements OnLoginS
 		{
 			menu.findItem(R.id.action_login).setVisible(false);
 			menu.findItem(R.id.action_logout).setVisible(true);
+			menu.findItem(R.id.action_mybids).setVisible(true);
+			menu.findItem(R.id.action_mymessages).setVisible(true);
 			System.out.println("loggedin");
 		}
 		this.invalidateOptionsMenu();
@@ -57,23 +63,22 @@ public abstract class BiditActivity extends FragmentActivity implements OnLoginS
 			new LoginDialogFragment().show(getFragmentManager(), "login");
 			return true;
 		case R.id.action_logout:
-
 			Editor edit = prefs.edit();
 			edit.putBoolean("isLoggedIn", false);
 			edit.commit();
 			return true;
-		case R.id.action_settings:
-			//implementation for settings goes here
-			return true;
-
 		case R.id.action_mybids:
 			Intent intent = new Intent(this, ViewBidsActivity.class);
 			startActivity(intent);
 			return true;
 		case R.id.action_mymessages:
-			/*Intent intent2 = new Intent(this, ViewMessagesActivity.class);
-			startActivity(intent2);*/
+			Intent intent2 = new Intent(this, ViewMessagesActivity.class);
+			startActivity(intent2);
 			return true;
+		default:
+			Intent myIntent = new Intent(getApplicationContext(), MainActivity.class);
+			startActivityForResult(myIntent, 0);
+			break;
 		}
 		return super.onOptionsItemSelected(item);
 	}

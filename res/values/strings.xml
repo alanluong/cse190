@@ -28,6 +28,7 @@
     <string name="price">Price</string>
     <string name="logout">Logout</string>
     <string name="mybids">My Bids</string>
+    <string name="mymessages">My Messages</string>
     <string name="descr_image">descr_image</string>
 
 </resources>

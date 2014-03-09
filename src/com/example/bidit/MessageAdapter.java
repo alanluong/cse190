@@ -7,12 +7,12 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.TextView;
 
-public class BidAdapter extends ArrayAdapter<Bid> {
+public class MessageAdapter extends ArrayAdapter<Message> {
 
-	public BidAdapter(Context context, int resource) {
+	public MessageAdapter(Context context, int resource) {
 		super(context, resource);
 	}
-	
+
 	@Override
 	public View getView(int position, View convertView, ViewGroup parent) {
 		View v = convertView;
@@ -20,17 +20,14 @@ public class BidAdapter extends ArrayAdapter<Bid> {
 		if (v == null) {
 			LayoutInflater vi = (LayoutInflater) getContext().getSystemService(
 					Context.LAYOUT_INFLATER_SERVICE);
-			v = vi.inflate(R.layout.bids_list_item, null);
+			v = vi.inflate(R.layout.messages_list_item, null);
 		}
 
-		Bid it = this.getItem(position);
-		TextView itemDescription = (TextView) v.findViewById(R.id.item_description);
-		itemDescription.setText("this is where the description goes");
-		TextView bidPrice = (TextView) v.findViewById(R.id.bid_price);
-		bidPrice.setText("" + it.getPrice());
+		Message it = this.getItem(position);
+		TextView messageContent = (TextView) v.findViewById(R.id.msg_content);
+		messageContent.setText("" + it.getContent());
 
 		
 		return v;
 	}
-
 }
