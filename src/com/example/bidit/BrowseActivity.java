@@ -2,7 +2,6 @@ package com.example.bidit;
 
 import java.io.IOException;
 import java.math.BigDecimal;
-import java.net.MalformedURLException;
 import java.net.URL;
 
 import org.apache.http.HttpResponse;
@@ -18,14 +17,11 @@ import android.graphics.BitmapFactory;
 import android.app.ActionBar;
 import android.content.Intent;
 
-import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.view.ViewPager;
 import android.util.Log;
 import android.view.Menu;
-import android.view.View;
-import android.view.View.OnClickListener;
 import android.view.MenuItem;
 
 public class BrowseActivity extends BiditActivity {
@@ -124,7 +120,6 @@ public class BrowseActivity extends BiditActivity {
 				purl = new URL(url);
 				bmp = BitmapFactory.decodeStream(purl.openConnection().getInputStream());
 			} catch (Exception e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 			return bmp;
