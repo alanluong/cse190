@@ -55,12 +55,9 @@ public class ImagePagerActivity extends BiditActivity {
 		imageLoader = ImageLoader.getInstance();
 		imageLoader.init(config);
 
-		//Bundle bundle = getIntent().getExtras();
-		//assert bundle != null;
-		//String[] imageUrls = bundle.getStringArray(Extra.IMAGES);
-		//int pagerPosition = bundle.getInt(Extra.IMAGE_POSITION, 0);
-		//imageUrls = Constants.IMAGES;
 		new RequestAdsTask().execute();
+
+		
 		int pagerPosition = 0;
 
 		if (savedInstanceState != null) {
@@ -79,8 +76,7 @@ public class ImagePagerActivity extends BiditActivity {
 			.build();
 
 		pager = (ViewPager) findViewById(R.id.pager);
-		Log.d("pager", pager.toString());
-		pager.setAdapter(new ImagePagerAdapter(imageUrls));
+		//pager.setAdapter(new ImagePagerAdapter(imageUrls));
 		pager.setCurrentItem(pagerPosition);
 	}
 
@@ -97,7 +93,6 @@ public class ImagePagerActivity extends BiditActivity {
 		ImagePagerAdapter(String[] images) {
 			this.images = images;
 			inflater = getLayoutInflater();
-			Log.d("passed","passed");
 		}
 
 		@Override
@@ -112,6 +107,7 @@ public class ImagePagerActivity extends BiditActivity {
 
 		@Override
 		public Object instantiateItem(ViewGroup view, final int position) {
+			
 			View imageLayout = inflater.inflate(R.layout.item_pager_image, view, false);
 			assert imageLayout != null;
 			ImageView imageView = (ImageView) imageLayout.findViewById(R.id.image);
@@ -120,13 +116,10 @@ public class ImagePagerActivity extends BiditActivity {
 			imageView.setOnClickListener(new OnClickListener(){
 				@Override
 				public void onClick(View arg0) {
-					//if (Config.getCurrentUser() == null) {
-					//	new LoginDialogFragment().show(getFragmentManager(),
-					//			"login");
-					//} else {
+
 						BidDialogFragment bdf = BidDialogFragment.newInstance(adapter.getAd(position).getDescription(), adapter.getAd(position).getPrice().toString());
 						bdf.show(getSupportFragmentManager(), "BidDialog");
-					//}
+
 				}
 			});
 			
@@ -232,6 +225,12 @@ public class ImagePagerActivity extends BiditActivity {
 			adapter.addAll(ads);
 			adapter.notifyDataSetChanged();
 			Log.d(BrowseActivity.class.getName(), "count: " + adapter.getCount());
+		}
+		
+		@Override
+		protected void onPostExecute(Void vd) {
+			//wait for ad objects before rendering
+			pager.setAdapter(new ImagePagerAdapter(imageUrls));	
 		}
 		
 	}
