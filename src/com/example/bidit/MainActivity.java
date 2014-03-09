@@ -72,7 +72,7 @@ public class MainActivity extends BiditActivity implements OnClickListener,
 			switch (clicked.getId()) {
 			case R.id.buybutton:
 				System.out.println("buy button clicked");
-				Intent intent = new Intent(MainActivity.this, BrowseActivity.class);
+				Intent intent = new Intent(MainActivity.this, ImagePagerActivity.class);
 				startActivity(intent);
 /*	
 		if(view instanceof Button){

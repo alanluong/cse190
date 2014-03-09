@@ -27,5 +27,6 @@
     <string name="login">Login</string>
     <string name="price">Price</string>
     <string name="mybids">My Bids</string>
+    <string name="descr_image">descr_image</string>
 
 </resources>
