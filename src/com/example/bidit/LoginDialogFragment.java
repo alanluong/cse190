@@ -1,24 +1,14 @@
 package com.example.bidit;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
-import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpPost;
-import org.apache.http.client.utils.URIBuilder;
 import org.apache.http.message.BasicNameValuePair;
-import org.apache.http.params.BasicHttpParams;
-import org.apache.http.params.HttpParams;
 import org.apache.http.util.EntityUtils;
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.DialogFragment;
@@ -34,8 +24,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
-import android.webkit.WebView.FindListener;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
@@ -55,36 +43,27 @@ public class LoginDialogFragment extends DialogFragment {
 						new DialogInterface.OnClickListener() {
 							@Override
 							public void onClick(DialogInterface dialog, int id) {
-								new LoginTask((OnLoginSuccessful)getActivity(), getActivity()).execute(view);
+								new LoginTask(
+										(OnLoginSuccessful) getActivity(),
+										getActivity()).execute(view);
 							}
 
 						})
 				.setNegativeButton(R.string.cancel,
 						new DialogInterface.OnClickListener() {
+							@Override
 							public void onClick(DialogInterface dialog, int id) {
 								LoginDialogFragment.this.getDialog().cancel();
 							}
 						});
-		
-		Dialog dialog = builder.create();
-		//dialog.getWindow().setLayout(300, ViewGroup.LayoutParams.WRAP_CONTENT);
-         
-		//WindowManager.LayoutParams lp = new WindowManager.LayoutParams();
 
-    	//lp.copyFrom(dialog.getWindow().getAttributes());
-    	//lp.width = 900;
-    	//lp.height = 1000;
-    	//lp.x=-170;
-    	//lp.y=100;
-    	//alert.getWindow().setAttributes(lp);
-		
+		Dialog dialog = builder.create();
 		return dialog;
 	}
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
-		// TODO Auto-generated method stub
 		return super.onCreateView(inflater, container, savedInstanceState);
 	}
 
@@ -93,7 +72,7 @@ public class LoginDialogFragment extends DialogFragment {
 		private ProgressDialog loggingInDialog;
 		private OnLoginSuccessful myListener;
 		private Context myContext;
-		
+
 		public LoginTask(OnLoginSuccessful listener, Context context) {
 			this.myListener = listener;
 			this.myContext = context;
@@ -119,17 +98,11 @@ public class LoginDialogFragment extends DialogFragment {
 		protected void onPreExecute() {
 			loggingInDialog = new ProgressDialog(getActivity());
 			loggingInDialog.setMessage("Logging In...");
-			// uploadingDialog.getWindow().setLayout(LayoutParams.WRAP_CONTENT,LayoutParams.WRAP_CONTENT);
 			loggingInDialog.setCancelable(false);
 			loggingInDialog.show();
-
 			WindowManager.LayoutParams lp = new WindowManager.LayoutParams();
-
 			lp.copyFrom(loggingInDialog.getWindow().getAttributes());
 			lp.width = 700;
-			// lp.height = 150;
-			// lp.x=-170;
-			// lp.y=100;
 			loggingInDialog.getWindow().setAttributes(lp);
 		}
 
@@ -138,12 +111,14 @@ public class LoginDialogFragment extends DialogFragment {
 			if (login.booleanValue()) {
 				loggingInDialog.dismiss();
 				myListener.onLoginSuccessful();
-				Toast.makeText(myContext, "Login Successful", Toast.LENGTH_SHORT).show();
-				
-			} 
-			
+				Toast.makeText(myContext, "Login Successful",
+						Toast.LENGTH_SHORT).show();
+
+			}
+
 			else {
-				Toast.makeText(myContext, "Incorrect Credentials", Toast.LENGTH_SHORT).show();
+				Toast.makeText(myContext, "Incorrect Credentials",
+						Toast.LENGTH_SHORT).show();
 				loggingInDialog.dismiss();
 			}
 
@@ -167,15 +142,15 @@ public class LoginDialogFragment extends DialogFragment {
 				if (response.getStatusLine().getStatusCode() == 403) {
 					return false;
 				}
-				
+
 				SharedPreferences prefs = Util.getPreferences(getMyContext());
 				Editor editor = prefs.edit();
-				
+
 				editor.putBoolean("isLoggedIn", true);
 				editor.putString("Username", username);
 				editor.putString("Password", password);
 				editor.commit();
-				
+
 				String content = EntityUtils.toString(response.getEntity());
 				Log.d("LoginDialog", content);
 				return true;
