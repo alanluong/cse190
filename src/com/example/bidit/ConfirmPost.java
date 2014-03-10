@@ -46,6 +46,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.SharedPreferences.Editor;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.Bitmap.CompressFormat;
@@ -94,6 +95,8 @@ public class ConfirmPost extends BiditActivity implements OnLoginSuccessful{
 	EditText priceEditText;
 	Ad ad;
 	User user;
+	
+	SharedPreferences pref;
 
 
 	@SuppressLint("NewApi")
@@ -264,7 +267,7 @@ public class ConfirmPost extends BiditActivity implements OnLoginSuccessful{
 		public void onClick(View v) {
 			//postItem(absolutePhotoPath);
 			
-			SharedPreferences pref = Util.getPreferences(getApplicationContext());
+			pref = Util.getPreferences(getApplicationContext());
 			
 			final EditText ad_price= (EditText) findViewById(R.id.priceText);
 	    	final EditText ad_description= (EditText) findViewById(R.id.descriptionText);
@@ -331,8 +334,10 @@ public class ConfirmPost extends BiditActivity implements OnLoginSuccessful{
 	    	
 	    	else 
 	    	{
+				String username = pref.getString("Username", "");
+				
 	    		BigDecimal adPrice = new BigDecimal(ad_price.getText().toString());
-		    	user = new User("test@gmail.com", "jon", "test");
+		    	user = new User(username, "", "");
 		    	ad = new Ad(user, adPrice, ad_description.getText().toString(), null, null);
 		    	ad.setLocalPath(absolutePhotoPath);
 		    	
@@ -430,7 +435,16 @@ public class ConfirmPost extends BiditActivity implements OnLoginSuccessful{
         
         return status;
 
-    }  
+    } 
+    
+    @Override
+	public void onLoginSuccessful() {
+    	
+    	user.setEmail(pref.getString("Username", ""));
+    	System.out.println(user.getEmail());
+		new AdPost().execute(ad);
+		
+	}
 
 	
 	class AdPost extends AsyncTask<Ad, Void, Void> {		
@@ -582,11 +596,7 @@ public class ConfirmPost extends BiditActivity implements OnLoginSuccessful{
 	}
 
 
-	@Override
-	public void onLoginSuccessful() {
-		new AdPost().execute(ad);
-		
-	}
+	
 	
 	/*
 	public int uploadFile(String sourceFileUri) {

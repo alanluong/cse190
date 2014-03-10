@@ -3,7 +3,9 @@
     <item
         android:id="@+id/action_login"
         android:title="@string/login"/>
-    <item android:id="@+id/action_logout" android:title="@string/logout"></item>
+    <item 
+        android:id="@+id/action_logout" 
+        android:title="@string/logout"/>
     <item
         android:id="@+id/action_mybids"
         android:title="@string/mybids" />

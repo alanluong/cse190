@@ -26,12 +26,13 @@ public abstract class BiditActivity extends FragmentActivity implements OnLoginS
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		// Inflate the menu; this adds items to the action bar if it is present.
-		getMenuInflater().inflate(R.menu.main, menu);
+		//getMenuInflater().inflate(R.menu.main, menu);
 		return true;
 	}
 
 	@Override
 	public boolean onPrepareOptionsMenu(Menu menu) {
+		
 		prefs = Util.getPreferences(this);
 		if (prefs.getBoolean("isLoggedIn", false) == false)
 		{
@@ -50,6 +51,7 @@ public abstract class BiditActivity extends FragmentActivity implements OnLoginS
 			menu.findItem(R.id.action_mymessages).setVisible(true);
 			System.out.println("loggedin");
 		}
+		
 		this.invalidateOptionsMenu();
 		return super.onCreateOptionsMenu(menu);
 	}
