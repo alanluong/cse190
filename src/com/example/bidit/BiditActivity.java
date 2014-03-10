@@ -26,7 +26,7 @@ public abstract class BiditActivity extends FragmentActivity implements OnLoginS
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		// Inflate the menu; this adds items to the action bar if it is present.
-		//getMenuInflater().inflate(R.menu.main, menu);
+		getMenuInflater().inflate(R.menu.main, menu);
 		return true;
 	}
 
@@ -38,7 +38,7 @@ public abstract class BiditActivity extends FragmentActivity implements OnLoginS
 		{
 			menu.findItem(R.id.action_login).setVisible(true);
 			menu.findItem(R.id.action_logout).setVisible(false);
-			menu.findItem(R.id.action_mybids).setVisible(false);
+			menu.findItem(R.id.action_myitems).setVisible(false);
 			menu.findItem(R.id.action_mymessages).setVisible(false);
 			System.out.println("loggedout");
 		}
@@ -47,13 +47,14 @@ public abstract class BiditActivity extends FragmentActivity implements OnLoginS
 		{
 			menu.findItem(R.id.action_login).setVisible(false);
 			menu.findItem(R.id.action_logout).setVisible(true);
-			menu.findItem(R.id.action_mybids).setVisible(true);
+			menu.findItem(R.id.action_myitems).setVisible(true);
 			menu.findItem(R.id.action_mymessages).setVisible(true);
 			System.out.println("loggedin");
 		}
 		
-		this.invalidateOptionsMenu();
-		return super.onCreateOptionsMenu(menu);
+		//this.invalidateOptionsMenu();
+		//return super.onCreateOptionsMenu(menu);
+		return true;
 	}
 
 	@Override
@@ -68,8 +69,8 @@ public abstract class BiditActivity extends FragmentActivity implements OnLoginS
 			edit.putBoolean("isLoggedIn", false);
 			edit.commit();
 			return true;
-		case R.id.action_mybids:
-			Intent intent = new Intent(this, ViewBidsActivity.class);
+		case R.id.action_myitems:
+			Intent intent = new Intent(this, ViewItemsActivity.class);
 			startActivity(intent);
 			return true;
 		case R.id.action_mymessages:

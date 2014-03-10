@@ -7,8 +7,8 @@
         android:id="@+id/action_logout" 
         android:title="@string/logout"/>
     <item
-        android:id="@+id/action_mybids"
-        android:title="@string/mybids" />
+        android:id="@+id/action_myitems"
+        android:title="@string/myitems" />
     <item
         android:id="@+id/action_mymessages"
         android:title="@string/mymessages" />
