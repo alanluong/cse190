@@ -2,7 +2,9 @@ package com.example.bidit;
 
 
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.math.BigDecimal;
+import java.net.URLEncoder;
 
 import org.apache.http.HttpResponse;
 import org.apache.http.client.ClientProtocolException;
@@ -23,10 +25,8 @@ import android.support.v4.view.ViewPager;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.view.View.OnTouchListener;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
@@ -43,14 +43,17 @@ import com.nostra13.universalimageloader.core.display.FadeInBitmapDisplayer;
 
 public class ImagePagerActivity extends BiditActivity {
 
-	protected ImageLoader imageLoader;
 	private static final String STATE_POSITION = "STATE_POSITION";
-	private String[] imageUrls;
-	AdAdapter adapter = new AdAdapter(getSupportFragmentManager());;
-
-	DisplayImageOptions options;
-
-	ViewPager pager;
+	
+	private DisplayImageOptions options;
+	private int pagerPosition = 0;
+	
+	protected ImageLoader imageLoader;
+	protected AdAdapter adapter = new AdAdapter(getSupportFragmentManager());
+	protected ImagePagerAdapter imgpgradapter;
+	protected String[] imageUrls;
+	protected ViewPager pager;
+	protected int loadlimit = 10;
 
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -80,10 +83,8 @@ public class ImagePagerActivity extends BiditActivity {
             AlertDialog alert = builder.create();
             alert.show();
 		}
-		new RequestAdsTask().execute();
-
 		
-		int pagerPosition = 0;
+		new RequestAdsTask().execute();
 
 		if (savedInstanceState != null) {
 			pagerPosition = savedInstanceState.getInt(STATE_POSITION);
@@ -101,7 +102,7 @@ public class ImagePagerActivity extends BiditActivity {
 			.build();
 
 		pager = (ViewPager) findViewById(R.id.pager);
-		//pager.setAdapter(new ImagePagerAdapter(imageUrls));
+		imgpgradapter = new ImagePagerAdapter(imageUrls);
 		pager.setCurrentItem(pagerPosition);
 		
 	}
@@ -126,10 +127,10 @@ public class ImagePagerActivity extends BiditActivity {
 		private LayoutInflater inflater;
 
 		ImagePagerAdapter(String[] images) {
-			this.images = images;
 			inflater = getLayoutInflater();
+			this.images = images;
 		}
-
+		
 		@Override
 		public void destroyItem(ViewGroup container, int position, Object object) {
 			container.removeView((View) object);
@@ -137,7 +138,7 @@ public class ImagePagerActivity extends BiditActivity {
 
 		@Override
 		public int getCount() {
-			return images.length;
+			return adapter.getCount();
 		}
 
 		@Override
@@ -158,8 +159,7 @@ public class ImagePagerActivity extends BiditActivity {
 				}
 			});
 			
-			
-			imageLoader.displayImage(images[position], imageView, options, new SimpleImageLoadingListener() {
+			imageLoader.displayImage(imageUrls[position], imageView, options, new SimpleImageLoadingListener() {
 				@Override
 				public void onLoadingStarted(String imageUri, View view) {
 					spinner.setVisibility(View.VISIBLE);
@@ -216,7 +216,7 @@ public class ImagePagerActivity extends BiditActivity {
 		
 		
 	}
-
+	
 	@Override
 	public void onLoginSuccessful() {
 		// TODO Auto-generated method stub
@@ -226,26 +226,37 @@ public class ImagePagerActivity extends BiditActivity {
 	public class RequestAdsTask extends AsyncTask<Void, Ad, Void> {
 		@Override
 		protected Void doInBackground(Void... params) {
-			Log.d("adapi", Util.AD_API);
+			
+			/*
+			int offset = adapter.getCount();
+			String rangeurl = "";
+			try {
+				rangeurl = "?q=" + URLEncoder.encode("{\"offset\":", "UTF-8")
+						+ URLEncoder.encode(offset+"", "UTF-8")
+						+ URLEncoder.encode(",\"limit\":", "UTF-8")
+						+ URLEncoder.encode(loadlimit+"", "UTF-8")
+						+ URLEncoder.encode("}", "UTF-8");
+			} catch (UnsupportedEncodingException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
+			*/
 			HttpGet request = new HttpGet(Util.AD_API);
 			try {
-				HttpResponse response = Util.getHttpClient()
-				.execute(request);
+				
+				HttpResponse response = Util.getHttpClient().execute(request);
 				String content = EntityUtils.toString(response.getEntity());
 				JSONObject json = new JSONObject(content);
 				JSONArray objects = json.getJSONArray("objects");
 				imageUrls = new String[objects.length()];
 				for (int i = 0; i < objects.length(); ++i) {
 					JSONObject o = objects.getJSONObject(i);
-					User seller = null;
+					User seller = Util.getCurrentUser();
 					BigDecimal price = new BigDecimal(o.getDouble("price"));
 					String description = o.getString("description");
 					String imageUrl = (Util.BASE_URL + "/uploads/" + o.getString("id")+".jpg");
-					Log.d("imageurl", imageUrl);
 					imageUrls[i] = imageUrl;
-
-					//Bitmap image = loadImageFromUrl(imageUrl);
-					Ad ad = new Ad(seller, price, description, description, null);
+					Ad ad = new Ad(seller, price, description, imageUrl, null);
 					publishProgress(ad);
 				}
 				Log.d(BrowseActivity.class.getName(), content);
@@ -263,15 +274,17 @@ public class ImagePagerActivity extends BiditActivity {
 		protected void onProgressUpdate(Ad... ads) {
 			adapter.addAll(ads);
 			adapter.notifyDataSetChanged();
-			Log.d(BrowseActivity.class.getName(), "count: " + adapter.getCount());
+			
 		}
 		
 		@Override
 		protected void onPostExecute(Void vd) {
 			//wait for ad objects before rendering
-			pager.setAdapter(new ImagePagerAdapter(imageUrls));	
+			pager.setAdapter(imgpgradapter);
 		}
 		
 	}
+	
+
 	
 }
