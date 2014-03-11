@@ -12,6 +12,8 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.graphics.Bitmap;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -21,8 +23,10 @@ import android.support.v4.view.ViewPager;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.View.OnTouchListener;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
@@ -41,7 +45,7 @@ public class ImagePagerActivity extends BiditActivity {
 
 	protected ImageLoader imageLoader;
 	private static final String STATE_POSITION = "STATE_POSITION";
-	private String[] imageUrls = new String[100];
+	private String[] imageUrls;
 	AdAdapter adapter = new AdAdapter(getSupportFragmentManager());;
 
 	DisplayImageOptions options;
@@ -56,6 +60,26 @@ public class ImagePagerActivity extends BiditActivity {
 		imageLoader = ImageLoader.getInstance();
 		imageLoader.init(config);
 
+		if(!isNetworkOnline())
+		{
+			AlertDialog.Builder builder = new AlertDialog.Builder(ImagePagerActivity.this);
+            builder.setCancelable(false);
+            builder.setTitle("No Network Detected");
+            builder.setMessage("Please check your network connection!");
+            builder.setInverseBackgroundForced(true);
+            builder.setPositiveButton("OK",
+                    new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog,
+                                int which) {
+                            dialog.dismiss();
+                            finish();
+                        }
+                    });
+            
+            AlertDialog alert = builder.create();
+            alert.show();
+		}
 		new RequestAdsTask().execute();
 
 		
@@ -79,6 +103,7 @@ public class ImagePagerActivity extends BiditActivity {
 		pager = (ViewPager) findViewById(R.id.pager);
 		//pager.setAdapter(new ImagePagerAdapter(imageUrls));
 		pager.setCurrentItem(pagerPosition);
+		
 	}
 
 	@Override
@@ -93,7 +118,8 @@ public class ImagePagerActivity extends BiditActivity {
 		getMenuInflater().inflate(R.menu.main, menu);
 		return super.onCreateOptionsMenu(menu);
 	}
-
+	
+	
 	private class ImagePagerAdapter extends PagerAdapter {
 
 		private String[] images;
@@ -131,6 +157,7 @@ public class ImagePagerActivity extends BiditActivity {
 
 				}
 			});
+			
 			
 			imageLoader.displayImage(images[position], imageView, options, new SimpleImageLoadingListener() {
 				@Override
@@ -186,6 +213,8 @@ public class ImagePagerActivity extends BiditActivity {
 		public Parcelable saveState() {
 			return null;
 		}
+		
+		
 	}
 
 	@Override
@@ -205,6 +234,7 @@ public class ImagePagerActivity extends BiditActivity {
 				String content = EntityUtils.toString(response.getEntity());
 				JSONObject json = new JSONObject(content);
 				JSONArray objects = json.getJSONArray("objects");
+				imageUrls = new String[objects.length()];
 				for (int i = 0; i < objects.length(); ++i) {
 					JSONObject o = objects.getJSONObject(i);
 					User seller = null;
@@ -225,7 +255,7 @@ public class ImagePagerActivity extends BiditActivity {
 				e.printStackTrace();
 			} catch (JSONException e) {
 				e.printStackTrace();
-			}
+			} 
 			return null;
 		}
 

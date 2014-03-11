@@ -1,9 +1,12 @@
 package com.example.bidit;
 
 import android.app.ActionBar;
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.view.Menu;
@@ -85,6 +88,36 @@ public abstract class BiditActivity extends FragmentActivity implements OnLoginS
 		}
 		return super.onOptionsItemSelected(item);
 	}
+	
+	public boolean isNetworkOnline() 
+    {
+        boolean status=false;
+        try
+        {
+            ConnectivityManager cm = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+            NetworkInfo netInfo = cm.getNetworkInfo(0);
+            
+            if (netInfo != null && netInfo.getState()==NetworkInfo.State.CONNECTED) 
+            {
+                status= true;
+            }
+            
+            else 
+            {
+                netInfo = cm.getNetworkInfo(1);
+                if(netInfo!=null && netInfo.getState()==NetworkInfo.State.CONNECTED)
+                    status= true;
+            }
+        }
+        
+        catch(Exception e){
+            e.printStackTrace();  
+            return false;
+        }
+        
+        return status;
+
+    } 
 
 
 }
