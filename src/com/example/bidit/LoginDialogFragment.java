@@ -150,6 +150,8 @@ public class LoginDialogFragment extends DialogFragment {
 				editor.putString("Username", username);
 				editor.putString("Password", password);
 				editor.commit();
+				
+				Util.setCurrentUser(new User(username));
 
 				String content = EntityUtils.toString(response.getEntity());
 				Log.d("LoginDialog", content);

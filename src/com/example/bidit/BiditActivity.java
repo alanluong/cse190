@@ -67,6 +67,7 @@ public abstract class BiditActivity extends FragmentActivity implements OnLoginS
 		case R.id.action_logout:
 			Editor edit = prefs.edit();
 			edit.putBoolean("isLoggedIn", false);
+			Util.setCurrentUser(null);
 			edit.commit();
 			return true;
 		case R.id.action_myitems:

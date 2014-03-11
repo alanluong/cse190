@@ -13,7 +13,7 @@ public class Util {
 	public static final String MESSAGE_API = BASE_URL + API + "/Message";
 	public static final String USER_API = BASE_URL + API + "/User";
 	public static final String LOGIN = BASE_URL + "/login";
-	static private User currentUser;
+	static private User currentUser = null;
 	public static final String PREFS_NAME = "MyPrefsFile";
 
 	public static SharedPreferences getPreferences(Context context) {
