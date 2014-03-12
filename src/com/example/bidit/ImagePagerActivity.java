@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.math.BigDecimal;
 import java.net.URLEncoder;
+import java.util.ArrayList;
 
 import org.apache.http.HttpResponse;
 import org.apache.http.client.ClientProtocolException;
@@ -22,6 +23,7 @@ import android.os.Bundle;
 import android.os.Parcelable;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
+import android.support.v4.view.ViewPager.OnPageChangeListener;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -49,9 +51,7 @@ public class ImagePagerActivity extends BiditActivity {
 	private int pagerPosition = 0;
 	
 	protected ImageLoader imageLoader;
-	protected AdAdapter adapter = new AdAdapter(getSupportFragmentManager());
 	protected ImagePagerAdapter imgpgradapter;
-	protected String[] imageUrls;
 	protected ViewPager pager;
 	protected int loadlimit = 10;
 
@@ -102,8 +102,33 @@ public class ImagePagerActivity extends BiditActivity {
 			.build();
 
 		pager = (ViewPager) findViewById(R.id.pager);
-		imgpgradapter = new ImagePagerAdapter(imageUrls);
+		imgpgradapter = new ImagePagerAdapter();
 		pager.setCurrentItem(pagerPosition);
+		pager.setOnPageChangeListener(new OnPageChangeListener(){
+
+			@Override
+			public void onPageScrollStateChanged(int arg0) {
+				// TODO Auto-generated method stub
+				
+			}
+
+			@Override
+			public void onPageScrolled(int arg0, float arg1, int arg2) {
+				// TODO Auto-generated method stub
+				
+			}
+
+			@Override
+			public void onPageSelected(int arg0) {
+				// TODO Auto-generated method stub
+				if(arg0 + 1 == imgpgradapter.getCount())
+				{
+					pagerPosition = arg0;	
+					new RequestMoreAdsTask().execute();
+				}
+			}
+			
+		});
 		
 	}
 
@@ -120,15 +145,14 @@ public class ImagePagerActivity extends BiditActivity {
 		return super.onCreateOptionsMenu(menu);
 	}
 	
-	
 	private class ImagePagerAdapter extends PagerAdapter {
 
-		private String[] images;
 		private LayoutInflater inflater;
+		private ArrayList<Ad> adapter;
 
-		ImagePagerAdapter(String[] images) {
+		ImagePagerAdapter() {
+			adapter = new ArrayList<Ad>();
 			inflater = getLayoutInflater();
-			this.images = images;
 		}
 		
 		@Override
@@ -138,7 +162,7 @@ public class ImagePagerActivity extends BiditActivity {
 
 		@Override
 		public int getCount() {
-			return adapter.getCount();
+			return adapter.size();
 		}
 
 		@Override
@@ -153,13 +177,13 @@ public class ImagePagerActivity extends BiditActivity {
 				@Override
 				public void onClick(View arg0) {
 
-						BidDialogFragment bdf = BidDialogFragment.newInstance(adapter.getAd(position).getDescription(), adapter.getAd(position).getPrice().toString());
+						BidDialogFragment bdf = BidDialogFragment.newInstance(adapter.get(position).getDescription(), adapter.get(position).getPrice().toString());
 						bdf.show(getSupportFragmentManager(), "BidDialog");
 
 				}
 			});
 			
-			imageLoader.displayImage(imageUrls[position], imageView, options, new SimpleImageLoadingListener() {
+			imageLoader.displayImage(adapter.get(position).getImagePath(), imageView, options, new SimpleImageLoadingListener() {
 				@Override
 				public void onLoadingStarted(String imageUri, View view) {
 					spinner.setVisibility(View.VISIBLE);
@@ -214,6 +238,11 @@ public class ImagePagerActivity extends BiditActivity {
 			return null;
 		}
 		
+		public void addAll(Ad... ads){
+			for(Ad ad : ads){
+				adapter.add(ad);
+			}
+		}
 		
 	}
 	
@@ -227,8 +256,8 @@ public class ImagePagerActivity extends BiditActivity {
 		@Override
 		protected Void doInBackground(Void... params) {
 			
-			/*
-			int offset = adapter.getCount();
+			
+			int offset = imgpgradapter.getCount();
 			String rangeurl = "";
 			try {
 				rangeurl = "?q=" + URLEncoder.encode("{\"offset\":", "UTF-8")
@@ -240,22 +269,20 @@ public class ImagePagerActivity extends BiditActivity {
 				// TODO Auto-generated catch block
 				e1.printStackTrace();
 			}
-			*/
-			HttpGet request = new HttpGet(Util.AD_API);
+			
+			HttpGet request = new HttpGet(Util.AD_API + rangeurl);
 			try {
 				
 				HttpResponse response = Util.getHttpClient().execute(request);
 				String content = EntityUtils.toString(response.getEntity());
 				JSONObject json = new JSONObject(content);
 				JSONArray objects = json.getJSONArray("objects");
-				imageUrls = new String[objects.length()];
 				for (int i = 0; i < objects.length(); ++i) {
 					JSONObject o = objects.getJSONObject(i);
 					User seller = Util.getCurrentUser();
 					BigDecimal price = new BigDecimal(o.getDouble("price"));
 					String description = o.getString("description");
 					String imageUrl = (Util.BASE_URL + "/uploads/" + o.getString("id")+".jpg");
-					imageUrls[i] = imageUrl;
 					Ad ad = new Ad(seller, price, description, imageUrl, null);
 					publishProgress(ad);
 				}
@@ -272,8 +299,8 @@ public class ImagePagerActivity extends BiditActivity {
 
 		@Override
 		protected void onProgressUpdate(Ad... ads) {
-			adapter.addAll(ads);
-			adapter.notifyDataSetChanged();
+			imgpgradapter.addAll(ads);
+			imgpgradapter.notifyDataSetChanged();
 			
 		}
 		
@@ -286,5 +313,62 @@ public class ImagePagerActivity extends BiditActivity {
 	}
 	
 
+	public class RequestMoreAdsTask extends AsyncTask<Void, Ad, Void> {
+		@Override
+		protected Void doInBackground(Void... params) {
+			
+			
+			int offset = imgpgradapter.getCount();
+			String rangeurl = "";
+			try {
+				rangeurl = "?q=" + URLEncoder.encode("{\"offset\":", "UTF-8")
+						+ URLEncoder.encode(offset+"", "UTF-8")
+						+ URLEncoder.encode(",\"limit\":", "UTF-8")
+						+ URLEncoder.encode(loadlimit+"", "UTF-8")
+						+ URLEncoder.encode("}", "UTF-8");
+			} catch (UnsupportedEncodingException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
+			
+			HttpGet request = new HttpGet(Util.AD_API + rangeurl);
+			try {
+				
+				HttpResponse response = Util.getHttpClient().execute(request);
+				String content = EntityUtils.toString(response.getEntity());
+				JSONObject json = new JSONObject(content);
+				JSONArray objects = json.getJSONArray("objects");
+				for (int i = 0; i < objects.length(); ++i) {
+					JSONObject o = objects.getJSONObject(i);
+					User seller = Util.getCurrentUser();
+					BigDecimal price = new BigDecimal(o.getDouble("price"));
+					String description = o.getString("description");
+					String imageUrl = (Util.BASE_URL + "/uploads/" + o.getString("id")+".jpg");
+					Ad ad = new Ad(seller, price, description, imageUrl, null);
+					publishProgress(ad);
+				}
+				Log.d(BrowseActivity.class.getName(), content);
+			} catch (ClientProtocolException e) {
+				e.printStackTrace();
+			} catch (IOException e) {
+				e.printStackTrace();
+			} catch (JSONException e) {
+				e.printStackTrace();
+			} 
+			return null;
+		}
+
+		@Override
+		protected void onProgressUpdate(Ad... ads) {
+			imgpgradapter.addAll(ads);
+			imgpgradapter.notifyDataSetChanged();	
+		}
+		
+		@Override
+		protected void onPostExecute(Void vd) {
+			pager.setCurrentItem(pagerPosition);
+		}
+		
+	}
 	
 }
