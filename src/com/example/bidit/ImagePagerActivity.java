@@ -257,7 +257,7 @@ public class ImagePagerActivity extends BiditActivity {
 		protected Void doInBackground(Void... params) {
 			
 			
-			int offset = imgpgradapter.getCount();
+			int offset = 0;
 			String rangeurl = "";
 			try {
 				rangeurl = "?q=" + URLEncoder.encode("{\"offset\":", "UTF-8")
