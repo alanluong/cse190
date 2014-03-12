@@ -84,11 +84,12 @@ public class ImagePagerActivity extends BiditActivity {
             alert.show();
 		}
 		
-		new RequestAdsTask().execute();
-
 		if (savedInstanceState != null) {
-			pagerPosition = savedInstanceState.getInt(STATE_POSITION);
+			//System.out.println("here " + savedInstanceState.getInt(STATE_POSITION, 0));
+			pagerPosition = savedInstanceState.getInt(STATE_POSITION, 0);
 		}
+		
+		new RequestAdsTask().execute();
 
 		options = new DisplayImageOptions.Builder()
 			.showImageForEmptyUri(R.drawable.ic_empty)
@@ -123,6 +124,7 @@ public class ImagePagerActivity extends BiditActivity {
 				// TODO Auto-generated method stub
 				if(arg0 + 1 == imgpgradapter.getCount())
 				{
+					System.out.println("arg" + arg0);
 					pagerPosition = arg0;	
 					new RequestMoreAdsTask().execute();
 				}
@@ -133,7 +135,15 @@ public class ImagePagerActivity extends BiditActivity {
 	}
 
 	@Override
+	public void onDestroy() {
+		super.onDestroy();
+		if (imageLoader != null)
+			imageLoader.destroy();
+	}
+	
+	@Override
 	public void onSaveInstanceState(Bundle outState) {
+		//System.out.println(pager.getCurrentItem());
 		outState.putInt(STATE_POSITION, pager.getCurrentItem());
 	}
 	
@@ -308,6 +318,7 @@ public class ImagePagerActivity extends BiditActivity {
 		protected void onPostExecute(Void vd) {
 			//wait for ad objects before rendering
 			pager.setAdapter(imgpgradapter);
+			pager.setCurrentItem(pagerPosition);
 		}
 		
 	}
