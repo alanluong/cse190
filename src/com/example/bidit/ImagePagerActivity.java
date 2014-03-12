@@ -256,7 +256,6 @@ public class ImagePagerActivity extends BiditActivity {
 		@Override
 		protected Void doInBackground(Void... params) {
 			
-			
 			int offset = 0;
 			String rangeurl = "";
 			try {

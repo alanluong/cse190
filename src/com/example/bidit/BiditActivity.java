@@ -1,7 +1,9 @@
 package com.example.bidit;
 
 import android.app.ActionBar;
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
@@ -11,6 +13,7 @@ import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.Toast;
 
 public abstract class BiditActivity extends FragmentActivity implements OnLoginSuccessful {
 
@@ -72,6 +75,10 @@ public abstract class BiditActivity extends FragmentActivity implements OnLoginS
 			edit.putBoolean("isLoggedIn", false);
 			Util.setCurrentUser(null);
 			edit.commit();
+			
+			Toast.makeText(this, "Logoff Successful",
+					Toast.LENGTH_SHORT).show();
+			
 			return true;
 		case R.id.action_myitems:
 			Intent intent = new Intent(this, ViewItemsActivity.class);
