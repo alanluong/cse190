@@ -1,7 +1,6 @@
 package com.example.bidit;
 
 
-import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.ArrayList;
@@ -16,11 +15,14 @@ import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.message.BasicNameValuePair;
+import org.apache.http.util.Args;
 import org.apache.http.util.EntityUtils;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
 import android.R.string;
+import android.app.Activity;
+import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.os.AsyncTask;
@@ -34,22 +36,19 @@ import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Toast;
 
 public class BidDialogFragment extends DialogFragment {
 	
 	private EditText mEditText;
+	Bid bid;
 
     public BidDialogFragment() {
         // Empty constructor required for DialogFragment
     }
-
-    public static BidDialogFragment newInstance(String description, String price) {
-    	BidDialogFragment frag = new BidDialogFragment();
-        Bundle args = new Bundle();
-        args.putString("description", description);
-        args.putString("price", price);
-        frag.setArguments(args);
-        return frag;
+    
+    public BidDialogFragment(Bid bid) {
+    	this.bid = bid;
     }
 
     @Override
@@ -57,8 +56,8 @@ public class BidDialogFragment extends DialogFragment {
             Bundle savedInstanceState) {
         final View view = inflater.inflate(R.layout.fragment_bid, container);
         mEditText = (EditText) view.findViewById(R.id.txt_your_bid);
-        
-        getDialog().setTitle("[$"+getArguments().getString("price")+"] - " + getArguments().getString("description"));
+        String title = String.format("[$%s] - %s", bid.getAd().getPrice(), bid.getAd().getDescription());
+        getDialog().setTitle(title);
         
         // Show soft keyboard automatically
         mEditText.requestFocus();
@@ -76,39 +75,54 @@ public class BidDialogFragment extends DialogFragment {
         bidButton.setOnClickListener(new OnClickListener(){
 			@Override
 			public void onClick(View arg0) {
-				new PutBidTask().execute(view);
+				new PutBidTask(bid, getActivity()).execute(view);
+				dismiss();
 			}
         });
         
         return view;
     }
-    
-    public class PutBidTask extends AsyncTask<View, Void, Void> {
+
+	public class PutBidTask extends AsyncTask<View, Void, Void> {
+		private Bid bid;
+		Context context;
+		
+		public PutBidTask(Bid bid, Context context) {
+			super();
+			this.bid = bid;
+			this.context = context;
+		}
+
 		@Override
 		protected Void doInBackground(View... views) {
 			View view = views[0];
 			String bidPrice = ((EditText) view.findViewById(R.id.txt_your_bid))
 					.getText().toString();
 			try {
+				SharedPreferences prefs = Util.getPreferences(getActivity());
 				HttpPost request = new HttpPost(Util.BID_API);
-				// TODO: replace with proper data
 				JSONObject bids = new JSONObject();
-				bids.put("bidder", "testing@test.com");
+				bids.put("bidder", prefs.getString("Username", ""));
 				bids.put("seller", "testing@test.com");
 				bids.put("price", bidPrice);
-				bids.put("ad_id", 69);
-				Log.d(getActivity().toString(), bids.toString());
+				bids.put("ad_id", bid.getAd().getId());
+				Log.d("BidDialog", bids.toString());		
 				StringEntity entity = new StringEntity(bids.toString());
 				request.setEntity(entity);
 				request.setHeader("Content-type", "application/json");
 				HttpResponse response = Util.getHttpClient().execute(request);
-
 				String content = EntityUtils.toString(response.getEntity());
-				Log.d(getActivity().toString(), content);
+				Log.d("BidDialog", content);
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
 			return null;
 		}
+
+		@Override
+		protected void onPostExecute(Void result) {
+			Toast.makeText(context, "Bid placed", Toast.LENGTH_SHORT).show();
+		}
+		
     }
 }

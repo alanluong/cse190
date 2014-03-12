@@ -10,31 +10,6 @@ public class AdAdapter /*extends ArrayAdapter<Ad>*/ extends FragmentStatePagerAd
 	
 	private static ArrayList<Ad> mAds;
 	
-	/*public AdAdapter(Context context, int resource) {
-		super(context, resource);
-	}
-
-	@Override
-	public View getView(int position, View convertView, ViewGroup parent) {
-		View v = convertView;
-
-		if (v == null) {
-			LayoutInflater vi = (LayoutInflater) getContext().getSystemService(
-					Context.LAYOUT_INFLATER_SERVICE);
-			v = vi.inflate(R.layout.ads_list_item, null);
-		}
-
-		Ad it = this.getItem(position);
-		if (it != null) {
-			ImageView iv = (ImageView) v.findViewById(R.id.list_product_image);
-			if (iv != null) {
-				iv.setImageDrawable(it.getImage());
-			}
-		}
-		
-		return v;
-	}*/
-	
 	public AdAdapter(FragmentManager fm) {
 		this(fm, null);
 	}
@@ -55,7 +30,7 @@ public class AdAdapter /*extends ArrayAdapter<Ad>*/ extends FragmentStatePagerAd
 	@Override
 	public Fragment getItem(int position) {
 		Ad it = mAds.get(position);
-		return AdSlideFragment.newInstance(it.getImage(), it.getDescription(), ""+it.getPrice());
+		return AdSlideFragment.newInstance(it);
 	}
 	
 	public void addAll(Ad... ads){

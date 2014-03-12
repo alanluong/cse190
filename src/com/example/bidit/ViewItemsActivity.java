@@ -50,6 +50,7 @@ public class ViewItemsActivity extends BiditActivity {
 					String description = o.getString("description");
 					
 					Ad ad = new Ad(seller, price, description, description, null);
+					ad.setId(o.getInt("id"));
 					publishProgress(ad);
 				}
 				Log.d(BrowseActivity.class.getName(), content);

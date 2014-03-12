@@ -113,7 +113,6 @@ public class LoginDialogFragment extends DialogFragment {
 				myListener.onLoginSuccessful();
 				Toast.makeText(myContext, "Login Successful",
 						Toast.LENGTH_SHORT).show();
-
 			}
 
 			else {
@@ -150,7 +149,7 @@ public class LoginDialogFragment extends DialogFragment {
 				editor.putString("Username", username);
 				editor.putString("Password", password);
 				editor.commit();
-				
+
 				Util.setCurrentUser(new User(username));
 
 				String content = EntityUtils.toString(response.getEntity());

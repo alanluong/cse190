@@ -176,8 +176,8 @@ public class ImagePagerActivity extends BiditActivity {
 			imageView.setOnClickListener(new OnClickListener(){
 				@Override
 				public void onClick(View arg0) {
-
-						BidDialogFragment bdf = BidDialogFragment.newInstance(adapter.get(position).getDescription(), adapter.get(position).getPrice().toString());
+						Bid bid = new Bid(null, null, null, adapter.get(position));
+						BidDialogFragment bdf = new BidDialogFragment(bid);
 						bdf.show(getSupportFragmentManager(), "BidDialog");
 
 				}
@@ -284,6 +284,7 @@ public class ImagePagerActivity extends BiditActivity {
 					String description = o.getString("description");
 					String imageUrl = (Util.BASE_URL + "/uploads/" + o.getString("id")+".jpg");
 					Ad ad = new Ad(seller, price, description, imageUrl, null);
+					ad.setId(o.getInt("id"));
 					publishProgress(ad);
 				}
 				Log.d(BrowseActivity.class.getName(), content);
@@ -345,6 +346,7 @@ public class ImagePagerActivity extends BiditActivity {
 					String description = o.getString("description");
 					String imageUrl = (Util.BASE_URL + "/uploads/" + o.getString("id")+".jpg");
 					Ad ad = new Ad(seller, price, description, imageUrl, null);
+					ad.setId(o.getInt("id"));
 					publishProgress(ad);
 				}
 				Log.d(BrowseActivity.class.getName(), content);

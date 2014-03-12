@@ -65,13 +65,6 @@ public class BrowseActivity extends BiditActivity {
 		savedAds = adapter.getAds();
 	}
 
-	/*@Override
-	public boolean onCreateOptionsMenu(Menu menu) {
-		// Inflate the menu; this adds items to the action bar if it is present.
-		getMenuInflater().inflate(R.menu.main, menu);
-		return true;
-	}*/
-
 	public class RequestAdsTask extends AsyncTask<Void, Ad, Void> {
 		@Override
 		protected Void doInBackground(Void... params) {
@@ -82,17 +75,18 @@ public class BrowseActivity extends BiditActivity {
 				String content = EntityUtils.toString(response.getEntity());
 				JSONObject json = new JSONObject(content);
 				JSONArray objects = json.getJSONArray("objects");
+				Log.e(BrowseActivity.class.getName(), "WHAT IS GOING ON");
 				for (int i = 0; i < 3; ++i) {
 					JSONObject o = objects.getJSONObject(i);
-					User seller = null;
+					User seller = new User(o.getString("email"));
 					BigDecimal price = new BigDecimal(o.getDouble("price"));
 					String description = o.getString("description");
-					
-
 					String imageUrl = (Util.BASE_URL + "uploads/" + o.getString("id")+".jpg");
 					Log.d("asdf",imageUrl);
 					Bitmap image = loadImageFromUrl(imageUrl);
 					Ad ad = new Ad(seller, price, description, description, image);
+					ad.setId(o.getInt("id"));
+					System.out.println(ad.getSeller().getEmail());
 					publishProgress(ad);
 				}
 				Log.d(BrowseActivity.class.getName(), content);
@@ -127,17 +121,6 @@ public class BrowseActivity extends BiditActivity {
 			return bmp;
 		}
 	}
-	
-	/*@Override
-	public boolean onOptionsItemSelected(MenuItem item){
-		if(super.onOptionsItemSelected(item)){
-			return true;
-		}
-		Intent myIntent = new Intent(getApplicationContext(), MainActivity.class);
-		startActivityForResult(myIntent, 0);
-		return true;
-	}*/
-
 
 	@Override
 	public void onLoginSuccessful() {
