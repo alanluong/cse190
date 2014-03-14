@@ -1,57 +1,26 @@
 package com.example.bidit;
 
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
 import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-import org.apache.http.HttpResponse;
-import org.apache.http.client.ClientProtocolException;
-import org.apache.http.client.HttpClient;
-import org.apache.http.client.methods.HttpPost;
-import org.apache.http.entity.mime.HttpMultipartMode;
-import org.apache.http.entity.mime.MultipartEntityBuilder;
-import org.apache.http.entity.mime.content.FileBody;
-import org.apache.http.impl.client.DefaultHttpClient;
-import org.json.JSONArray;
-
-import com.example.bidit.SimpleGestureFilter.SimpleGestureListener;
-
+import android.content.Intent;
 import android.net.Uri;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
-import android.app.Activity;
-import android.app.AlertDialog;
-import android.app.FragmentManager;
-import android.app.ProgressDialog;
-import android.content.Intent;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.graphics.Bitmap.CompressFormat;
 import android.view.Menu;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
-import android.widget.ImageView;
 
-public class MainActivity extends BiditActivity implements OnClickListener,
-		SimpleGestureListener {
-	private SimpleGestureFilter detector;
+public class MainActivity extends BiditActivity implements OnClickListener{
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
-
-		detector = new SimpleGestureFilter(this, this);
 
 		((Button) findViewById(R.id.buybutton)).setOnClickListener(this);
 		((Button) findViewById(R.id.sellbutton)).setOnClickListener(this);
@@ -229,22 +198,6 @@ public class MainActivity extends BiditActivity implements OnClickListener,
 			case RESULT_CANCELED:
 				break;
 			}
-		}
-	}
-
-	@Override
-	public boolean dispatchTouchEvent(MotionEvent ev) {
-		this.detector.onTouchEvent(ev);
-		return super.dispatchTouchEvent(ev);
-	}
-
-	@Override
-	public void onSwipe(int direction) {
-		switch (direction) {
-		case SimpleGestureFilter.SWIPE_LEFT:
-			Intent intent = new Intent(MainActivity.this, MessageActivity.class);
-			startActivity(intent);
-			break;
 		}
 	}
 
