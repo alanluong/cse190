@@ -31,5 +31,7 @@
     <string name="mymessages">My Messages</string>
     <string name="descr_image">descr_image</string>
     <string name="confirm">Confirm password</string>
+    <string name="yes">Yes</string>
+    <string name="no">No</string>
 
 </resources>

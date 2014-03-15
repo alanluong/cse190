@@ -20,6 +20,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
+import android.opengl.Visibility;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
@@ -161,7 +162,14 @@ public class LoginDialogFragment extends DialogFragment {
 				HttpResponse response = Util.getHttpClient().execute(request);
 				String content = EntityUtils.toString(response.getEntity());
 				Log.d("LoginDialogFragment", content);
-				return response.getStatusLine().getStatusCode() != 200;
+				if (response.getStatusLine().getStatusCode() == 201) {
+					Editor editor = prefs.edit();
+					editor.putBoolean("isLoggedIn", true);
+					editor.putString("Username", username);
+					editor.putString("Password", password);
+					editor.commit();
+					return true;
+				}
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
@@ -237,8 +245,10 @@ public class LoginDialogFragment extends DialogFragment {
 				boolean on = s.isChecked();
 				if (on) {
 					button.setText("Register");
+					view.findViewById(R.id.confirm).setVisibility(View.VISIBLE);
 				} else {
 					button.setText("Login");
+					view.findViewById(R.id.confirm).setVisibility(View.GONE);
 				}
 			}
 		});
