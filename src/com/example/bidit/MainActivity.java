@@ -10,7 +10,6 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
-import android.view.Menu;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
@@ -30,15 +29,6 @@ public class MainActivity extends BiditActivity implements OnClickListener{
 	String mCurrentPhotoPath = "";
 	String absolutePhotoPath = "";
 	Uri capturedImageUri = null;
-
-	@Override
-	public boolean onCreateOptionsMenu(Menu menu) {
-		// Inflate the menu; this adds items to the action bar if it is present.
-		
-		getMenuInflater().inflate(R.menu.main, menu);
-		return super.onCreateOptionsMenu(menu);
-	}
-
 
 	@Override
 	public void onClick(View view) {

@@ -26,7 +26,6 @@ import android.support.v4.view.ViewPager;
 import android.support.v4.view.ViewPager.OnPageChangeListener;
 import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.Menu;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -173,14 +172,6 @@ public class ImagePagerActivity extends BiditActivity {
 		outState.putInt(STATE_POSITION, pager.getCurrentItem());
 		outState.putParcelableArrayList(ADAPTER, imgpgradapter.getAdapter());
 		
-	}
-	
-	@Override
-	public boolean onCreateOptionsMenu(Menu menu) {
-		// Inflate the menu; this adds items to the action bar if it is present.
-		
-		getMenuInflater().inflate(R.menu.main, menu);
-		return super.onCreateOptionsMenu(menu);
 	}
 	
 	private class ImagePagerAdapter extends PagerAdapter {

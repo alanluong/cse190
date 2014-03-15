@@ -25,7 +25,7 @@ public class MessageAdapter extends ArrayAdapter<Message> {
 
 		Message it = this.getItem(position);
 		TextView messageContent = (TextView) v.findViewById(R.id.msg_content);
-		messageContent.setText("" + it.getContent());
+		messageContent.setText("" + it.getContent().substring(0, 20));
 
 		
 		return v;
