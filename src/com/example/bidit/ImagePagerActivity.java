@@ -27,8 +27,10 @@ import android.support.v4.view.ViewPager.OnPageChangeListener;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.View.OnTouchListener;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
@@ -104,30 +106,46 @@ public class ImagePagerActivity extends BiditActivity {
 		pager = (ViewPager) findViewById(R.id.pager);
 		imgpgradapter = new ImagePagerAdapter();
 		pager.setCurrentItem(pagerPosition);
+		
+		
+	    pager.setOnTouchListener(new OnTouchListener() {
+	        @Override
+	        public boolean onTouch(View v, MotionEvent e) {               
+	            switch (e.getAction() & MotionEvent.ACTION_MASK) {
+	                case MotionEvent.ACTION_DOWN:
+	                    break;
+	                case MotionEvent.ACTION_MOVE:
+	                    if(pagerPosition+1 == imgpgradapter.getCount())
+	                    {
+	                    	new RequestMoreAdsTask().execute();
+	                    }
+	                    break;
+	                case MotionEvent.ACTION_UP: 
+	                    break;
+	           }
+	           return false;
+	       }
+	   });
+	   
+	   
 		pager.setOnPageChangeListener(new OnPageChangeListener(){
 
 			@Override
 			public void onPageScrollStateChanged(int arg0) {
-				// TODO Auto-generated method stub
-				
 			}
 
 			@Override
 			public void onPageScrolled(int arg0, float arg1, int arg2) {
-				// TODO Auto-generated method stub
-				
 			}
 
 			@Override
 			public void onPageSelected(int arg0) {
-				// TODO Auto-generated method stub
+				pagerPosition = arg0;
 				if(arg0 + 1 == imgpgradapter.getCount())
-				{
-					pagerPosition = arg0;	
+				{		
 					new RequestMoreAdsTask().execute();
 				}
-			}
-			
+			}		
 		});
 		
 	}
