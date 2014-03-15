@@ -25,6 +25,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.View.OnClickListener;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.BaseAdapter;
@@ -149,6 +150,15 @@ public class ImageListActivity extends BiditActivity {
 			holder.text.setText(String.format("[$%s] - %s", adapter.get(position).getPrice(), adapter.get(position).getDescription()));
 
 			imageLoader.displayImage(adapter.get(position).getImagePath(), holder.image, options, animateFirstListener);
+			
+			view.setOnClickListener(new OnClickListener(){
+				@Override
+				public void onClick(View arg0) {
+					//TODO put stuff in the bundle to tell ViewBidsActivity which item was clicked
+					Intent intent = new Intent(ImageListActivity.this, ViewBidsActivity.class);
+					startActivity(intent);
+				}
+			});
 
 			return view;
 		}
