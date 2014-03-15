@@ -334,7 +334,6 @@ public class ImagePagerActivity extends BiditActivity {
 					ad.setId(o.getInt("id"));
 					publishProgress(ad);
 				}
-				Log.d(BrowseActivity.class.getName(), content);
 			} catch (ClientProtocolException e) {
 				e.printStackTrace();
 			} catch (IOException e) {
@@ -397,7 +396,6 @@ public class ImagePagerActivity extends BiditActivity {
 					ad.setId(o.getInt("id"));
 					publishProgress(ad);
 				}
-				Log.d(BrowseActivity.class.getName(), content);
 			} catch (ClientProtocolException e) {
 				e.printStackTrace();
 			} catch (IOException e) {

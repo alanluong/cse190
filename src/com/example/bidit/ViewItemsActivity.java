@@ -53,7 +53,6 @@ public class ViewItemsActivity extends BiditActivity {
 					ad.setId(o.getInt("id"));
 					publishProgress(ad);
 				}
-				Log.d(BrowseActivity.class.getName(), content);
 			} catch (ClientProtocolException e) {
 				e.printStackTrace();
 			} catch (IOException e) {
@@ -68,7 +67,7 @@ public class ViewItemsActivity extends BiditActivity {
 		protected void onProgressUpdate(Ad... ads) {
 			adapter.addAll(ads);
 			adapter.notifyDataSetChanged();
-			Log.d(BrowseActivity.class.getName(), "count: " + adapter.getCount());
+			//Log.d(BrowseActivity.class.getName(), "count: " + adapter.getCount());
 		}
 	}
 	
