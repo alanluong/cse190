@@ -22,10 +22,16 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.view.WindowManager;
+import android.view.View.OnLayoutChangeListener;
+import android.webkit.WebView.FindListener;
+import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Switch;
 import android.widget.Toast;
+import android.widget.ToggleButton;
 
 public class LoginDialogFragment extends DialogFragment {
 	public LoginDialogFragment() {
@@ -38,14 +44,22 @@ public class LoginDialogFragment extends DialogFragment {
 		AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
 		LayoutInflater inflater = getActivity().getLayoutInflater();
 		final View view = inflater.inflate(R.layout.dialog_login, null);
+
 		builder.setView(view)
 				.setPositiveButton(R.string.login,
 						new DialogInterface.OnClickListener() {
 							@Override
-							public void onClick(DialogInterface dialog, int id) {
-								new LoginTask(
-										(OnLoginSuccessful) getActivity(),
-										getActivity()).execute(view);
+							public void onClick(DialogInterface di, int id) {
+								AlertDialog dialog = (AlertDialog)di;
+								String text = dialog.getButton(DialogInterface.BUTTON_POSITIVE).getText().toString();
+								if (text.equals("Login")) {
+									new LoginTask(
+											(OnLoginSuccessful) getActivity(),
+											getActivity()).execute(view);
+								} else {
+									new RegisterTask();
+								}
+								
 							}
 
 						})
@@ -56,8 +70,21 @@ public class LoginDialogFragment extends DialogFragment {
 								LoginDialogFragment.this.getDialog().cancel();
 							}
 						});
-
-		Dialog dialog = builder.create();
+		
+		final AlertDialog dialog = builder.create();
+		final Switch s = ((Switch) view.findViewById(R.id.switchRegister));
+		s.setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View arg0) {
+				Button button = dialog.getButton(DialogInterface.BUTTON_POSITIVE);
+				boolean on = s.isChecked();
+				if (on) {
+					button.setText("Register");
+				} else {
+					button.setText("Login");
+				}
+			}
+		});
 		return dialog;
 	}
 
@@ -66,6 +93,15 @@ public class LoginDialogFragment extends DialogFragment {
 			Bundle savedInstanceState) {
 		return super.onCreateView(inflater, container, savedInstanceState);
 	}
+	
+	public class RegisterTask extends AsyncTask<View, Void, Boolean> {
+
+		@Override
+		protected Boolean doInBackground(View... arg0) {
+			return null;
+		}
+	}
+
 
 	public class LoginTask extends AsyncTask<View, Void, Boolean> {
 
@@ -160,6 +196,5 @@ public class LoginDialogFragment extends DialogFragment {
 			}
 			return false;
 		}
-
 	}
 }

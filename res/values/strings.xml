@@ -30,5 +30,6 @@
     <string name="myitems">My Items</string>
     <string name="mymessages">My Messages</string>
     <string name="descr_image">descr_image</string>
+    <string name="confirm">Confirm password</string>
 
 </resources>
