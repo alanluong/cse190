@@ -38,7 +38,6 @@ public abstract class BiditActivity extends FragmentActivity implements
 
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
-		// Inflate the menu; this adds items to the action bar if it is present.
 		getMenuInflater().inflate(R.menu.main, menu);
 		return true;
 	}
@@ -87,7 +86,7 @@ public abstract class BiditActivity extends FragmentActivity implements
 
 			return true;
 		case R.id.action_myitems:
-			Intent intent = new Intent(this, ViewItemsActivity.class);
+			Intent intent = new Intent(this, ImageListActivity.class);
 			startActivity(intent);
 			return true;
 		case R.id.action_mymessages:
