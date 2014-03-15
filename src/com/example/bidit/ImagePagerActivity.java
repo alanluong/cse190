@@ -48,6 +48,7 @@ import com.nostra13.universalimageloader.core.display.FadeInBitmapDisplayer;
 public class ImagePagerActivity extends BiditActivity {
 
 	private static final String STATE_POSITION = "STATE_POSITION";
+	private static final String ADAPTER = "ADAPTER";
 	
 	private DisplayImageOptions options;
 	private int pagerPosition = 0;
@@ -86,28 +87,35 @@ public class ImagePagerActivity extends BiditActivity {
             alert.show();
 		}
 		
+		
 		if (savedInstanceState != null) {
-			//System.out.println("here " + savedInstanceState.getInt(STATE_POSITION, 0));
+
 			pagerPosition = savedInstanceState.getInt(STATE_POSITION, 0);
+			ArrayList<Ad> temp = savedInstanceState.<Ad>getParcelableArrayList(ADAPTER);
+			imgpgradapter = new ImagePagerAdapter(temp);
+			pager = (ViewPager) findViewById(R.id.pager);
+			pager.setAdapter(imgpgradapter);
+			pager.setCurrentItem(pagerPosition);
+
+		}
+		else
+		{
+			new RequestAdsTask().execute();
+			pager = (ViewPager) findViewById(R.id.pager);
+			imgpgradapter = new ImagePagerAdapter();
+			pager.setCurrentItem(pagerPosition);
 		}
 		
-		new RequestAdsTask().execute();
-
 		options = new DisplayImageOptions.Builder()
-			.showImageForEmptyUri(R.drawable.ic_empty)
-			.showImageOnFail(R.drawable.ic_error)
-			.resetViewBeforeLoading(true)
-			.cacheOnDisc(true)
-			.imageScaleType(ImageScaleType.EXACTLY)
-			.bitmapConfig(Bitmap.Config.RGB_565)
-			.considerExifParams(true)
-			.displayer(new FadeInBitmapDisplayer(300))
-			.build();
-
-		pager = (ViewPager) findViewById(R.id.pager);
-		imgpgradapter = new ImagePagerAdapter();
-		pager.setCurrentItem(pagerPosition);
-		
+		.showImageForEmptyUri(R.drawable.ic_empty)
+		.showImageOnFail(R.drawable.ic_error)
+		.resetViewBeforeLoading(true)
+		.cacheOnDisc(true)
+		.imageScaleType(ImageScaleType.EXACTLY)
+		.bitmapConfig(Bitmap.Config.RGB_565)
+		.considerExifParams(true)
+		.displayer(new FadeInBitmapDisplayer(300))
+		.build();
 		
 	    pager.setOnTouchListener(new OnTouchListener() {
 	        @Override
@@ -146,6 +154,7 @@ public class ImagePagerActivity extends BiditActivity {
 				{
 					new RequestMoreAdsTask().execute();
 				}
+				
 			}		
 		});
 		
@@ -160,8 +169,10 @@ public class ImagePagerActivity extends BiditActivity {
 	
 	@Override
 	public void onSaveInstanceState(Bundle outState) {
-		//System.out.println(pager.getCurrentItem());
+		
 		outState.putInt(STATE_POSITION, pager.getCurrentItem());
+		outState.putParcelableArrayList(ADAPTER, imgpgradapter.getAdapter());
+		
 	}
 	
 	@Override
@@ -180,6 +191,16 @@ public class ImagePagerActivity extends BiditActivity {
 		ImagePagerAdapter() {
 			adapter = new ArrayList<Ad>();
 			inflater = getLayoutInflater();
+		}
+		
+		ImagePagerAdapter(ArrayList<Ad> ads) {
+			adapter = ads;
+			inflater = getLayoutInflater();
+		}
+		
+		public ArrayList<Ad> getAdapter()
+		{
+			return adapter;
 		}
 		
 		@Override
@@ -305,11 +326,11 @@ public class ImagePagerActivity extends BiditActivity {
 				JSONArray objects = json.getJSONArray("objects");
 				for (int i = 0; i < objects.length(); ++i) {
 					JSONObject o = objects.getJSONObject(i);
-					User seller = Util.getCurrentUser();
+					User seller = new User(o.getString("email"));
 					BigDecimal price = new BigDecimal(o.getDouble("price"));
 					String description = o.getString("description");
 					String imageUrl = (Util.BASE_URL + "/uploads/" + o.getString("id")+".jpg");
-					Ad ad = new Ad(seller, price, description, imageUrl, null);
+					Ad ad = new Ad(seller, price, description, imageUrl);
 					ad.setId(o.getInt("id"));
 					publishProgress(ad);
 				}
@@ -368,11 +389,11 @@ public class ImagePagerActivity extends BiditActivity {
 				JSONArray objects = json.getJSONArray("objects");
 				for (int i = 0; i < objects.length(); ++i) {
 					JSONObject o = objects.getJSONObject(i);
-					User seller = Util.getCurrentUser();
+					User seller = new User(o.getString("email"));
 					BigDecimal price = new BigDecimal(o.getDouble("price"));
 					String description = o.getString("description");
 					String imageUrl = (Util.BASE_URL + "/uploads/" + o.getString("id")+".jpg");
-					Ad ad = new Ad(seller, price, description, imageUrl, null);
+					Ad ad = new Ad(seller, price, description, imageUrl);
 					ad.setId(o.getInt("id"));
 					publishProgress(ad);
 				}
@@ -395,7 +416,7 @@ public class ImagePagerActivity extends BiditActivity {
 		
 		@Override
 		protected void onPostExecute(Void vd) {
-			pager.setCurrentItem(pagerPosition);
+			
 		}
 		
 	}

@@ -338,7 +338,7 @@ public class ConfirmPost extends BiditActivity implements OnLoginSuccessful{
 				
 	    		BigDecimal adPrice = new BigDecimal(ad_price.getText().toString());
 		    	user = new User(username);
-		    	ad = new Ad(user, adPrice, ad_description.getText().toString(), null, null);
+		    	ad = new Ad(user, adPrice, ad_description.getText().toString(), null);
 		    	ad.setLocalPath(absolutePhotoPath);
 		    	
 		    	if(pref.getBoolean("isLoggedIn", false) == false)

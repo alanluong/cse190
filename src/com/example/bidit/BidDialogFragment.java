@@ -1,30 +1,18 @@
 package com.example.bidit;
 
 
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
+import java.math.BigDecimal;
 
-import org.apache.http.Header;
-import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
-import org.apache.http.NameValuePair;
-import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.entity.StringEntity;
-import org.apache.http.message.BasicNameValuePair;
-import org.apache.http.util.Args;
 import org.apache.http.util.EntityUtils;
-import org.json.JSONArray;
 import org.json.JSONObject;
 
-import android.R.string;
-import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.SharedPreferences;
-import android.content.SharedPreferences.Editor;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
@@ -75,8 +63,34 @@ public class BidDialogFragment extends DialogFragment {
         bidButton.setOnClickListener(new OnClickListener(){
 			@Override
 			public void onClick(View arg0) {
-				new PutBidTask(bid, getActivity()).execute(view);
-				dismiss();
+				String bidPriceStr = ((EditText) view.findViewById(R.id.txt_your_bid))
+						.getText().toString();
+				BigDecimal bidPrice = new BigDecimal(bidPriceStr);
+				if(bidPrice.compareTo(bid.getAd().getPrice()) != 1)
+				{
+					AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+		            builder.setCancelable(false);
+		            builder.setTitle("Bid Too Low");
+		            builder.setMessage("You must bid higher than the minimum price!");
+		            builder.setInverseBackgroundForced(true);
+		            builder.setPositiveButton("OK",
+		                    new DialogInterface.OnClickListener() {
+		                        @Override
+		                        public void onClick(DialogInterface dialog,
+		                                int which) {
+		                            dialog.dismiss();
+		                        }
+		                    });
+		            
+		            AlertDialog alert = builder.create();
+		            alert.show();
+		            dismiss();
+				}
+				else
+				{
+					new PutBidTask(bid, getActivity()).execute(view);
+					dismiss();
+				}
 			}
         });
         
@@ -103,7 +117,7 @@ public class BidDialogFragment extends DialogFragment {
 				HttpPost request = new HttpPost(Util.BID_API);
 				JSONObject bids = new JSONObject();
 				bids.put("bidder", prefs.getString("Username", ""));
-				bids.put("seller", "testing@test.com");
+				bids.put("seller", bid.getAd().getSeller().getEmail());
 				bids.put("price", bidPrice);
 				bids.put("ad_id", bid.getAd().getId());
 				Log.d("BidDialog", bids.toString());		

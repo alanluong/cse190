@@ -49,7 +49,7 @@ public class ViewItemsActivity extends BiditActivity {
 					BigDecimal price = new BigDecimal(o.getDouble("price"));
 					String description = o.getString("description");
 					
-					Ad ad = new Ad(seller, price, description, description, null);
+					Ad ad = new Ad(seller, price, description, description);
 					ad.setId(o.getInt("id"));
 					publishProgress(ad);
 				}

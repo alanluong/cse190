@@ -84,7 +84,7 @@ public class BrowseActivity extends BiditActivity {
 					String imageUrl = (Util.BASE_URL + "uploads/" + o.getString("id")+".jpg");
 					Log.d("asdf",imageUrl);
 					Bitmap image = loadImageFromUrl(imageUrl);
-					Ad ad = new Ad(seller, price, description, description, image);
+					Ad ad = new Ad(seller, price, description, description);
 					ad.setId(o.getInt("id"));
 					System.out.println(ad.getSeller().getEmail());
 					publishProgress(ad);
