@@ -26,10 +26,13 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
-public class BidDialogFragment extends DialogFragment {
+public class BidDialogFragment extends DialogFragment{
 	
 	private EditText mEditText;
+	private View view;
+	private SharedPreferences pref;
 	Bid bid;
+	
 
     public BidDialogFragment() {
         // Empty constructor required for DialogFragment
@@ -42,7 +45,7 @@ public class BidDialogFragment extends DialogFragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
             Bundle savedInstanceState) {
-        final View view = inflater.inflate(R.layout.fragment_bid, container);
+        view = inflater.inflate(R.layout.fragment_bid, container);
         mEditText = (EditText) view.findViewById(R.id.txt_your_bid);
         String title = String.format("[$%s] - %s", bid.getAd().getPrice(), bid.getAd().getDescription());
         getDialog().setTitle(title);
@@ -63,33 +66,44 @@ public class BidDialogFragment extends DialogFragment {
         bidButton.setOnClickListener(new OnClickListener(){
 			@Override
 			public void onClick(View arg0) {
-				String bidPriceStr = ((EditText) view.findViewById(R.id.txt_your_bid))
-						.getText().toString();
-				BigDecimal bidPrice = new BigDecimal(bidPriceStr);
-				if(bidPrice.compareTo(bid.getAd().getPrice()) != 1)
-				{
-					AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-		            builder.setCancelable(false);
-		            builder.setTitle("Bid Too Low");
-		            builder.setMessage("You must bid higher than the minimum price!");
-		            builder.setInverseBackgroundForced(true);
-		            builder.setPositiveButton("OK",
-		                    new DialogInterface.OnClickListener() {
-		                        @Override
-		                        public void onClick(DialogInterface dialog,
-		                                int which) {
-		                            dialog.dismiss();
-		                        }
-		                    });
-		            
-		            AlertDialog alert = builder.create();
-		            alert.show();
-		            dismiss();
-				}
+				
+				pref = Util.getPreferences(getActivity().getApplicationContext());
+				
+				if(pref.getBoolean("isLoggedIn", false) == false)
+		    	{
+		    		new LoginDialogFragment().show(getActivity().getFragmentManager(), "loginDialog");
+		    	}
+				
 				else
 				{
-					new PutBidTask(bid, getActivity()).execute(view);
-					dismiss();
+					String bidPriceStr = ((EditText) view.findViewById(R.id.txt_your_bid))
+							.getText().toString();
+					BigDecimal bidPrice = new BigDecimal(bidPriceStr);
+					if(bidPrice.compareTo(bid.getAd().getPrice()) != 1)
+					{
+						AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+			            builder.setCancelable(false);
+			            builder.setTitle("Bid Too Low");
+			            builder.setMessage("You must bid higher than the minimum price!");
+			            builder.setInverseBackgroundForced(true);
+			            builder.setPositiveButton("OK",
+			                    new DialogInterface.OnClickListener() {
+			                        @Override
+			                        public void onClick(DialogInterface dialog,
+			                                int which) {
+			                            dialog.dismiss();
+			                        }
+			                    });
+			            
+			            AlertDialog alert = builder.create();
+			            alert.show();
+			            dismiss();
+					}
+					else
+					{
+						new PutBidTask(bid, getActivity()).execute(view);
+						dismiss();
+					}
 				}
 			}
         });
@@ -139,4 +153,5 @@ public class BidDialogFragment extends DialogFragment {
 		}
 		
     }
+
 }
