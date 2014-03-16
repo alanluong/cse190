@@ -13,16 +13,16 @@
         android:id="@+id/sellbutton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
         android:layout_alignParentLeft="true"
-        android:background="@drawable/sell_tag" />
+        android:layout_centerVertical="true"
+        android:background="@drawable/sell_tag_land" />
 
     <Button
         android:id="@+id/buybutton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
         android:layout_alignParentRight="true"
-        android:background="@drawable/buy_paddle" />
+        android:layout_centerVertical="true"
+        android:background="@drawable/buy_paddle_land" />
 
 </RelativeLayout>
