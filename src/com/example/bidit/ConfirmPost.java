@@ -41,6 +41,8 @@ import android.widget.TextView;
 import android.widget.TextView.OnEditorActionListener;
 
 import com.example.bidit.util.SystemUiHider;
+import com.google.analytics.tracking.android.EasyTracker;
+import com.google.analytics.tracking.android.MapBuilder;
 
 /**
  * An example full-screen activity that shows and hides the system UI (i.e.
@@ -154,6 +156,14 @@ public class ConfirmPost extends BiditActivity implements OnLoginSuccessful{
                             @Override
                             public void onClick(DialogInterface dialog,
                                     int which) {
+                            	EasyTracker easyTracker = EasyTracker.getInstance(ConfirmPost.this);
+                            	easyTracker.send(MapBuilder
+                    					.createEvent("ui_action",
+                    							     "button_click",
+                    							     "missing_fields_ok",
+                    							     null)
+                    					.build()
+                    			);
                                 dialog.dismiss();
                             }
                         });
@@ -175,6 +185,14 @@ public class ConfirmPost extends BiditActivity implements OnLoginSuccessful{
                             @Override
                             public void onClick(DialogInterface dialog,
                                     int which) {
+                            	EasyTracker easyTracker = EasyTracker.getInstance(ConfirmPost.this);
+                            	easyTracker.send(MapBuilder
+                    					.createEvent("ui_action",
+                    							     "button_click",
+                    							     "no_network_ok",
+                    							     null)
+                    					.build()
+                    			);
                                 dialog.dismiss();
                             }
                         });         

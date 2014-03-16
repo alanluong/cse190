@@ -11,6 +11,10 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import com.google.analytics.tracking.android.EasyTracker;
+import com.google.analytics.tracking.android.MapBuilder;
+import com.google.analytics.tracking.android.StandardExceptionParser;
+
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
@@ -52,10 +56,31 @@ MessageAdapter adapter;
 				}
 				Log.d(ViewMessagesActivity.class.getName(), content);
 			} catch (ClientProtocolException e) {
+				EasyTracker easyTracker = EasyTracker.getInstance(ViewMessagesActivity.this);
+				easyTracker.send(MapBuilder
+						.createException(new StandardExceptionParser(ViewMessagesActivity.this, null)
+							.getDescription(Thread.currentThread().getName(), e),
+							false)
+						.build()
+				);
 				e.printStackTrace();
 			} catch (IOException e) {
+				EasyTracker easyTracker = EasyTracker.getInstance(ViewMessagesActivity.this);
+				easyTracker.send(MapBuilder
+						.createException(new StandardExceptionParser(ViewMessagesActivity.this, null)
+							.getDescription(Thread.currentThread().getName(), e),
+							false)
+						.build()
+				);
 				e.printStackTrace();
 			} catch (JSONException e) {
+				EasyTracker easyTracker = EasyTracker.getInstance(ViewMessagesActivity.this);
+				easyTracker.send(MapBuilder
+						.createException(new StandardExceptionParser(ViewMessagesActivity.this, null)
+							.getDescription(Thread.currentThread().getName(), e),
+							false)
+						.build()
+				);
 				e.printStackTrace();
 			}
 			return null;

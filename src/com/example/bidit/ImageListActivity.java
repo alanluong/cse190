@@ -34,6 +34,7 @@ import android.widget.TextView;
 
 import com.google.analytics.tracking.android.EasyTracker;
 import com.google.analytics.tracking.android.MapBuilder;
+import com.google.analytics.tracking.android.StandardExceptionParser;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
@@ -230,10 +231,31 @@ public class ImageListActivity extends BiditActivity {
 					publishProgress(ad);
 				}
 			} catch (ClientProtocolException e) {
+				EasyTracker easyTracker = EasyTracker.getInstance(ImageListActivity.this);
+				easyTracker.send(MapBuilder
+						.createException(new StandardExceptionParser(ImageListActivity.this, null)
+							.getDescription(Thread.currentThread().getName(), e),
+							false)
+						.build()
+				);
 				e.printStackTrace();
 			} catch (IOException e) {
+				EasyTracker easyTracker = EasyTracker.getInstance(ImageListActivity.this);
+				easyTracker.send(MapBuilder
+						.createException(new StandardExceptionParser(ImageListActivity.this, null)
+							.getDescription(Thread.currentThread().getName(), e),
+							false)
+						.build()
+				);
 				e.printStackTrace();
 			} catch (JSONException e) {
+				EasyTracker easyTracker = EasyTracker.getInstance(ImageListActivity.this);
+				easyTracker.send(MapBuilder
+						.createException(new StandardExceptionParser(ImageListActivity.this, null)
+							.getDescription(Thread.currentThread().getName(), e),
+							false)
+						.build()
+				);
 				e.printStackTrace();
 			} 
 			return null;
