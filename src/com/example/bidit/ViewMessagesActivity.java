@@ -1,7 +1,6 @@
 package com.example.bidit;
 
 import java.io.IOException;
-import java.math.BigDecimal;
 
 import org.apache.http.HttpResponse;
 import org.apache.http.client.ClientProtocolException;
@@ -11,18 +10,18 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import com.google.analytics.tracking.android.EasyTracker;
-import com.google.analytics.tracking.android.MapBuilder;
-import com.google.analytics.tracking.android.StandardExceptionParser;
-
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
 import android.widget.ListView;
 
+import com.google.analytics.tracking.android.EasyTracker;
+import com.google.analytics.tracking.android.MapBuilder;
+import com.google.analytics.tracking.android.StandardExceptionParser;
+
 public class ViewMessagesActivity extends BiditActivity {
 	
-MessageAdapter adapter;
+	private MessageAdapter adapter;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -45,10 +44,10 @@ MessageAdapter adapter;
 				String content = EntityUtils.toString(response.getEntity());
 				JSONObject json = new JSONObject(content);
 				JSONArray objects = json.getJSONArray("objects");
-				for (int i = 0; i < 3; ++i) {
+				for (int i = 0; i < objects.length(); ++i) {
 					JSONObject o = objects.getJSONObject(i);
-					User sender = null;
-					User receiver = null;
+					User sender = new User(o.getString("sender"));
+					User receiver = new User(o.getString("receiver"));;
 					String msg_content = o.getString("content");
 					
 					Message message = new Message(sender, receiver, msg_content);
@@ -90,7 +89,6 @@ MessageAdapter adapter;
 		protected void onProgressUpdate(Message... messages) {
 			adapter.addAll(messages);
 			adapter.notifyDataSetChanged();
-			Log.d(ViewMessagesActivity.class.getName(), "count: " + adapter.getCount());
 		}
 	}
 

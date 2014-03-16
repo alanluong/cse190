@@ -17,6 +17,8 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
@@ -52,8 +54,6 @@ public class ImageListActivity extends BiditActivity {
 	protected ItemAdapter itmadapter;
 	protected ListView listview;
 	
-
-
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -62,6 +62,35 @@ public class ImageListActivity extends BiditActivity {
 		ImageLoaderConfiguration config = new ImageLoaderConfiguration.Builder(this).build();
 		imageLoader = ImageLoader.getInstance();
 		imageLoader.init(config);
+		
+		if(!isNetworkOnline())
+		{
+			AlertDialog.Builder builder = new AlertDialog.Builder(ImageListActivity.this);
+            builder.setCancelable(false);
+            builder.setTitle("No Network Detected");
+            builder.setMessage("Please check your network connection!");
+            builder.setInverseBackgroundForced(true);
+            builder.setPositiveButton("OK",
+                    new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog,
+                                int which) {
+                        	EasyTracker easyTracker = EasyTracker.getInstance(ImageListActivity.this);
+                        	easyTracker.send(MapBuilder
+                					.createEvent("ui_action",
+                							     "button_click",
+                							     "no_network_ok",
+                							     null)
+                					.build()
+                			);
+                            dialog.dismiss();
+                            finish();
+                        }
+                    });
+            
+            AlertDialog alert = builder.create();
+            alert.show();
+		}
 
 		//Bundle bundle = getIntent().getExtras();
 		itmadapter = new ItemAdapter();

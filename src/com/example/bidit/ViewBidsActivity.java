@@ -148,7 +148,7 @@ public class ViewBidsActivity extends BiditActivity {
 				v = vi.inflate(R.layout.bids_list_item, null);
 			}
 
-			Bid it = this.getItem(position);
+			final Bid it = this.getItem(position);
 			TextView bidPrice = (TextView) v.findViewById(R.id.bid_price);
 			bidPrice.setText("Bidder's Price - $" + it.getPrice());
 			
@@ -165,7 +165,8 @@ public class ViewBidsActivity extends BiditActivity {
 									     null)
 							.build()
 					);
-					SendMessageDialogFragment smdf = SendMessageDialogFragment.newInstance();
+					Message msg = new Message(it.getSeller(), it.getBidder(), null);
+					SendMessageDialogFragment smdf = SendMessageDialogFragment.newInstance(msg);
 					smdf.show(getFragmentManager(), "login");
 				}
 				
