@@ -167,7 +167,8 @@ public class ImageListActivity extends BiditActivity {
 					);
 					Intent intent = new Intent(ImageListActivity.this, ViewBidsActivity.class);
 					Bundle bundle = new Bundle();
-					bundle.putString("description", adapter.get(position).getDescription());
+					//bundle.putString("description", adapter.get(position).getDescription());
+					bundle.putParcelable("ad", adapter.get(position));
 					intent.putExtras(bundle);
 					startActivity(intent);
 				}

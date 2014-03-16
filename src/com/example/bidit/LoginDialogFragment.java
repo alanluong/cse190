@@ -20,7 +20,6 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
-import android.opengl.Visibility;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
@@ -29,13 +28,12 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.view.WindowManager;
-import android.view.View.OnLayoutChangeListener;
-import android.webkit.WebView.FindListener;
 import android.widget.Button;
+import android.widget.CompoundButton;
+import android.widget.CompoundButton.OnCheckedChangeListener;
 import android.widget.EditText;
 import android.widget.Switch;
 import android.widget.Toast;
-import android.widget.ToggleButton;
 
 public class LoginDialogFragment extends DialogFragment {
 	public class LoginTask extends AsyncTask<View, Void, Boolean> {
@@ -241,6 +239,22 @@ public class LoginDialogFragment extends DialogFragment {
 		s.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View arg0) {
+				Button button = dialog.getButton(DialogInterface.BUTTON_POSITIVE);
+				boolean on = s.isChecked();
+				if (on) {
+					button.setText("Register");
+					view.findViewById(R.id.confirm).setVisibility(View.VISIBLE);
+				} else {
+					button.setText("Login");
+					view.findViewById(R.id.confirm).setVisibility(View.GONE);
+				}
+			}
+		});
+		s.setOnCheckedChangeListener(new OnCheckedChangeListener() {
+
+			@Override
+			public void onCheckedChanged(CompoundButton arg0, boolean arg1) {
+				// TODO Auto-generated method stub
 				Button button = dialog.getButton(DialogInterface.BUTTON_POSITIVE);
 				boolean on = s.isChecked();
 				if (on) {

@@ -1,7 +1,9 @@
 package com.example.bidit;
 
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.math.BigDecimal;
+import java.net.URLEncoder;
 
 import org.apache.http.HttpResponse;
 import org.apache.http.client.ClientProtocolException;
@@ -42,19 +44,30 @@ public class ViewBidsActivity extends BiditActivity {
 		
 		TextView itemDescription = (TextView) findViewById(R.id.item_description);
 		Bundle b = getIntent().getExtras();
+		Ad ad = null;
 		if(b != null){
-			itemDescription.setText(b.getString("description"));
+			ad = b.getParcelable("ad");
+			itemDescription.setText(ad.getDescription());
 		}else{
 			itemDescription.setText("this is where the description goes");
 		}
 			
-		new RequestBidsTask().execute();
+		new RequestBidsTask().execute(ad);
 	}
 	
-	public class RequestBidsTask extends AsyncTask<Void, Bid, Void> {
+	public class RequestBidsTask extends AsyncTask<Ad, Bid, Void> {
 		@Override
-		protected Void doInBackground(Void... params) {
-			HttpGet request = new HttpGet(Util.BID_API);
+		protected Void doInBackground(Ad... params) {
+			
+			String rangeurl = "";
+			try {
+				rangeurl = "?q=" + URLEncoder.encode("{\"filters\":[{\"name\":\"ad_id\",\"op\":\"eq\",\"val\":"+"\"" + params[0].getId() + "\"}]}", "UTF-8");
+			} catch (UnsupportedEncodingException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
+			
+			HttpGet request = new HttpGet(Util.BID_API+rangeurl);
 			try {
 				HttpResponse response = Util.getHttpClient()
 						.execute(request);
@@ -63,9 +76,9 @@ public class ViewBidsActivity extends BiditActivity {
 				JSONArray objects = json.getJSONArray("objects");
 				for (int i = 0; i < 3; ++i) {
 					JSONObject o = objects.getJSONObject(i);
-					User seller = null;
-					User buyer = null;
-					Ad ad = null;
+					User seller = new User(o.getString("seller"));
+					User buyer = new User(o.getString("bidder"));
+					Ad ad = params[0];
 					BigDecimal price = new BigDecimal(o.getDouble("price"));
 					
 					Bid bid = new Bid(price, buyer, seller, ad);
