@@ -1,11 +1,10 @@
 package com.example.bidit;
 
 import android.app.ActionBar;
-import android.app.Dialog;
-import android.app.Fragment;
+import android.content.BroadcastReceiver;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.net.ConnectivityManager;
@@ -14,9 +13,6 @@ import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
-import android.widget.Button;
-import android.widget.Switch;
 import android.widget.Toast;
 
 public abstract class BiditActivity extends FragmentActivity implements
@@ -34,6 +30,16 @@ public abstract class BiditActivity extends FragmentActivity implements
 		super.onCreate(savedInstanceState);
 		ActionBar actionBar = getActionBar();
 		actionBar.setDisplayHomeAsUpEnabled(true);
+		
+	    IntentFilter intentFilter = new IntentFilter();
+	    intentFilter.addAction("com.package.ACTION_LOGOUT");
+	    registerReceiver(new BroadcastReceiver() {
+
+	                    @Override
+	                    public void onReceive(Context context, Intent intent) {
+	                        finish();
+	                    }
+	                }, intentFilter);
 	}
 
 	@Override
@@ -83,7 +89,14 @@ public abstract class BiditActivity extends FragmentActivity implements
 
 			Toast.makeText(this, "Logoff Successful", Toast.LENGTH_SHORT)
 					.show();
-
+			
+			Intent broadcastIntent = new Intent();
+			broadcastIntent.setAction("com.package.ACTION_LOGOUT");
+			sendBroadcast(broadcastIntent);
+			
+			Intent intent0 = new Intent(this, MainActivity.class);
+			startActivity(intent0);
+			
 			return true;
 		case R.id.action_myitems:
 			Intent intent = new Intent(this, ImageListActivity.class);
