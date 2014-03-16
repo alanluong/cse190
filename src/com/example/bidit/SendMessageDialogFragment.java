@@ -85,6 +85,7 @@ public class SendMessageDialogFragment extends DialogFragment {
 				msgs.put("sender", msg.getSender().getEmail());
 				msgs.put("receiver", msg.getReceiver().getEmail());
 				msgs.put("content", content);
+				msgs.put("subject", msg.getSubject());
 	
 				StringEntity entity = new StringEntity(msgs.toString());
 				request.setEntity(entity);

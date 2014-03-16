@@ -79,12 +79,12 @@ public class BidDialogFragment extends DialogFragment{
 					String bidPriceStr = ((EditText) view.findViewById(R.id.txt_your_bid))
 							.getText().toString();
 					BigDecimal bidPrice = new BigDecimal(bidPriceStr);
-					if(bidPrice.compareTo(bid.getAd().getPrice()) != 1)
+					if(bidPrice.compareTo(bid.getAd().getPrice()) == -1)
 					{
 						AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
 			            builder.setCancelable(false);
 			            builder.setTitle("Bid Too Low");
-			            builder.setMessage("You must bid higher than the minimum price!");
+			            builder.setMessage("You must bid higher than or equal to the minimum price!");
 			            builder.setInverseBackgroundForced(true);
 			            builder.setPositiveButton("OK",
 			                    new DialogInterface.OnClickListener() {

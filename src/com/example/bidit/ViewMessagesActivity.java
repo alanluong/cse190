@@ -69,8 +69,9 @@ public class ViewMessagesActivity extends BiditActivity {
 					User sender = new User(o.getString("sender"));
 					User receiver = new User(o.getString("receiver"));;
 					String msg_content = o.getString("content");
+					String msg_subject = o.getString("subject");
 					
-					Message message = new Message(sender, receiver, msg_content);
+					Message message = new Message(sender, receiver, msg_content, msg_subject);
 					publishProgress(message);
 				}
 				Log.d(ViewMessagesActivity.class.getName(), content);

@@ -4,13 +4,27 @@ public class Message {
 	User sender;
 	User receiver;
 	String content;
+	String subject;
 	
-	public Message(User s, User r, String c){
+	public Message(User s, User r, String c, String subject){
 		setSender(s);
 		setReceiver(r);
 		setContent(c);
+		setSubject(subject);
 	}
 	
+
+
+	public String getSubject() {
+		return subject;
+	}
+
+
+	public void setSubject(String subject) {
+		this.subject = subject;
+	}
+
+
 	public User getSender() {
 		return sender;
 	}
