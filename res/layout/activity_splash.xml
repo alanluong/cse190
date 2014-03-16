@@ -10,7 +10,8 @@
         android:layout_alignParentLeft="true"
         android:layout_alignParentTop="true"
         android:scaleType="fitStart"
-        android:src="@drawable/ic_splash" />
+        android:src="@drawable/ic_splash"
+        android:background="#4AADD6" />
  
 </RelativeLayout>
 

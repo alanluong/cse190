@@ -10,7 +10,7 @@
         android:id="@+id/txt_your_bid"
         android:layout_width="match_parent"
         android:layout_height="wrap_content" 
-        android:inputType="number"
+        android:inputType="numberDecimal"
         android:imeOptions="actionDone"
         android:hint="@string/your_bid" />
     

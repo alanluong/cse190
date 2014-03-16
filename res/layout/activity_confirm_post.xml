@@ -94,7 +94,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="bottom|center_horizontal"
-                android:background="#009900"
+                android:background="#4AADD6"
                 android:layout_weight=".1"
                 android:gravity="center|bottom"
                 android:orientation="vertical"
@@ -105,7 +105,7 @@
                  style="?android:attr/buttonBarButtonStyle"
                  android:layout_width="wrap_content"
                  android:layout_height="wrap_content"
-                 android:background="#009900"
+                 android:background="#4AADD6"
                  android:text="@string/post"
                  android:textColor="#FFFFFF" />
 
