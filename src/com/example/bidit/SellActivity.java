@@ -8,6 +8,7 @@ import java.util.Date;
 
 import com.google.analytics.tracking.android.EasyTracker;
 import com.google.analytics.tracking.android.MapBuilder;
+import com.google.analytics.tracking.android.StandardExceptionParser;
 
 
 import android.app.Activity;
@@ -82,6 +83,13 @@ public class SellActivity extends FragmentActivity implements OnClickListener {
 			        } 
 			        
 			        catch (IOException ex) {
+			        	EasyTracker easyTracker1 = EasyTracker.getInstance(SellActivity.this);
+						easyTracker1.send(MapBuilder
+								.createException(new StandardExceptionParser(SellActivity.this, null)
+									.getDescription(Thread.currentThread().getName(), ex),
+									false)
+								.build()
+						);
 			            // Error occurred while creating the File
 			        }
 			        
@@ -126,12 +134,24 @@ public class SellActivity extends FragmentActivity implements OnClickListener {
     			  }
 	    		  
 	    		  catch (FileNotFoundException e) {
-	    			  // TODO Auto-generated catch block
+	    			  EasyTracker easyTracker = EasyTracker.getInstance(SellActivity.this);
+						easyTracker.send(MapBuilder
+								.createException(new StandardExceptionParser(SellActivity.this, null)
+									.getDescription(Thread.currentThread().getName(), e),
+									false)
+								.build()
+						);
 	    			  e.printStackTrace();
 	    		  } 
 	    		  
 	    		  catch (IOException e) {
-	    			  // TODO Auto-generated catch block
+	    			  EasyTracker easyTracker = EasyTracker.getInstance(SellActivity.this);
+						easyTracker.send(MapBuilder
+								.createException(new StandardExceptionParser(SellActivity.this, null)
+									.getDescription(Thread.currentThread().getName(), e),
+									false)
+								.build()
+						);
 	    			  e.printStackTrace();
 	    		  }
 	    		  

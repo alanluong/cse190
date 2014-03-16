@@ -7,6 +7,7 @@ import java.util.Date;
 
 import com.google.analytics.tracking.android.EasyTracker;
 import com.google.analytics.tracking.android.MapBuilder;
+import com.google.analytics.tracking.android.StandardExceptionParser;
 
 import android.content.Intent;
 import android.net.Uri;
@@ -100,6 +101,13 @@ public class MainActivity extends BiditActivity implements OnClickListener{
 					}
 
 					catch (IOException ex) {
+						EasyTracker easyTracker2 = EasyTracker.getInstance(MainActivity.this);
+						easyTracker2.send(MapBuilder
+								.createException(new StandardExceptionParser(MainActivity.this, null)
+									.getDescription(Thread.currentThread().getName(), ex),
+									false)
+								.build()
+						);
 						// Error occurred while creating the File
 					}
 

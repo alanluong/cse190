@@ -15,6 +15,7 @@ import org.json.JSONObject;
 
 import com.google.analytics.tracking.android.EasyTracker;
 import com.google.analytics.tracking.android.MapBuilder;
+import com.google.analytics.tracking.android.StandardExceptionParser;
 
 import android.content.Context;
 import android.os.AsyncTask;
@@ -63,6 +64,13 @@ public class ViewBidsActivity extends BiditActivity {
 			try {
 				rangeurl = "?q=" + URLEncoder.encode("{\"filters\":[{\"name\":\"ad_id\",\"op\":\"eq\",\"val\":"+"\"" + params[0].getId() + "\"}]}", "UTF-8");
 			} catch (UnsupportedEncodingException e1) {
+				EasyTracker easyTracker = EasyTracker.getInstance(ViewBidsActivity.this);
+				easyTracker.send(MapBuilder
+						.createException(new StandardExceptionParser(ViewBidsActivity.this, null)
+							.getDescription(Thread.currentThread().getName(), e1),
+							false)
+						.build()
+				);
 				// TODO Auto-generated catch block
 				e1.printStackTrace();
 			}
@@ -86,10 +94,31 @@ public class ViewBidsActivity extends BiditActivity {
 				}
 				Log.d(ViewBidsActivity.class.getName(), content);
 			} catch (ClientProtocolException e) {
+				EasyTracker easyTracker = EasyTracker.getInstance(ViewBidsActivity.this);
+				easyTracker.send(MapBuilder
+						.createException(new StandardExceptionParser(ViewBidsActivity.this, null)
+							.getDescription(Thread.currentThread().getName(), e),
+							false)
+						.build()
+				);
 				e.printStackTrace();
 			} catch (IOException e) {
+				EasyTracker easyTracker = EasyTracker.getInstance(ViewBidsActivity.this);
+				easyTracker.send(MapBuilder
+						.createException(new StandardExceptionParser(ViewBidsActivity.this, null)
+							.getDescription(Thread.currentThread().getName(), e),
+							false)
+						.build()
+				);
 				e.printStackTrace();
 			} catch (JSONException e) {
+				EasyTracker easyTracker = EasyTracker.getInstance(ViewBidsActivity.this);
+				easyTracker.send(MapBuilder
+						.createException(new StandardExceptionParser(ViewBidsActivity.this, null)
+							.getDescription(Thread.currentThread().getName(), e),
+							false)
+						.build()
+				);
 				e.printStackTrace();
 			}
 			return null;
