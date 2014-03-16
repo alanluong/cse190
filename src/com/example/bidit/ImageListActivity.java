@@ -154,8 +154,10 @@ public class ImageListActivity extends BiditActivity {
 			view.setOnClickListener(new OnClickListener(){
 				@Override
 				public void onClick(View arg0) {
-					//TODO put stuff in the bundle to tell ViewBidsActivity which item was clicked
 					Intent intent = new Intent(ImageListActivity.this, ViewBidsActivity.class);
+					Bundle bundle = new Bundle();
+					bundle.putString("description", adapter.get(position).getDescription());
+					intent.putExtras(bundle);
 					startActivity(intent);
 				}
 			});

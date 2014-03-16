@@ -38,8 +38,13 @@ public class ViewBidsActivity extends BiditActivity {
 		lv.setAdapter(adapter);
 		
 		TextView itemDescription = (TextView) findViewById(R.id.item_description);
-		itemDescription.setText("this is where the description goes"); //TODO get description from previous screen (ViewItemsActivity)
-		
+		Bundle b = getIntent().getExtras();
+		if(b != null){
+			itemDescription.setText(b.getString("description"));
+		}else{
+			itemDescription.setText("this is where the description goes");
+		}
+			
 		new RequestBidsTask().execute();
 	}
 	
