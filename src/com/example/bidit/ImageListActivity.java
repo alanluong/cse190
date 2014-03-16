@@ -22,8 +22,8 @@ import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
@@ -32,6 +32,9 @@ import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.google.analytics.tracking.android.EasyTracker;
+import com.google.analytics.tracking.android.MapBuilder;
+import com.google.analytics.tracking.android.StandardExceptionParser;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
@@ -42,7 +45,6 @@ import com.nostra13.universalimageloader.core.display.RoundedBitmapDisplayer;
 
 public class ImageListActivity extends BiditActivity {
 
-	private static final String IMAGE_POSITION = "IMAGE_POSITION";
 	private SharedPreferences pref;
 	DisplayImageOptions options;
 	
@@ -149,6 +151,26 @@ public class ImageListActivity extends BiditActivity {
 			holder.text.setText(String.format("[$%s] - %s", adapter.get(position).getPrice(), adapter.get(position).getDescription()));
 
 			imageLoader.displayImage(adapter.get(position).getImagePath(), holder.image, options, animateFirstListener);
+			
+			view.setOnClickListener(new OnClickListener(){
+				@Override
+				public void onClick(View arg0) {
+					EasyTracker easyTracker = EasyTracker.getInstance(ImageListActivity.this);
+					easyTracker.send(MapBuilder
+							.createEvent("ui_action",
+									     "button_press",
+									     "item_click",
+									     null)
+							.build()
+					);
+					Intent intent = new Intent(ImageListActivity.this, ViewBidsActivity.class);
+					Bundle bundle = new Bundle();
+					//bundle.putString("description", adapter.get(position).getDescription());
+					bundle.putParcelable("ad", adapter.get(position));
+					intent.putExtras(bundle);
+					startActivity(intent);
+				}
+			});
 
 			return view;
 		}
@@ -209,10 +231,31 @@ public class ImageListActivity extends BiditActivity {
 					publishProgress(ad);
 				}
 			} catch (ClientProtocolException e) {
+				EasyTracker easyTracker = EasyTracker.getInstance(ImageListActivity.this);
+				easyTracker.send(MapBuilder
+						.createException(new StandardExceptionParser(ImageListActivity.this, null)
+							.getDescription(Thread.currentThread().getName(), e),
+							false)
+						.build()
+				);
 				e.printStackTrace();
 			} catch (IOException e) {
+				EasyTracker easyTracker = EasyTracker.getInstance(ImageListActivity.this);
+				easyTracker.send(MapBuilder
+						.createException(new StandardExceptionParser(ImageListActivity.this, null)
+							.getDescription(Thread.currentThread().getName(), e),
+							false)
+						.build()
+				);
 				e.printStackTrace();
 			} catch (JSONException e) {
+				EasyTracker easyTracker = EasyTracker.getInstance(ImageListActivity.this);
+				easyTracker.send(MapBuilder
+						.createException(new StandardExceptionParser(ImageListActivity.this, null)
+							.getDescription(Thread.currentThread().getName(), e),
+							false)
+						.build()
+				);
 				e.printStackTrace();
 			} 
 			return null;

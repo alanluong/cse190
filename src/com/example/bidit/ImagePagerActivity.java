@@ -34,6 +34,9 @@ import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
+import com.google.analytics.tracking.android.EasyTracker;
+import com.google.analytics.tracking.android.MapBuilder;
+import com.google.analytics.tracking.android.StandardExceptionParser;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
@@ -76,6 +79,14 @@ public class ImagePagerActivity extends BiditActivity {
                         @Override
                         public void onClick(DialogInterface dialog,
                                 int which) {
+                        	EasyTracker easyTracker = EasyTracker.getInstance(ImagePagerActivity.this);
+                        	easyTracker.send(MapBuilder
+                					.createEvent("ui_action",
+                							     "button_click",
+                							     "no_network_ok",
+                							     null)
+                					.build()
+                			);
                             dialog.dismiss();
                             finish();
                         }
@@ -122,6 +133,14 @@ public class ImagePagerActivity extends BiditActivity {
 	                case MotionEvent.ACTION_DOWN:
 	                    break;
 	                case MotionEvent.ACTION_MOVE:
+	                	EasyTracker easyTracker = EasyTracker.getInstance(ImagePagerActivity.this);
+						easyTracker.send(MapBuilder
+								.createEvent("ui_action",
+										     "swipe",
+										     "image_pager",
+										     null)
+								.build()
+						);
 	                    if(pagerPosition+1 == imgpgradapter.getCount())
 	                    {
 	                    	new RequestMoreAdsTask().execute();
@@ -147,6 +166,14 @@ public class ImagePagerActivity extends BiditActivity {
 
 			@Override
 			public void onPageSelected(int arg0) {
+				EasyTracker easyTracker = EasyTracker.getInstance(ImagePagerActivity.this);
+				easyTracker.send(MapBuilder
+						.createEvent("ui_action",
+								     "swipe",
+								     "image_pager",
+								     null)
+						.build()
+				);
 				pagerPosition = arg0;
 				if(arg0 + 1 == imgpgradapter.getCount())
 				{
@@ -229,22 +256,43 @@ public class ImagePagerActivity extends BiditActivity {
 
 				@Override
 				public void onLoadingFailed(String imageUri, View view, FailReason failReason) {
+					EasyTracker easyTracker = EasyTracker.getInstance(ImagePagerActivity.this);
 					String message = null;
 					switch (failReason.getType()) {
 						case IO_ERROR:
 							message = "Input/Output error";
+							easyTracker.send(MapBuilder
+									.createException(message, false)
+									.build()
+							);
 							break;
 						case DECODING_ERROR:
 							message = "Image can't be decoded";
+							easyTracker.send(MapBuilder
+									.createException(message, false)
+									.build()
+							);
 							break;
 						case NETWORK_DENIED:
 							message = "Downloads are denied";
+							easyTracker.send(MapBuilder
+									.createException(message, false)
+									.build()
+							);
 							break;
 						case OUT_OF_MEMORY:
 							message = "Out Of Memory error";
+							easyTracker.send(MapBuilder
+									.createException(message, false)
+									.build()
+							);
 							break;
 						case UNKNOWN:
 							message = "Unknown error";
+							easyTracker.send(MapBuilder
+									.createException(message, false)
+									.build()
+							);
 							break;
 					}
 					Toast.makeText(ImagePagerActivity.this, message, Toast.LENGTH_SHORT).show();
@@ -325,10 +373,31 @@ public class ImagePagerActivity extends BiditActivity {
 					publishProgress(ad);
 				}
 			} catch (ClientProtocolException e) {
+				EasyTracker easyTracker = EasyTracker.getInstance(ImagePagerActivity.this);
+				easyTracker.send(MapBuilder
+						.createException(new StandardExceptionParser(ImagePagerActivity.this, null)
+							.getDescription(Thread.currentThread().getName(), e),
+							false)
+						.build()
+				);
 				e.printStackTrace();
 			} catch (IOException e) {
+				EasyTracker easyTracker = EasyTracker.getInstance(ImagePagerActivity.this);
+				easyTracker.send(MapBuilder
+						.createException(new StandardExceptionParser(ImagePagerActivity.this, null)
+							.getDescription(Thread.currentThread().getName(), e),
+							false)
+						.build()
+				);
 				e.printStackTrace();
 			} catch (JSONException e) {
+				EasyTracker easyTracker = EasyTracker.getInstance(ImagePagerActivity.this);
+				easyTracker.send(MapBuilder
+						.createException(new StandardExceptionParser(ImagePagerActivity.this, null)
+							.getDescription(Thread.currentThread().getName(), e),
+							false)
+						.build()
+				);
 				e.printStackTrace();
 			} 
 			return null;
@@ -387,10 +456,31 @@ public class ImagePagerActivity extends BiditActivity {
 					publishProgress(ad);
 				}
 			} catch (ClientProtocolException e) {
+				EasyTracker easyTracker = EasyTracker.getInstance(ImagePagerActivity.this);
+				easyTracker.send(MapBuilder
+						.createException(new StandardExceptionParser(ImagePagerActivity.this, null)
+							.getDescription(Thread.currentThread().getName(), e),
+							false)
+						.build()
+				);
 				e.printStackTrace();
 			} catch (IOException e) {
+				EasyTracker easyTracker = EasyTracker.getInstance(ImagePagerActivity.this);
+				easyTracker.send(MapBuilder
+						.createException(new StandardExceptionParser(ImagePagerActivity.this, null)
+							.getDescription(Thread.currentThread().getName(), e),
+							false)
+						.build()
+				);
 				e.printStackTrace();
 			} catch (JSONException e) {
+				EasyTracker easyTracker = EasyTracker.getInstance(ImagePagerActivity.this);
+				easyTracker.send(MapBuilder
+						.createException(new StandardExceptionParser(ImagePagerActivity.this, null)
+							.getDescription(Thread.currentThread().getName(), e),
+							false)
+						.build()
+				);
 				e.printStackTrace();
 			} 
 			return null;

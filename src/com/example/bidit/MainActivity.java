@@ -5,6 +5,10 @@ import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
+import com.google.analytics.tracking.android.EasyTracker;
+import com.google.analytics.tracking.android.MapBuilder;
+import com.google.analytics.tracking.android.StandardExceptionParser;
+
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
@@ -13,6 +17,7 @@ import android.provider.MediaStore;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
+
 
 public class MainActivity extends BiditActivity implements OnClickListener{
 
@@ -36,6 +41,14 @@ public class MainActivity extends BiditActivity implements OnClickListener{
 			Button clicked = (Button) view;
 			switch (clicked.getId()) {
 			case R.id.buybutton:
+				EasyTracker easyTracker = EasyTracker.getInstance(this);
+				easyTracker.send(MapBuilder
+						.createEvent("ui_action",
+								     "button_press",
+								     "buy_button",
+								     null)
+						.build()
+				);
 				//Intent intent = new Intent(MainActivity.this, BrowseActivity.class);
 				Intent intent = new Intent(MainActivity.this, ImagePagerActivity.class);
 				startActivity(intent);
@@ -62,6 +75,14 @@ public class MainActivity extends BiditActivity implements OnClickListener{
 		    	*/
 				break;
 			case R.id.sellbutton:
+				EasyTracker easyTracker1 = EasyTracker.getInstance(this);
+				easyTracker1.send(MapBuilder
+						.createEvent("ui_action",
+								     "button_press",
+								     "sell_button",
+								     null)
+						.build()
+				);
 				Intent takePictureIntent = new Intent(
 						MediaStore.ACTION_IMAGE_CAPTURE);
 
@@ -81,6 +102,13 @@ public class MainActivity extends BiditActivity implements OnClickListener{
 					}
 
 					catch (IOException ex) {
+						EasyTracker easyTracker2 = EasyTracker.getInstance(MainActivity.this);
+						easyTracker2.send(MapBuilder
+								.createException(new StandardExceptionParser(MainActivity.this, null)
+									.getDescription(Thread.currentThread().getName(), ex),
+									false)
+								.build()
+						);
 						// Error occurred while creating the File
 					}
 

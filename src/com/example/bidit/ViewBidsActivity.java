@@ -1,7 +1,9 @@
 package com.example.bidit;
 
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.math.BigDecimal;
+import java.net.URLEncoder;
 
 import org.apache.http.HttpResponse;
 import org.apache.http.client.ClientProtocolException;
@@ -10,6 +12,10 @@ import org.apache.http.util.EntityUtils;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import com.google.analytics.tracking.android.EasyTracker;
+import com.google.analytics.tracking.android.MapBuilder;
+import com.google.analytics.tracking.android.StandardExceptionParser;
 
 import android.content.Context;
 import android.os.AsyncTask;
@@ -38,15 +44,38 @@ public class ViewBidsActivity extends BiditActivity {
 		lv.setAdapter(adapter);
 		
 		TextView itemDescription = (TextView) findViewById(R.id.item_description);
-		itemDescription.setText("this is where the description goes"); //TODO get description from previous screen (ViewItemsActivity)
-		
-		new RequestBidsTask().execute();
+		Bundle b = getIntent().getExtras();
+		Ad ad = null;
+		if(b != null){
+			ad = b.getParcelable("ad");
+			itemDescription.setText("[" + ad.getPrice() + "] - " + ad.getDescription());
+		}else{
+			itemDescription.setText("this is where the description goes");
+		}
+			
+		new RequestBidsTask().execute(ad);
 	}
 	
-	public class RequestBidsTask extends AsyncTask<Void, Bid, Void> {
+	public class RequestBidsTask extends AsyncTask<Ad, Bid, Void> {
 		@Override
-		protected Void doInBackground(Void... params) {
-			HttpGet request = new HttpGet(Util.BID_API);
+		protected Void doInBackground(Ad... params) {
+			
+			String rangeurl = "";
+			try {
+				rangeurl = "?q=" + URLEncoder.encode("{\"filters\":[{\"name\":\"ad_id\",\"op\":\"eq\",\"val\":"+"\"" + params[0].getId() + "\"}]}", "UTF-8");
+			} catch (UnsupportedEncodingException e1) {
+				EasyTracker easyTracker = EasyTracker.getInstance(ViewBidsActivity.this);
+				easyTracker.send(MapBuilder
+						.createException(new StandardExceptionParser(ViewBidsActivity.this, null)
+							.getDescription(Thread.currentThread().getName(), e1),
+							false)
+						.build()
+				);
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
+			
+			HttpGet request = new HttpGet(Util.BID_API+rangeurl);
 			try {
 				HttpResponse response = Util.getHttpClient()
 						.execute(request);
@@ -55,9 +84,9 @@ public class ViewBidsActivity extends BiditActivity {
 				JSONArray objects = json.getJSONArray("objects");
 				for (int i = 0; i < 3; ++i) {
 					JSONObject o = objects.getJSONObject(i);
-					User seller = null;
-					User buyer = null;
-					Ad ad = null;
+					User seller = new User(o.getString("seller"));
+					User buyer = new User(o.getString("bidder"));
+					Ad ad = params[0];
 					BigDecimal price = new BigDecimal(o.getDouble("price"));
 					
 					Bid bid = new Bid(price, buyer, seller, ad);
@@ -65,10 +94,31 @@ public class ViewBidsActivity extends BiditActivity {
 				}
 				Log.d(ViewBidsActivity.class.getName(), content);
 			} catch (ClientProtocolException e) {
+				EasyTracker easyTracker = EasyTracker.getInstance(ViewBidsActivity.this);
+				easyTracker.send(MapBuilder
+						.createException(new StandardExceptionParser(ViewBidsActivity.this, null)
+							.getDescription(Thread.currentThread().getName(), e),
+							false)
+						.build()
+				);
 				e.printStackTrace();
 			} catch (IOException e) {
+				EasyTracker easyTracker = EasyTracker.getInstance(ViewBidsActivity.this);
+				easyTracker.send(MapBuilder
+						.createException(new StandardExceptionParser(ViewBidsActivity.this, null)
+							.getDescription(Thread.currentThread().getName(), e),
+							false)
+						.build()
+				);
 				e.printStackTrace();
 			} catch (JSONException e) {
+				EasyTracker easyTracker = EasyTracker.getInstance(ViewBidsActivity.this);
+				easyTracker.send(MapBuilder
+						.createException(new StandardExceptionParser(ViewBidsActivity.this, null)
+							.getDescription(Thread.currentThread().getName(), e),
+							false)
+						.build()
+				);
 				e.printStackTrace();
 			}
 			return null;
@@ -100,13 +150,21 @@ public class ViewBidsActivity extends BiditActivity {
 
 			Bid it = this.getItem(position);
 			TextView bidPrice = (TextView) v.findViewById(R.id.bid_price);
-			bidPrice.setText("" + it.getPrice());
+			bidPrice.setText("Bidder's Price - $" + it.getPrice());
 			
 			Button replyToBid = (Button) v.findViewById(R.id.reply_to_bid);
 			replyToBid.setOnClickListener(new OnClickListener(){
 
 				@Override
 				public void onClick(View arg0) {
+					EasyTracker easyTracker = EasyTracker.getInstance(ViewBidsActivity.this);
+					easyTracker.send(MapBuilder
+							.createEvent("ui_action",
+									     "button_press",
+									     "reply_button",
+									     null)
+							.build()
+					);
 					SendMessageDialogFragment smdf = SendMessageDialogFragment.newInstance();
 					smdf.show(getFragmentManager(), "login");
 				}
