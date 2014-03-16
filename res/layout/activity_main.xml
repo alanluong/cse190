@@ -6,26 +6,25 @@
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
+    android:background="@drawable/background"
     tools:context=".MainActivity" >
-
-    <Button
-        android:id="@+id/buybutton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentTop="true"
-        android:layout_marginTop="117dp"
-        android:text="@string/buy" />
 
     <Button
         android:id="@+id/sellbutton"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignLeft="@+id/buybutton"
-        android:layout_alignRight="@+id/buybutton"
-        android:layout_below="@+id/buybutton"
-        android:layout_marginTop="87dp"
-        android:text="@string/sell" />
-
+        android:layout_height="200dp"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentTop="true"
+        android:background="@drawable/sell_tag" />
+    
+    <Button
+        android:id="@+id/buybutton"
+        android:layout_width="wrap_content"
+        android:layout_height="210dp"
+        android:layout_alignLeft="@+id/sellbutton"
+        android:layout_alignRight="@+id/sellbutton"
+        android:layout_alignParentBottom="true"
+        android:background="@drawable/buy_paddle" />
+    
 </RelativeLayout>
