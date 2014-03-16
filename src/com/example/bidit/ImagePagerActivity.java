@@ -34,6 +34,8 @@ import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
+import com.google.analytics.tracking.android.EasyTracker;
+import com.google.analytics.tracking.android.MapBuilder;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
@@ -122,6 +124,14 @@ public class ImagePagerActivity extends BiditActivity {
 	                case MotionEvent.ACTION_DOWN:
 	                    break;
 	                case MotionEvent.ACTION_MOVE:
+	                	EasyTracker easyTracker = EasyTracker.getInstance(ImagePagerActivity.this);
+						easyTracker.send(MapBuilder
+								.createEvent("ui_action",
+										     "swipe",
+										     "image_pager",
+										     null)
+								.build()
+						);
 	                    if(pagerPosition+1 == imgpgradapter.getCount())
 	                    {
 	                    	new RequestMoreAdsTask().execute();
@@ -147,6 +157,14 @@ public class ImagePagerActivity extends BiditActivity {
 
 			@Override
 			public void onPageSelected(int arg0) {
+				EasyTracker easyTracker = EasyTracker.getInstance(ImagePagerActivity.this);
+				easyTracker.send(MapBuilder
+						.createEvent("ui_action",
+								     "swipe",
+								     "image_pager",
+								     null)
+						.build()
+				);
 				pagerPosition = arg0;
 				if(arg0 + 1 == imgpgradapter.getCount())
 				{

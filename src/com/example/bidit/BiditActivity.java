@@ -1,5 +1,7 @@
 package com.example.bidit;
 
+import com.google.analytics.tracking.android.EasyTracker;
+
 import android.app.ActionBar;
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -40,6 +42,16 @@ public abstract class BiditActivity extends FragmentActivity implements
 	                        finish();
 	                    }
 	                }, intentFilter);
+	}
+	
+	public void onStart(){
+		super.onStart();
+		EasyTracker.getInstance(this).activityStart(this);
+	}
+	
+	public void onStop(){
+		super.onStop();
+		EasyTracker.getInstance(this).activityStop(this);
 	}
 
 	@Override
