@@ -23,6 +23,8 @@ public abstract class BiditActivity extends FragmentActivity implements
 
 	private SharedPreferences prefs;
 	private LoginDialogFragment ldf;
+	private IntentFilter intentFilter;
+	private BroadcastReceiver broadcastreceiver;
 
 	public BiditActivity() {
 		super();
@@ -34,15 +36,15 @@ public abstract class BiditActivity extends FragmentActivity implements
 		ActionBar actionBar = getActionBar();
 		actionBar.setDisplayHomeAsUpEnabled(true);
 		
-	    IntentFilter intentFilter = new IntentFilter();
+	    intentFilter = new IntentFilter();
 	    intentFilter.addAction("com.package.ACTION_LOGOUT");
-	    registerReceiver(new BroadcastReceiver() {
+	    broadcastreceiver = new BroadcastReceiver() {
 
-	                    @Override
-	                    public void onReceive(Context context, Intent intent) {
-	                        finish();
-	                    }
-	                }, intentFilter);
+            @Override
+            public void onReceive(Context context, Intent intent) {
+                finish();
+            }};
+	    registerReceiver(broadcastreceiver, intentFilter);
 	}
 	
 	public void onStart(){
@@ -55,6 +57,18 @@ public abstract class BiditActivity extends FragmentActivity implements
 		EasyTracker.getInstance(this).activityStop(this);
 	}
 
+	public void onPause(){
+		super.onPause();
+		EasyTracker.getInstance(this).activityStop(this);
+		unregisterReceiver(broadcastreceiver);
+	}
+	
+	public void onResume(){
+		super.onResume();
+		EasyTracker.getInstance(this).activityStop(this);
+		registerReceiver(broadcastreceiver, intentFilter);
+	}
+	
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		getMenuInflater().inflate(R.menu.main, menu);

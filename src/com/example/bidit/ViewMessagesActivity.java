@@ -1,6 +1,8 @@
 package com.example.bidit;
 
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 
 import org.apache.http.HttpResponse;
 import org.apache.http.client.ClientProtocolException;
@@ -10,6 +12,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
@@ -37,7 +40,22 @@ public class ViewMessagesActivity extends BiditActivity {
 	public class RequestMessagesTask extends AsyncTask<Void, Message, Void> {
 		@Override
 		protected Void doInBackground(Void... params) {
-			HttpGet request = new HttpGet(Util.MESSAGE_API);
+			String rangeurl = "";
+			try {
+				SharedPreferences pref = Util.getPreferences(getApplicationContext());
+				rangeurl = "?q=" + URLEncoder.encode("{\"filters\":[{\"name\":\"receiver\",\"op\":\"eq\",\"val\":"+"\"" + pref.getString("Username", "") + "\"}]}", "UTF-8");
+			} catch (UnsupportedEncodingException e1) {
+				EasyTracker easyTracker = EasyTracker.getInstance(ViewMessagesActivity.this);
+				easyTracker.send(MapBuilder
+						.createException(new StandardExceptionParser(ViewMessagesActivity.this, null)
+							.getDescription(Thread.currentThread().getName(), e1),
+							false)
+						.build()
+				);
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
+			HttpGet request = new HttpGet(Util.MESSAGE_API + rangeurl);
 			try {
 				HttpResponse response = Util.getHttpClient()
 						.execute(request);
