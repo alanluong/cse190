@@ -82,7 +82,7 @@ public class ViewBidsActivity extends BiditActivity {
 				String content = EntityUtils.toString(response.getEntity());
 				JSONObject json = new JSONObject(content);
 				JSONArray objects = json.getJSONArray("objects");
-				for (int i = 0; i < 3; ++i) {
+				for (int i = 0; i < objects.length(); ++i) {
 					JSONObject o = objects.getJSONObject(i);
 					User seller = new User(o.getString("seller"));
 					User buyer = new User(o.getString("bidder"));

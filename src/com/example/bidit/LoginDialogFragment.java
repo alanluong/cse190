@@ -97,7 +97,8 @@ public class LoginDialogFragment extends DialogFragment {
 		protected void onPostExecute(Boolean login) {
 			if (login.booleanValue()) {
 				loggingInDialog.dismiss();
-				myListener.onLoginSuccessful();
+				if(postflag)
+					myListener.onLoginSuccessful();
 				Toast.makeText(myContext, "Login Successful",
 						Toast.LENGTH_SHORT).show();
 			}
@@ -193,8 +194,15 @@ public class LoginDialogFragment extends DialogFragment {
 		
 	}
 
+	private boolean postflag = false;
+	
 	public LoginDialogFragment() {
 
+	}
+	
+	public LoginDialogFragment(boolean postflag)
+	{
+		this.postflag = postflag;
 	}
 	
 	@Override

@@ -43,7 +43,9 @@ public class ViewMessagesActivity extends BiditActivity {
 			String rangeurl = "";
 			try {
 				SharedPreferences pref = Util.getPreferences(getApplicationContext());
-				rangeurl = "?q=" + URLEncoder.encode("{\"filters\":[{\"name\":\"receiver\",\"op\":\"eq\",\"val\":"+"\"" + pref.getString("Username", "") + "\"}]}", "UTF-8");
+				rangeurl = "?q=" + URLEncoder.encode("{\"filters\":[{\"name\":\"receiver\",\"op\":\"eq\",\"val\":"+"\"", "UTF-8") 
+						+ URLEncoder.encode(pref.getString("Username", "") + "\"}],", "UTF-8")
+						+ URLEncoder.encode("\"field\":\"timestamp\",\"direction\":\"desc\"}", "UTF-8");
 			} catch (UnsupportedEncodingException e1) {
 				EasyTracker easyTracker = EasyTracker.getInstance(ViewMessagesActivity.this);
 				easyTracker.send(MapBuilder
