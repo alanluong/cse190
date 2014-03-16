@@ -5,9 +5,6 @@ import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-import com.google.analytics.tracking.android.EasyTracker;
-import com.google.analytics.tracking.android.MapBuilder;
-
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
@@ -16,6 +13,9 @@ import android.provider.MediaStore;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
+
+import com.google.analytics.tracking.android.EasyTracker;
+import com.google.analytics.tracking.android.MapBuilder;
 
 public class MainActivity extends BiditActivity implements OnClickListener{
 

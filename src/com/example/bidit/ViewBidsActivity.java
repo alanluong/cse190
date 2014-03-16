@@ -47,7 +47,7 @@ public class ViewBidsActivity extends BiditActivity {
 		Ad ad = null;
 		if(b != null){
 			ad = b.getParcelable("ad");
-			itemDescription.setText(ad.getDescription());
+			itemDescription.setText("[" + ad.getPrice() + "] - " + ad.getDescription());
 		}else{
 			itemDescription.setText("this is where the description goes");
 		}
@@ -121,7 +121,7 @@ public class ViewBidsActivity extends BiditActivity {
 
 			Bid it = this.getItem(position);
 			TextView bidPrice = (TextView) v.findViewById(R.id.bid_price);
-			bidPrice.setText("" + it.getPrice());
+			bidPrice.setText("Bidder's Price - $" + it.getPrice());
 			
 			Button replyToBid = (Button) v.findViewById(R.id.reply_to_bid);
 			replyToBid.setOnClickListener(new OnClickListener(){

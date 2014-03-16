@@ -22,10 +22,9 @@ import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
-import android.view.ViewGroup;
 import android.view.View.OnClickListener;
+import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.BaseAdapter;
@@ -45,7 +44,6 @@ import com.nostra13.universalimageloader.core.display.RoundedBitmapDisplayer;
 
 public class ImageListActivity extends BiditActivity {
 
-	private static final String IMAGE_POSITION = "IMAGE_POSITION";
 	private SharedPreferences pref;
 	DisplayImageOptions options;
 	
