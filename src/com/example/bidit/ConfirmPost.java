@@ -212,7 +212,7 @@ public class ConfirmPost extends BiditActivity implements OnLoginSuccessful{
 		    	
 		    	if(pref.getBoolean("isLoggedIn", false) == false)
 		    	{
-		    		new LoginDialogFragment().show(getFragmentManager(), "loginDialog");
+		    		new LoginDialogFragment(true).show(getFragmentManager(), "loginDialog");
 		    	}
 		    	
 		    	else
