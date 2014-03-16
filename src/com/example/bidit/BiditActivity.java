@@ -1,6 +1,7 @@
 package com.example.bidit;
 
 import com.google.analytics.tracking.android.EasyTracker;
+import com.google.analytics.tracking.android.MapBuilder;
 
 import android.app.ActionBar;
 import android.app.Dialog;
@@ -82,12 +83,27 @@ public abstract class BiditActivity extends FragmentActivity implements
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		prefs = Util.getPreferences(this);
+		EasyTracker easyTracker = EasyTracker.getInstance(this);
 		switch (item.getItemId()) {
 		case R.id.action_login:
+			easyTracker.send(MapBuilder
+					.createEvent("ui_action",
+							     "menu_click",
+							     "login",
+							     null)
+					.build()
+			);
 			ldf = new LoginDialogFragment();
 			ldf.show(getFragmentManager(), "login");
 			return true;
 		case R.id.action_logout:
+			easyTracker.send(MapBuilder
+					.createEvent("ui_action",
+							     "menu_click",
+							     "logout",
+							     null)
+					.build()
+			);
 			Editor edit = prefs.edit();
 			edit.putBoolean("isLoggedIn", false);
 			Util.setCurrentUser(null);
@@ -98,10 +114,24 @@ public abstract class BiditActivity extends FragmentActivity implements
 
 			return true;
 		case R.id.action_myitems:
+			easyTracker.send(MapBuilder
+					.createEvent("ui_action",
+							     "menu_click",
+							     "myitems",
+							     null)
+					.build()
+			);
 			Intent intent = new Intent(this, ImageListActivity.class);
 			startActivity(intent);
 			return true;
 		case R.id.action_mymessages:
+			easyTracker.send(MapBuilder
+					.createEvent("ui_action",
+							     "menu_click",
+							     "mymessages",
+							     null)
+					.build()
+			);
 			Intent intent2 = new Intent(this, ViewMessagesActivity.class);
 			startActivity(intent2);
 			return true;
