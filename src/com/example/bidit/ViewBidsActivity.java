@@ -11,6 +11,9 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import com.google.analytics.tracking.android.EasyTracker;
+import com.google.analytics.tracking.android.MapBuilder;
+
 import android.content.Context;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -112,6 +115,14 @@ public class ViewBidsActivity extends BiditActivity {
 
 				@Override
 				public void onClick(View arg0) {
+					EasyTracker easyTracker = EasyTracker.getInstance(ViewBidsActivity.this);
+					easyTracker.send(MapBuilder
+							.createEvent("ui_action",
+									     "button_press",
+									     "reply_button",
+									     null)
+							.build()
+					);
 					SendMessageDialogFragment smdf = SendMessageDialogFragment.newInstance();
 					smdf.show(getFragmentManager(), "login");
 				}

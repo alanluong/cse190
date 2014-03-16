@@ -33,6 +33,8 @@ import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.google.analytics.tracking.android.EasyTracker;
+import com.google.analytics.tracking.android.MapBuilder;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
@@ -154,6 +156,14 @@ public class ImageListActivity extends BiditActivity {
 			view.setOnClickListener(new OnClickListener(){
 				@Override
 				public void onClick(View arg0) {
+					EasyTracker easyTracker = EasyTracker.getInstance(ImageListActivity.this);
+					easyTracker.send(MapBuilder
+							.createEvent("ui_action",
+									     "button_press",
+									     "item_click",
+									     null)
+							.build()
+					);
 					Intent intent = new Intent(ImageListActivity.this, ViewBidsActivity.class);
 					Bundle bundle = new Bundle();
 					bundle.putString("description", adapter.get(position).getDescription());

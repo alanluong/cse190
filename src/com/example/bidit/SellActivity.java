@@ -6,6 +6,9 @@ import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
+import com.google.analytics.tracking.android.EasyTracker;
+import com.google.analytics.tracking.android.MapBuilder;
+
 
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -50,6 +53,14 @@ public class SellActivity extends FragmentActivity implements OnClickListener {
 			//	startActivity(intent);
 			//	break;
 			case R.id.camerabutton:
+				EasyTracker easyTracker = EasyTracker.getInstance(this);
+				easyTracker.send(MapBuilder
+						.createEvent("ui_action",
+								     "button_press",
+								     "camera_button",
+								     null)
+						.build()
+				);
 				Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
 				
 				if (takePictureIntent.resolveActivity(getPackageManager()) != null) {
@@ -85,6 +96,14 @@ public class SellActivity extends FragmentActivity implements OnClickListener {
 				
 				break;
 			case R.id.postbutton:
+				EasyTracker easyTracker1 = EasyTracker.getInstance(this);
+				easyTracker1.send(MapBuilder
+						.createEvent("ui_action",
+								     "button_press",
+								     "post_button",
+								     null)
+						.build()
+				);
 				postItem();
 				
 				finish();

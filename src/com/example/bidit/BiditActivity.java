@@ -1,5 +1,7 @@
 package com.example.bidit;
 
+import com.google.analytics.tracking.android.EasyTracker;
+
 import android.app.ActionBar;
 import android.app.Dialog;
 import android.app.Fragment;
@@ -34,6 +36,16 @@ public abstract class BiditActivity extends FragmentActivity implements
 		super.onCreate(savedInstanceState);
 		ActionBar actionBar = getActionBar();
 		actionBar.setDisplayHomeAsUpEnabled(true);
+	}
+	
+	public void onStart(){
+		super.onStart();
+		EasyTracker.getInstance(this).activityStart(this);
+	}
+	
+	public void onStop(){
+		super.onStop();
+		EasyTracker.getInstance(this).activityStop(this);
 	}
 
 	@Override
