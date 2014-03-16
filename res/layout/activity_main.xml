@@ -12,7 +12,7 @@
     <Button
         android:id="@+id/sellbutton"
         android:layout_width="wrap_content"
-        android:layout_height="200dp"
+        android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
         android:layout_alignParentRight="true"
         android:layout_alignParentTop="true"
@@ -21,7 +21,7 @@
     <Button
         android:id="@+id/buybutton"
         android:layout_width="wrap_content"
-        android:layout_height="210dp"
+        android:layout_height="wrap_content"
         android:layout_alignLeft="@+id/sellbutton"
         android:layout_alignRight="@+id/sellbutton"
         android:layout_alignParentBottom="true"
