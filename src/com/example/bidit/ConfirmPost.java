@@ -316,7 +316,8 @@ public class ConfirmPost extends BiditActivity implements OnLoginSuccessful{
 	        	
 	        	AlertDialog.Builder builder = new AlertDialog.Builder(ConfirmPost.this);
                 builder.setCancelable(false);
-                builder.setTitle("Post Success!");
+                builder.setTitle("Item Posted!");
+                //builder.setMessage("Your item is for sale");
                 builder.setInverseBackgroundForced(true);
                 builder.setPositiveButton("OK",
                         new DialogInterface.OnClickListener() {
@@ -330,7 +331,7 @@ public class ConfirmPost extends BiditActivity implements OnLoginSuccessful{
                 
                 AlertDialog alert = builder.create();
                 alert.show();
-                alert.getWindow().setLayout(500, ViewGroup.LayoutParams.WRAP_CONTENT);
+                alert.getWindow().setLayout(800, ViewGroup.LayoutParams.WRAP_CONTENT);
 	        	
 	        } 
 	        
