@@ -36,5 +36,8 @@
     <string name="reply">Reply</string>
     <string name="yes">Yes</string>
     <string name="no">No</string>
+    <string name="reply_to_message">Reply</string>
+    <string name="myMessages">My Messages</string>
+    <string name="myItems">My Items</string>
 
 </resources>

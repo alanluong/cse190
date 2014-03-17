@@ -8,9 +8,18 @@
         android:id="@+id/item_description"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
+        android:gravity="center"
+        android:padding="10dp"
+        android:background="#4AADD6"
+        android:textColor="#FFFFFF"
         android:layout_gravity="center|center_vertical"
-        android:layout_marginLeft="20dip"
+        android:layout_marginLeft="0dip"
         android:textSize="25sp" />
+    
+    <View
+	    android:layout_width="fill_parent"
+	    android:layout_height="1dp"
+	    android:background="#EEEEEE"/>
     
     <ListView
         android:id="@+id/bid_list"

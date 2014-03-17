@@ -48,7 +48,7 @@ public class ViewBidsActivity extends BiditActivity {
 		Ad ad = null;
 		if(b != null){
 			ad = b.getParcelable("ad");
-			itemDescription.setText("[" + ad.getPrice() + "] - " + ad.getDescription());
+			itemDescription.setText("[$" + ad.getPrice() + "] - " + ad.getDescription());
 		}else{
 			itemDescription.setText("this is where the description goes");
 		}
