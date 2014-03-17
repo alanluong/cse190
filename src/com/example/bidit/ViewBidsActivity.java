@@ -165,7 +165,7 @@ public class ViewBidsActivity extends BiditActivity {
 									     null)
 							.build()
 					);
-					String subject = "$" + it.getAd().getPrice().toString() + " " + it.getAd().getDescription();
+					String subject = "$" + it.getPrice().toString() + " " + it.getAd().getDescription();
 					if(subject.length() > 20)
 					{
 						subject = subject.substring(0,20);

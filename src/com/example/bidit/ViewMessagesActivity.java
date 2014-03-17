@@ -12,11 +12,19 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.view.View.OnClickListener;
+import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.ListView;
+import android.widget.TextView;
 
 import com.google.analytics.tracking.android.EasyTracker;
 import com.google.analytics.tracking.android.MapBuilder;
@@ -34,7 +42,49 @@ public class ViewMessagesActivity extends BiditActivity {
 		adapter = new MessageAdapter(this, R.layout.messages_list_item);
 		ListView lv = (ListView)findViewById(R.id.message_list);
 		lv.setAdapter(adapter);
+		
 		new RequestMessagesTask().execute();
+	}
+	
+	public class MessageAdapter extends ArrayAdapter<Message> {
+
+		public MessageAdapter(Context context, int resource) {
+			super(context, resource);
+		}
+
+		@Override
+		public View getView(int position, View convertView, ViewGroup parent) {
+			View v = convertView;
+
+			if (v == null) {
+				LayoutInflater vi = (LayoutInflater) getContext().getSystemService(
+						Context.LAYOUT_INFLATER_SERVICE);
+				v = vi.inflate(R.layout.messages_list_item, null);
+			}
+
+			final Message it = this.getItem(position);
+			TextView messageContent = (TextView) v.findViewById(R.id.msg_content);
+			messageContent.setText(it.getSubject() + " - " + it.getContent());
+
+			Button replyToBid = (Button) v.findViewById(R.id.reply_to_message);
+			replyToBid.setOnClickListener(new OnClickListener(){
+
+				@Override
+				public void onClick(View arg0) {
+					String subject = "RE:"+it.getSubject();
+					if(subject.length() > 20)
+					{
+						subject = subject.substring(0,20);
+					}
+					Message msg = new Message(it.getReceiver(), it.getSender(), null, subject);
+					SendMessageDialogFragment smdf = SendMessageDialogFragment.newInstance(msg);
+					smdf.show(getFragmentManager(), "login");
+				}
+				
+			});
+			
+			return v;
+		}
 	}
 	
 	public class RequestMessagesTask extends AsyncTask<Void, Message, Void> {
@@ -45,7 +95,7 @@ public class ViewMessagesActivity extends BiditActivity {
 				SharedPreferences pref = Util.getPreferences(getApplicationContext());
 				rangeurl = "?q=" + URLEncoder.encode("{\"filters\":[{\"name\":\"receiver\",\"op\":\"eq\",\"val\":"+"\"", "UTF-8") 
 						+ URLEncoder.encode(pref.getString("Username", "") + "\"}],", "UTF-8")
-						+ URLEncoder.encode("\"field\":\"timestamp\",\"direction\":\"desc\"}", "UTF-8");
+						+ URLEncoder.encode("\"order_by\":[{\"field\":\"id\",\"direction\":\"desc\"}]}", "UTF-8");
 			} catch (UnsupportedEncodingException e1) {
 				EasyTracker easyTracker = EasyTracker.getInstance(ViewMessagesActivity.this);
 				easyTracker.send(MapBuilder
